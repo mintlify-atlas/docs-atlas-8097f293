@@ -1,0 +1,110 @@
+{
+  "projectType": "saas",
+  "projectName": "Namida",
+  "projectDescription": "A Beautiful and Feature-rich Music & Video Player with YouTube Support, Built in Flutter",
+  "theme": "palm",
+  "primaryColor": "#94cb04",
+  "lightColor": "#545454",
+  "darkColor": null,
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Core Features",
+            "pages": [
+              "features/library",
+              "features/youtube",
+              "features/video-playback",
+              "features/playlists",
+              "features/queue",
+              "features/history"
+            ]
+          },
+          {
+            "group": "Audio & Playback",
+            "pages": [
+              "playback/audio-effects",
+              "playback/lyrics",
+              "playback/sleep-timer",
+              "playback/crossfade"
+            ]
+          },
+          {
+            "group": "Customization",
+            "pages": [
+              "customization/themes",
+              "customization/ui-settings",
+              "customization/gestures",
+              "customization/miniplayer"
+            ]
+          },
+          {
+            "group": "Advanced",
+            "pages": [
+              "advanced/indexer",
+              "advanced/tag-editor",
+              "advanced/backup-restore",
+              "advanced/import-history"
+            ]
+          },
+          {
+            "group": "Platform Support",
+            "pages": [
+              "platforms/android",
+              "platforms/windows",
+              "platforms/linux"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Community",
+        "groups": [
+          {
+            "group": "Resources",
+            "pages": [
+              "community/faq",
+              "community/troubleshooting",
+              "community/contributing",
+              "community/translations"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Local music library with powerful indexer and tag editor",
+    "YouTube streaming with download support and offline playback",
+    "Video playback with local and YouTube video integration",
+    "Advanced playlist management and queue system",
+    "Synced lyrics support with auto-fetching",
+    "Audio effects: crossfade, replay gain, pitch control, equalizer",
+    "History tracking and listening statistics",
+    "Dynamic theming with Material3 design",
+    "SponsorBlock and Return YouTube Dislike integration",
+    "Multi-library support: Local, YouTube, Subsonic, WebDAV"
+  ],
+  "publicApiSurface": [
+    "Local Library Management",
+    "YouTube Video/Audio Streaming",
+    "Playlist CRUD Operations",
+    "Queue Management",
+    "History Import/Export",
+    "Tag Editing",
+    "Lyrics Fetching",
+    "Backup/Restore",
+    "Settings Configuration",
+    "Audio Effects Control"
+  ]
+}
