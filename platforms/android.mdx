@@ -1,0 +1,258 @@
+---
+title: Android
+description: Install and use Namida on Android devices
+---
+
+Namida is primarily designed for Android and offers the most complete feature set on this platform. The app supports Android 7.0 (API 24) and above.
+
+## Installation
+
+<Steps>
+  <Step title="Download the APK">
+    Download the latest version from one of the following sources:
+    
+    <CardGroup cols={2}>
+      <Card title="Stable Release" icon="github" href="https://github.com/namidaco/namida/releases/latest">
+        Download the stable version from GitHub Releases
+      </Card>
+      <Card title="Beta Release" icon="flask" href="https://github.com/namidaco/namida-snapshots/releases/latest">
+        Get the latest beta with new features
+      </Card>
+    </CardGroup>
+  </Step>
+  
+  <Step title="Install via Obtainium (Optional)">
+    For automatic updates, you can use Obtainium:
+    
+    - Install [Obtainium](https://github.com/ImranR98/Obtainium) on your device
+    - Add Namida repository: `https://github.com/namidaco/namida/`
+    - Obtainium will notify you of new releases
+  </Step>
+  
+  <Step title="Enable Unknown Sources">
+    If this is your first sideload:
+    
+    1. Open **Settings** > **Security**
+    2. Enable **Unknown Sources** or **Install unknown apps**
+    3. Grant permission to your file manager or browser
+  </Step>
+  
+  <Step title="Install the APK">
+    1. Open the downloaded APK file
+    2. Tap **Install**
+    3. Wait for the installation to complete
+    4. Tap **Open** to launch Namida
+  </Step>
+</Steps>
+
+## System Requirements
+
+- **Minimum Android Version**: Android 7.0 (API 24)
+- **Target Android Version**: Android 14 (API 36)
+- **Architecture**: ARM64, ARMv7
+- **Storage**: At least 100MB for the app + space for your media library
+- **RAM**: 2GB recommended for optimal performance
+
+<Info>
+Namida uses `compileSdkVersion 36` and `targetSdk 36`, ensuring compatibility with the latest Android features and optimizations.
+</Info>
+
+## Permissions
+
+Namida requires several permissions to function properly. Here's what each permission is used for:
+
+### Required Permissions
+
+<Accordion title="Media & Storage Permissions">
+  **Android 12 and below:**
+  - `READ_EXTERNAL_STORAGE`: List audio files from indexer folders
+  
+  **Android 13+:**
+  - `READ_MEDIA_AUDIO`: List audio files from indexer folders
+  - `READ_MEDIA_VIDEO`: List video files for video playback
+  - `READ_MEDIA_IMAGES`: List image files for fallback album covers
+  
+  **Android 10+:**
+  - `WRITE_EXTERNAL_STORAGE` (Android ≤10): File write access with less restrictions
+  - `MANAGE_EXTERNAL_STORAGE` (requested when needed): Required for:
+    - Editing audio tags
+    - Creating or auto-restoring backups
+    - Saving artworks
+    - Deleting files
+    - Compressing images & fixing ytdlp images
+    - Exporting playlists as M3U
+    - Downloading YouTube content
+    - Playing tracks from root folders
+    - In-app file browser
+</Accordion>
+
+<Accordion title="Playback Permissions">
+  - `WAKE_LOCK`: Keep device awake during media playback
+  - `FOREGROUND_SERVICE`: Run background service for continuous playback
+  - `FOREGROUND_SERVICE_MEDIA_PLAYBACK`: Dedicated media playback service (Android 14+)
+</Accordion>
+
+<Accordion title="Network & Features">
+  - `INTERNET`: Required for:
+    - Fetching artist/album images
+    - Streaming and downloading YouTube content
+    - Lyrics fetching
+    - Online features
+</Accordion>
+
+<Accordion title="Optional Permissions (Requested When Needed)">
+  - `VIBRATE`: Haptic feedback for interactions (can be disabled in settings)
+  - `POST_NOTIFICATIONS`: Show notifications for history import, download progress, etc.
+  - `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS`: Improve download reliability
+  - `WRITE_SETTINGS`: Set audio files as ringtones or notification sounds
+</Accordion>
+
+<Warning>
+Namida will never request permissions it doesn't need. All permissions are used solely for the features described above.
+</Warning>
+
+## Android-Specific Features
+
+### Media Integration
+
+- **Android Auto**: Full support for Android Auto integration
+- **Media Controls**: System media controls and lock screen playback controls
+- **Quick Settings Tile**: Add Namida to quick settings for easy access
+- **Home Screen Widgets**: Multiple widget styles available
+
+### App Icons
+
+Namida includes multiple icon variants you can switch between:
+
+- Default Icon
+- Enhanced Icon
+- Hollow Icon
+- Monet Icon (Material You themed)
+- Glowy Icon
+- Shade Icon
+- Mini Icon
+- Seasonal Icons (Spooky, Namiween, Space, etc.)
+
+<Note>
+Switch app icons in **Settings** > **Customization** > **App Icon**
+</Note>
+
+### Storage Management
+
+<Steps>
+  <Step title="Configure Indexer Folders">
+    1. Open Namida
+    2. Go to **Settings** > **Indexer**
+    3. Tap **Add Folder**
+    4. Select folders containing your music
+    5. Tap **Start Indexing**
+  </Step>
+  
+  <Step title="Set Minimum Requirements">
+    Filter out unwanted files:
+    
+    - Set minimum file size (e.g., skip files under 500KB)
+    - Set minimum duration (e.g., skip tracks under 30 seconds)
+    - Enable duplicate track prevention
+  </Step>
+  
+  <Step title="Exclude Folders">
+    Exclude folders you don't want indexed:
+    
+    - Notification sounds
+    - System audio
+    - Voice recordings
+  </Step>
+</Steps>
+
+### Picture-in-Picture Mode
+
+When playing videos, Namida supports Picture-in-Picture (PiP) mode:
+
+1. Play any video
+2. Swipe up to go home or press the home button
+3. Video continues playing in a small floating window
+4. Resize and move the PiP window as needed
+
+### File Associations
+
+Namida automatically registers as a handler for:
+
+- Audio files (`audio/*` MIME types)
+- Video files (`video/*` MIME types)
+- Playlist files (`.m3u`, `.m3u8`)
+- YouTube URLs (opens YouTube links directly in Namida)
+- Text sharing (share YouTube links to Namida)
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Installation Blocked">
+    If Play Protect blocks installation:
+    
+    1. Tap **More details**
+    2. Tap **Install anyway**
+    3. Namida is safe - it's not on Play Store to avoid restrictions
+  </Accordion>
+  
+  <Accordion title="Music Not Showing Up">
+    If your music library isn't appearing:
+    
+    1. Go to **Settings** > **Indexer**
+    2. Check if your music folders are added
+    3. Grant storage permissions when prompted
+    4. Tap **Refresh Library**
+    5. Wait for indexing to complete
+  </Accordion>
+  
+  <Accordion title="Playback Issues">
+    If you experience playback problems:
+    
+    1. Check if battery optimization is disabled for Namida
+    2. Go to **Settings** > **Apps** > **Namida** > **Battery**
+    3. Select **Unrestricted** or **Don't optimize**
+    4. This prevents Android from killing the playback service
+  </Accordion>
+  
+  <Accordion title="YouTube Download Not Working">
+    If YouTube downloads fail:
+    
+    1. Ensure you have internet connectivity
+    2. Check if you granted `MANAGE_EXTERNAL_STORAGE` permission
+    3. Verify you have sufficient storage space
+    4. Try clearing the app cache
+  </Accordion>
+</AccordionGroup>
+
+## Performance Tips
+
+<CardGroup cols={2}>
+  <Card title="Battery Optimization" icon="battery-full">
+    Disable battery optimization for Namida to ensure uninterrupted playback and reliable background downloads.
+  </Card>
+  
+  <Card title="Storage Location" icon="sd-card">
+    For best performance, keep your music on internal storage rather than SD card when possible.
+  </Card>
+  
+  <Card title="Large Libraries" icon="database">
+    If you have a large music library (10,000+ tracks), consider enabling "Prevent Duplicated Tracks" to improve indexing speed.
+  </Card>
+  
+  <Card title="High Refresh Rate" icon="display">
+    Namida supports high refresh rate displays. Enable it in **Settings** > **Display** for smoother animations.
+  </Card>
+</CardGroup>
+
+## Developer Information
+
+- **Package Name**: `com.msob7y.namida`
+- **Application ID**: `com.msob7y.namida`
+- **Min SDK**: 24 (Android 7.0)
+- **Target SDK**: 36 (Android 14)
+- **Build System**: Gradle with Kotlin DSL
+- **Architecture**: Flutter with native Android components
+
+<Info>
+For developers interested in contributing or building from source, check the [GitHub repository](https://github.com/namidaco/namida).
+</Info>

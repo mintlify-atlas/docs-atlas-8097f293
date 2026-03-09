@@ -1,0 +1,381 @@
+---
+title: Video Playback
+description: Experience seamless video playback with gesture controls, fullscreen support, and smart video matching
+---
+
+Namida provides comprehensive video playback capabilities for both local videos and YouTube content, with intuitive gesture controls and seamless integration with your music library.
+
+## Overview
+
+Video functionality in Namida includes:
+
+- **Local Video Library**: Full indexing and playback of local video files
+- **Music Video Matching**: Automatic matching of videos to audio tracks
+- **YouTube Integration**: Stream and play YouTube videos
+- **Gesture Controls**: Intuitive touch controls for playback
+- **Fullscreen Mode**: Immersive viewing experience
+
+<Info>
+Since v4.0.0, Namida supports full video library indexing and independent video playback, not just as accompaniment to audio tracks.
+</Info>
+
+## Local Video Playback
+
+### Video Library
+
+Namida indexes video files from your specified folders:
+
+<Steps>
+  <Step title="Automatic Indexing">
+    Videos in music folders are automatically detected and indexed
+  </Step>
+  
+  <Step title="Dedicated Video View">
+    Browse videos independently in the Videos tab
+  </Step>
+  
+  <Step title="Folder Organization">
+    Videos organized by folder with thumbnail previews
+  </Step>
+  
+  <Step title="Seamless Playback">
+    Play videos directly or as background to audio tracks
+  </Step>
+</Steps>
+
+### Video Format Support
+
+Namida supports common video formats:
+
+- **MP4** (H.264, H.265/HEVC)
+- **MKV** (Matroska)
+- **WebM** (VP8, VP9, AV1)
+- **AVI**
+- **MOV**
+- **3GP**
+- **FLV**
+
+<Note>
+Video codec support depends on your device's hardware and Android version. Most modern devices support H.264 and VP9.
+</Note>
+
+## Music Video Matching
+
+Namida can automatically find and play videos related to audio tracks:
+
+### Local Video Matching
+
+For tracks in your local library, Namida looks for matching videos:
+
+<Accordion title="Matching Algorithm">
+  Namida searches for videos in your library that match the currently playing track:
+  
+  1. **Exact filename match**: Video file contains the audio filename
+  2. **Title + Artist match**: Video filename contains track title and first artist
+  3. **YouTube ID match**: Video contains YouTube ID from track's comment tag or filename
+  
+  **Note**: Symbols and whitespace are ignored during matching for better results
+</Accordion>
+
+#### Matching Examples
+
+```bash
+# Audio file:
+Alan Walker - Faded.m4a
+
+# These video files will match:
+video alan WaLkER - faDed (480p).mp4  # Case insensitive, symbols ignored
+Alan Walker - Faded [Official Video].mp4
+v=dQw4w9WgXcQ.mp4  # If track has this YouTube ID in tags
+```
+
+### YouTube Video Matching
+
+For tracks with YouTube metadata:
+
+<Steps>
+  <Step title="Check Track Tags">
+    Namida looks for YouTube URL in the track's comment tag or filename
+  </Step>
+  
+  <Step title="Download Video">
+    If found, the video is downloaded and cached automatically
+  </Step>
+  
+  <Step title="Play When Ready">
+    Video plays once buffered sufficiently
+  </Step>
+</Steps>
+
+<Info>
+**Supported URL formats in tags:**
+- Full URLs: `https://www.youtube.com/watch?v=VIDEO_ID`
+- Parameter format in filename: `v=VIDEO_ID` or `id=VIDEO_ID`
+
+This format is commonly used by yt-dlp when downloading.
+</Info>
+
+## Video Player Controls
+
+### Touch Gestures
+
+Namida features a comprehensive gesture control system for video playback:
+
+<CardGroup cols={2}>
+  <Card title="Seeking" icon="forward-step">
+    **Horizontal Swipe**: Seek forward/backward
+    
+    **Double Tap Left**: Quick seek backward (-10s)
+    
+    **Double Tap Right**: Quick seek forward (+10s)
+  </Card>
+  
+  <Card title="Volume Control" icon="volume-high">
+    **Swipe Up/Down (Right Side)**: Adjust volume
+    
+    Shows visual feedback with volume percentage
+  </Card>
+  
+  <Card title="Brightness" icon="sun">
+    **Swipe Up/Down (Left Side)**: Adjust screen brightness
+    
+    Shows visual feedback with brightness percentage
+  </Card>
+  
+  <Card title="Playback Speed" icon="gauge">
+    **Long Press**: Enable 2x playback speed
+    
+    Release to return to normal speed
+  </Card>
+</CardGroup>
+
+### Fullscreen Controls
+
+<Steps>
+  <Step title="Enter Fullscreen">
+    - Swipe up on video
+    - Pinch outward (zoom in beyond threshold)
+    - Tap fullscreen button
+  </Step>
+  
+  <Step title="Exit Fullscreen">
+    - Swipe down on video
+    - Pinch inward (zoom out)
+    - Tap minimize button
+    - Press back button
+  </Step>
+</Steps>
+
+<Accordion title="Fullscreen Features">
+  - **Auto-rotation**: Automatically rotate to landscape/portrait
+  - **Hide UI**: System bars hidden for immersive viewing
+  - **Enhanced controls**: Optimized touch targets in fullscreen
+  - **Gesture navigation**: All gestures work seamlessly
+</Accordion>
+
+### Zoom & Aspect Ratio
+
+Customize how videos are displayed:
+
+- **Pinch to Zoom**: Zoom in/out on video content
+- **Aspect Ratio Modes**:
+  - **Fit**: Video fits within screen, no cropping (default)
+  - **Fill**: Video fills screen, may crop edges
+  - **Stretch**: Video stretched to fill screen (may distort)
+
+<Warning>
+Zooming in significantly (>1.1x scale) while not in fullscreen will automatically trigger fullscreen mode.
+</Warning>
+
+## Video Widget Features
+
+### Miniplayer Mode
+
+Video continues playing in a miniplayer when navigating the app:
+
+- **Picture-in-Picture**: Small video overlay while browsing
+- **Drag to Position**: Move miniplayer anywhere on screen
+- **Resize**: Adjust miniplayer size
+- **Tap to Expand**: Return to full player
+
+### Control Visibility
+
+Smart control overlay system:
+
+- **Auto-hide**: Controls fade after 3 seconds of inactivity
+- **Tap to Show**: Single tap shows controls temporarily
+- **Always Show**: Option to keep controls visible
+- **Disable in PiP**: Controls hidden in picture-in-picture mode
+
+## Advanced Video Features
+
+### Video Priority System
+
+Namida uses intelligent video source prioritization:
+
+```dart
+// Video source priority (from highest to lowest):
+// 1. Manually selected video
+// 2. Locally matched video file
+// 3. YouTube video from track metadata
+// 4. YouTube search result for track
+```
+
+<Accordion title="Video Source Selection">
+  When multiple video sources are available:
+  
+  1. **User selection takes precedence**: If you manually select a video, it will be used
+  2. **Local videos preferred**: Local matches used before YouTube
+  3. **Cached YouTube videos**: Already cached videos load faster
+  4. **Stream if needed**: YouTube content streamed if not cached
+</Accordion>
+
+### Background Playback
+
+Configure video behavior when app is in background:
+
+- **Audio-only**: Continue audio playback without video
+- **Pause video**: Stop video but continue audio
+- **Full pause**: Pause both video and audio
+- **Picture-in-Picture**: Continue video in PiP mode (Android 8.0+)
+
+### Video Effects
+
+Enhance video viewing experience:
+
+- **Brightness Override**: Temporarily boost brightness for videos
+- **Color Filters**: Apply color corrections (coming soon)
+- **Playback Speed**: Adjust from 0.25x to 2x speed
+- **Audio Boost**: Increase volume beyond system maximum (careful!)
+
+## Performance Optimization
+
+### Hardware Acceleration
+
+Namida uses hardware acceleration for smooth playback:
+
+- **GPU Rendering**: Offload video decoding to GPU
+- **Efficient Codecs**: Prefer hardware-accelerated codecs (H.264, VP9)
+- **Adaptive Quality**: Automatically reduce quality if performance suffers
+
+### Battery Optimization
+
+<CardGroup cols={2}>
+  <Card title="Audio-Only Mode" icon="battery-three-quarters">
+    Disable video rendering to save battery when only listening
+  </Card>
+  
+  <Card title="Lower Resolution" icon="battery-half">
+    Use 480p or lower for background playback
+  </Card>
+  
+  <Card title="Disable Gestures" icon="battery-quarter">
+    Reduce CPU usage by disabling visual effects
+  </Card>
+  
+  <Card title="Screen Timeout" icon="battery-empty">
+    Allow screen to dim/sleep during audio playback
+  </Card>
+</CardGroup>
+
+## Video Settings
+
+### Playback Preferences
+
+<Accordion title="Video Playback Options">
+  - **Auto-play video**: Automatically start video when track plays
+  - **Prefer local videos**: Use local matches before YouTube
+  - **Cache YouTube videos**: Download and cache YouTube videos
+  - **Video quality**: Default quality for YouTube videos
+  - **Hardware acceleration**: Enable GPU decoding
+</Accordion>
+
+### Display Settings
+
+- **Default aspect ratio**: Choose fit/fill/stretch
+- **Zoom level**: Set default zoom level
+- **Rotation lock**: Prevent auto-rotation in fullscreen
+- **Control timeout**: How long controls stay visible
+
+### Gesture Customization
+
+<Steps>
+  <Step title="Enable/Disable Gestures">
+    Toggle individual gesture controls on/off
+  </Step>
+  
+  <Step title="Adjust Sensitivity">
+    Fine-tune how responsive gestures are
+  </Step>
+  
+  <Step title="Swipe Directions">
+    Customize what each swipe direction does
+  </Step>
+</Steps>
+
+## Video Queue
+
+Manage video playback order:
+
+- **Video Queue**: Separate queue for videos
+- **Mixed Queue**: Combine audio and video tracks
+- **Auto-advance**: Continue to next video automatically
+- **Shuffle Videos**: Random video playback order
+
+## Best Practices
+
+<Steps>
+  <Step title="Organize Video Files">
+    Keep music videos in the same folders as audio files for automatic matching
+  </Step>
+  
+  <Step title="Use Descriptive Names">
+    Name video files to match audio tracks: "Artist - Title.mp4"
+  </Step>
+  
+  <Step title="Add YouTube IDs">
+    Tag audio files with YouTube IDs for automatic video matching
+  </Step>
+  
+  <Step title="Enable Caching">
+    Cache frequently watched YouTube videos for offline access
+  </Step>
+  
+  <Step title="Adjust Quality">
+    Use lower quality for background playback to save battery
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordion title="Video not playing with audio">
+  - Check if video file exists and is not corrupted
+  - Verify video filename matches track name or has YouTube ID
+  - Ensure video format is supported by your device
+  - Try manually selecting the video
+  - Refresh video library in settings
+</Accordion>
+
+<Accordion title="Choppy or laggy playback">
+  - Enable hardware acceleration in settings
+  - Lower video quality/resolution
+  - Close other apps to free memory
+  - Check if device supports the video codec
+  - Try disabling visual effects and gestures
+</Accordion>
+
+<Accordion title="Gestures not working">
+  - Verify gestures are enabled in video settings
+  - Check if control overlay is blocking gestures
+  - Ensure video is in active playback mode
+  - Try recalibrating gesture sensitivity
+  - Restart app if gestures become unresponsive
+</Accordion>
+
+<Accordion title="Fullscreen not working">
+  - Check if rotation lock is enabled on device
+  - Verify fullscreen gestures are enabled
+  - Try using fullscreen button instead of gestures
+  - Check app permissions for system UI control
+  - Update to latest version of Namida
+</Accordion>

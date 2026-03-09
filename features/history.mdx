@@ -1,0 +1,465 @@
+---
+title: History & Statistics
+description: Track your listening habits with detailed history, play counts, and powerful analytics
+---
+
+Namida maintains a comprehensive listening history system that tracks every play, provides detailed statistics, and offers powerful insights into your music habits.
+
+## Overview
+
+The history system provides:
+
+- **Reliable Tracking**: Every listen is recorded with timestamp
+- **Flexible Criteria**: Configure what counts as a "listen"
+- **Most Played**: Dynamic rankings based on play counts
+- **Time-Based Analysis**: Filter by date ranges and periods
+- **Import Support**: Load history from YouTube and Last.fm
+- **Export Capabilities**: Backup and share your listening data
+
+<Info>
+Despite being a highly flexible system (easily modified, manipulated, and imported), Namida's history lets you specify minimum seconds or percentage to count a listen, ensuring accurate tracking.
+</Info>
+
+## History Tracking
+
+### What Gets Tracked
+
+Every time you play a track, Namida records:
+
+```dart
+// Each history entry contains:
+// - Track information (title, artist, album, path)
+// - Timestamp (exact date and time played)
+// - Source (local library, YouTube, etc.)
+// - Listen duration (how long you actually listened)
+```
+
+<CardGroup cols={2}>
+  <Card title="Timestamp" icon="clock">
+    Exact date and time when track was played
+  </Card>
+  
+  <Card title="Track Details" icon="music">
+    Full metadata including title, artist, album
+  </Card>
+  
+  <Card title="Play Duration" icon="hourglass">
+    How long the track was actually played
+  </Card>
+  
+  <Card title="Source" icon="source">
+    Whether from local library, YouTube, or other source
+  </Card>
+</CardGroup>
+
+### Listen Criteria
+
+Configure what counts as a valid "listen":
+
+<Accordion title="Minimum Requirements">
+  **Minimum Seconds**: Track must be played for at least X seconds to count
+  - Default: 30 seconds
+  - Range: 1-300 seconds
+  - Prevents accidental skips from counting
+  
+  **Minimum Percentage**: Track must be played for at least X% of duration
+  - Default: 50%
+  - Range: 1-100%
+  - Ensures you actually listened to the track
+  
+  **Combined Rule**: Can require BOTH criteria to be met
+</Accordion>
+
+<Note>
+These criteria only affect whether a listen is counted for statistics - all plays are still recorded in history regardless.
+</Note>
+
+## History Views
+
+### Timeline View
+
+Browse your listening history chronologically:
+
+<Steps>
+  <Step title="Day Headers">
+    History organized by day with date headers
+  </Step>
+  
+  <Step title="Chronological Order">
+    Most recent plays at the top
+  </Step>
+  
+  <Step title="Track Details">
+    Each entry shows track info and play time
+  </Step>
+  
+  <Step title="Quick Actions">
+    Tap to play, long press for options
+  </Step>
+</Steps>
+
+### Calendar View
+
+See your listening activity by date:
+
+- **Monthly Calendar**: Visual representation of listening days
+- **Activity Indicators**: Dot indicators show days with listens
+- **Day Selection**: Tap any day to see what you played
+- **Heatmap Colors**: Intensity based on number of plays (optional)
+
+### Most Played
+
+Dynamic ranking of your top tracks:
+
+<Accordion title="Most Played Features">
+  - **Play Count**: Exact number of times each track was played
+  - **Time Filtering**: View top tracks from specific periods
+    - All time
+    - This year
+    - This month
+    - This week
+    - Custom date range
+  - **Ranking**: Tracks sorted by play count (highest first)
+  - **Percentage**: See what portion of total plays each track represents
+</Accordion>
+
+<Info>
+The Most Played page is perfect for discovering your true favorites and understanding your listening patterns over time.
+</Info>
+
+## Time-Based Features
+
+### Date Range Filtering
+
+Analyze specific time periods:
+
+<Steps>
+  <Step title="Select Range">
+    Choose start and end dates for analysis
+  </Step>
+  
+  <Step title="View Stats">
+    See plays, top tracks, and trends for that period
+  </Step>
+  
+  <Step title="Compare Periods">
+    Compare different time ranges to see how tastes evolved
+  </Step>
+</Steps>
+
+### Lost Memories
+
+Rediscover music from your past:
+
+<Accordion title="Lost Memories Algorithm">
+  Finds tracks you listened to around this time (same month/week) in previous years but haven't played recently:
+  
+  - **1 year ago**: Tracks from same period last year
+  - **2 years ago**: Tracks from same period two years ago
+  - **N years ago**: Customize how far back to look
+  
+  Perfect for rediscovering seasonal favorites or nostalgic tracks.
+</Accordion>
+
+<Note>
+"Lost Memories" helps you reconnect with songs you loved but forgot about, bringing back musical memories tied to specific times of year.
+</Note>
+
+## Statistics & Analytics
+
+### Global Statistics
+
+View overall listening stats:
+
+<CardGroup cols={2}>
+  <Card title="Total Plays" icon="play">
+    Total number of tracks played all-time
+  </Card>
+  
+  <Card title="Total Time" icon="clock">
+    Cumulative listening time across all history
+  </Card>
+  
+  <Card title="Unique Tracks" icon="music">
+    Number of different tracks you've played
+  </Card>
+  
+  <Card title="Average Per Day" icon="chart-line">
+    Average plays and listening time per day
+  </Card>
+  
+  <Card title="Longest Session" icon="stopwatch">
+    Your longest continuous listening session
+  </Card>
+  
+  <Card title="Top Day" icon="calendar-star">
+    Day with most plays or listening time
+  </Card>
+</CardGroup>
+
+### Track Statistics
+
+Detailed stats for individual tracks:
+
+```dart
+// Per-track statistics include:
+// - Total play count
+// - First played date
+// - Last played date
+// - Total listening time
+// - Average completion percentage
+// - Play frequency (plays per day/week)
+```
+
+### Trends & Patterns
+
+Discover listening patterns:
+
+- **Peak Hours**: Times of day you listen most
+- **Peak Days**: Days of week with most activity
+- **Seasonal Trends**: How listening changes throughout the year
+- **Genre Evolution**: How your genre preferences shift over time
+
+## History Management
+
+### Editing History
+
+Full control over your listening history:
+
+<Steps>
+  <Step title="Select Entry">
+    Long press any history entry
+  </Step>
+  
+  <Step title="Choose Action">
+    Delete, edit timestamp, or modify track info
+  </Step>
+  
+  <Step title="Confirm Changes">
+    Changes immediately reflected in stats
+  </Step>
+</Steps>
+
+<Warning>
+Editing or deleting history entries will affect your play counts and statistics. Use carefully.
+</Warning>
+
+### Bulk Operations
+
+Manage multiple history entries:
+
+- **Delete Range**: Remove all entries from a date range
+- **Delete Track**: Remove all plays of a specific track
+- **Delete Source**: Remove all plays from a source (e.g., YouTube)
+- **Clear All**: Completely reset history (with confirmation)
+
+### History Files
+
+History is stored in organized files:
+
+```dart
+// History organized by day
+// Each day stored in separate file: YYYYMMDD.json
+// Located in: AppDirs.HISTORY_PLAYLIST
+```
+
+<Info>
+Daily file structure makes history management efficient and allows for targeted operations without loading entire history.
+</Info>
+
+## Import & Export
+
+### YouTube History Import
+
+Import your YouTube watch history:
+
+<Steps>
+  <Step title="Export from YouTube">
+    Download watch history from Google Takeout
+  </Step>
+  
+  <Step title="Select File">
+    Choose watch-history.json or watch-history.html
+  </Step>
+  
+  <Step title="Import">
+    Namida processes and imports YouTube plays
+  </Step>
+  
+  <Step title="Match Tracks">
+    YouTube plays matched to local library when possible
+  </Step>
+</Steps>
+
+<Accordion title="YouTube History Matching">
+  Namida attempts to match YouTube history to your local library:
+  
+  - **Video ID Match**: If local track has YouTube ID in tags
+  - **Title Match**: Fuzzy matching based on video title
+  - **Artist/Title Match**: Extract and match metadata
+  - **Keep Unmatched**: YouTube-only plays preserved separately
+</Accordion>
+
+### Last.fm Import
+
+Import scrobbles from Last.fm:
+
+<Steps>
+  <Step title="Connect Account">
+    Link your Last.fm account in settings
+  </Step>
+  
+  <Step title="Fetch History">
+    Download scrobble history from Last.fm
+  </Step>
+  
+  <Step title="Import">
+    Scrobbles imported and matched to library
+  </Step>
+  
+  <Step title="Merge Data">
+    Combined with existing Namida history
+  </Step>
+</Steps>
+
+<Note>
+Importing from Last.fm can take time if you have extensive scrobble history. The process runs in the background.
+</Note>
+
+### History Export
+
+Backup and share your listening data:
+
+- **JSON Format**: Export history as structured JSON
+- **CSV Format**: Export for spreadsheet analysis
+- **Date Range**: Export specific time periods
+- **Full Export**: Export complete history with all metadata
+
+## Smart Features
+
+### Recommended Tracks
+
+Get recommendations based on listening patterns:
+
+<Accordion title="Recommendation Algorithms">
+  **Co-occurrence**: Tracks you often listened to with the current track
+  - Analyzes temporal proximity of plays
+  - Identifies tracks played in same sessions
+  
+  **Time-based**: Tracks from similar time periods
+  - Tracks you listened to at same time of day
+  - Seasonal listening patterns
+  
+  **Trend-based**: Tracks gaining momentum in your listens
+  - Recently rediscovered tracks
+  - Tracks you're playing more frequently
+</Accordion>
+
+### Similar Release Date
+
+Find tracks from the same era:
+
+```dart
+// Generates list of tracks released around the same time
+// Useful for exploring music from specific periods
+// Based on track year/date metadata
+```
+
+## Privacy & Data
+
+### Local Storage
+
+All history is stored locally:
+
+- **No Cloud Sync**: History never leaves your device
+- **Full Control**: You own and control all data
+- **Offline Access**: No internet needed for history features
+- **Manual Backups**: Export when and where you want
+
+### Data Cleanup
+
+Manage history storage:
+
+<CardGroup cols={2}>
+  <Card title="Auto-Cleanup" icon="broom">
+    Optional automatic deletion of old entries (configurable)
+  </Card>
+  
+  <Card title="Compress Old" icon="file-zipper">
+    Compress older history files to save space
+  </Card>
+  
+  <Card title="Archive" icon="box-archive">
+    Move old history to archive folder
+  </Card>
+  
+  <Card title="Selective Delete" icon="trash-can">
+    Remove specific periods or sources
+  </Card>
+</CardGroup>
+
+## Best Practices
+
+<Steps>
+  <Step title="Set Appropriate Criteria">
+    Configure minimum listen time/percentage to match your listening habits
+  </Step>
+  
+  <Step title="Regular Backups">
+    Export history periodically for safekeeping
+  </Step>
+  
+  <Step title="Import External Data">
+    Load YouTube/Last.fm history for complete listening profile
+  </Step>
+  
+  <Step title="Explore Most Played">
+    Regularly check most played tracks to discover favorites
+  </Step>
+  
+  <Step title="Use Lost Memories">
+    Rediscover old favorites seasonally
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordion title="Plays not being recorded">
+  - Check minimum listen criteria settings
+  - Verify app has storage permissions
+  - Ensure history tracking is enabled
+  - Check if device storage is full
+  - Try force-closing and reopening app
+</Accordion>
+
+<Accordion title="Incorrect play counts">
+  - Verify listen criteria (minimum time/percentage)
+  - Check for duplicate history entries
+  - Look for imported data that might be conflicting
+  - Review recent history for anomalies
+  - Consider re-importing from clean backup
+</Accordion>
+
+<Accordion title="History import failed">
+  - Verify file format is correct (JSON for YouTube)
+  - Check file isn't corrupted or truncated
+  - Ensure sufficient storage space
+  - Try importing smaller date ranges
+  - Check app logs for specific error messages
+</Accordion>
+
+<Accordion title="Lost Memories not showing results">
+  - Verify you have history from previous years
+  - Check date range settings
+  - Ensure tracks from that period still exist in library
+  - Try different time periods (1 year, 2 years ago)
+  - Refresh library if tracks were recently added
+</Accordion>
+
+<Accordion title="Most Played page is empty">
+  - Check if minimum listen criteria is too strict
+  - Verify history exists for selected time period
+  - Ensure tracks still exist in library
+  - Try "All time" instead of specific date range
+  - Check if history was accidentally cleared
+</Accordion>

@@ -1,0 +1,280 @@
+---
+title: Frequently Asked Questions
+description: Common questions and answers about Namida music and video player
+---
+
+## General Questions
+
+<AccordionGroup>
+  <Accordion title="What is Namida?">
+    Namida is a beautiful and feature-rich music and video player with YouTube support, built in Flutter. It's available for Android (stable/beta), Windows (beta), and Linux (beta).
+
+    Key features include:
+    - Local music library management with powerful indexing
+    - YouTube streaming, downloads, and offline playback
+    - Video playback with gesture controls
+    - Dynamic theming and Material3-like design
+    - Advanced playlist management
+    - History tracking and smart recommendations
+  </Accordion>
+
+  <Accordion title="Which platforms does Namida support?">
+    Namida is available on:
+    - **Android** (stable and beta releases)
+    - **Windows** (beta)
+    - **Linux** (beta)
+
+    Download the latest version from the [GitHub releases page](https://github.com/namidaco/namida/releases).
+  </Accordion>
+
+  <Accordion title="Is Namida free and open source?">
+    Yes, Namida is open source under a custom EULA license. You may read, compile, and modify the code for personal usage or for the purpose of contribution. However, redistributing the program under a different name or license without permission is not allowed.
+
+    The app includes some proprietary components that remain the intellectual property of namidaco.
+  </Accordion>
+
+  <Accordion title="Does Namida collect any personal data?">
+    No. Namida does **not** collect any personal data, usage analytics, crashlytics, or background tracking. Your privacy is fully respected and protected.
+
+    Error logs are saved locally and can only be shared manually as separate files when you choose to do so.
+  </Accordion>
+</AccordionGroup>
+
+## Features & Functionality
+
+<AccordionGroup>
+  <Accordion title="Can Namida play YouTube videos offline?">
+    Yes! Namida supports:
+    - Downloading YouTube videos and audio
+    - Caching for offline playback
+    - Audio-only mode and data saver mode
+    - Custom download filename builder (similar to yt-dlp)
+    - Cache priority system to keep important content
+
+    You can configure download settings including quality, format, and metadata tags.
+  </Accordion>
+
+  <Accordion title="How does the video integration work?">
+    Namida can play videos related to your music in two ways:
+
+    **Local Videos:**
+    - Looks for matching video files in your library folders
+    - Matches by filename, title & artist, or YouTube ID in tags
+    - Ignores symbols and whitespaces for better matching
+
+    **YouTube Videos:**
+    - Extracts YouTube links from track comment tags (often added by yt-dlp)
+    - Downloads and caches videos for playback
+    - Supports full video library indexing since v4.0.0
+  </Accordion>
+
+  <Accordion title="What audio formats does Namida support?">
+    Namida supports a wide range of audio formats including:
+    - MP3, M4A, AAC
+    - FLAC (lossless)
+    - OGG, Opus
+    - WAV
+    - And many more
+
+    The app uses a powerful tag editor powered by jaudiotagger for metadata management.
+  </Accordion>
+
+  <Accordion title="Does Namida support lyrics?">
+    Yes! Namida has excellent lyrics support:
+    - Auto-fetching of synced and plain lyrics
+    - Support for word-synced LRC/TTML formats
+    - Simple lyrics editing
+    - Lyrics offset adjustment
+    - Search tracks by lyrics content
+    - Multi-language lyrics display
+  </Accordion>
+
+  <Accordion title="What is the 'Smort Tracks Generation' feature?">
+    Namida can generate smart playlists based on your listening history:
+    - **Recommended Mix**: Tracks you often listened to together
+    - **Similar Release Date**: Tracks released around the same time
+    - **Time Range**: Tracks from specific periods
+    - **Underrated Mix**: Hidden gems from your library
+    - **Lost Memories**: Tracks you listened to around this time in previous years
+
+    These features help you rediscover your music in new ways.
+  </Accordion>
+
+  <Accordion title="Can I import my YouTube history?">
+    Yes! Namida can import:
+    - YouTube history (including from Google Takeout)
+    - Last.fm scrobbling history
+    - Multiple history files at once
+    - YouTube playlists from CSV files
+
+    The app will merge your imported history with local listening data.
+  </Accordion>
+</AccordionGroup>
+
+## Customization & Settings
+
+<AccordionGroup>
+  <Accordion title="What customization options are available?">
+    Namida offers extensive customization:
+    - **Dynamic theming** from album artwork
+    - **Waveform seekbar** with animation
+    - **Miniplayer party mode** with edge breathing effects
+    - **Particles effect** that responds to audio peaks
+    - **Animating thumbnail** synced to audio
+    - Custom color palettes
+    - Grid layouts and view modes
+    - Configurable swipe actions
+  </Accordion>
+
+  <Accordion title="How does the sleep timer work?">
+    Namida includes a sleep timer with two modes:
+    - **Timer by minutes**: Stop playback after a set duration
+    - **Timer by tracks**: Stop after a specific number of tracks
+
+    You can configure it from the player controls.
+  </Accordion>
+
+  <Accordion title="What audio effects are available?">
+    Namida supports various audio enhancements:
+    - **Crossfade** between tracks
+    - **Play/Pause fade** effects
+    - **Skip silence** functionality
+    - **Replay Gain** (normalize volume)
+    - **Equalizer** with presets
+    - **Pitch and speed** control
+    - **Volume normalization**
+  </Accordion>
+</AccordionGroup>
+
+## YouTube Features
+
+<AccordionGroup>
+  <Accordion title="What YouTube features does Namida support?">
+    Namida includes comprehensive YouTube integration:
+    - Best video and audio quality streaming
+    - SponsorBlock integration
+    - Return YouTube Dislike integration
+    - Video segments and heatmaps
+    - Channel subscriptions (when signed in)
+    - Playlists management
+    - Comments (view, add, edit, delete)
+    - Like/dislike videos
+    - Data saver mode
+  </Accordion>
+
+  <Accordion title="Can I use Namida without a YouTube account?">
+    Yes! Most YouTube features work without signing in. However, some features like:
+    - Channel subscriptions
+    - Personalized recommendations
+    - Playlist creation and management
+    - Liking/commenting on videos
+
+    These require you to sign in with your YouTube account.
+  </Accordion>
+
+  <Accordion title="How does the cache system work?">
+    Namida uses a smart cache priority system:
+    - **VIP priority**: Unavailable videos, important content
+    - **High priority**: Frequently accessed media
+    - **Normal priority**: Regular cached content
+    - **Low priority**: Can be cleared automatically
+
+    You can manually set cache priority for specific videos to prevent them from being cleared.
+  </Accordion>
+</AccordionGroup>
+
+## Library Management
+
+<AccordionGroup>
+  <Accordion title="How do I prevent duplicate tracks?">
+    Namida includes built-in duplicate prevention:
+    - Set minimum file size and duration in settings
+    - Automatic duplicate detection during indexing
+    - Option to prevent duplicated artist tracks
+    - Smart matching algorithm
+
+    Configure these options in **Settings > Indexer**.
+  </Accordion>
+
+  <Accordion title="Can I organize music by folders?">
+    Yes! Namida supports folder-based organization:
+    - Add specific folders to your library
+    - Exclude folders you don't want indexed
+    - Dedicated folders page with navigation
+    - Support for `cover.jpg` as folder artwork
+    - Support for `.info.txt` for folder descriptions
+  </Accordion>
+
+  <Accordion title="How do I edit track tags?">
+    Namida includes a powerful tag editor:
+    1. Long press on any track
+    2. Select **Edit Tags** from the menu
+    3. Modify title, artist, album, year, genre, and more
+    4. You can edit multiple tracks at once
+
+    <Note>
+      Tag editing requires **All Files Access** permission on Android 10+.
+    </Note>
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Where can I get help if I have issues?">
+    If you encounter problems:
+    1. Check the [Troubleshooting guide](/community/troubleshooting)
+    2. Share logs from **Settings > About > Share Logs**
+    3. Report issues on [GitHub](https://github.com/namidaco/namida/issues)
+    4. Ask in the community channels (Telegram, Discord)
+
+    Always include logs when reporting bugs for faster resolution.
+  </Accordion>
+
+  <Accordion title="How do I report a bug?">
+    To report a bug:
+    1. Go to **Settings > About > Share Logs**
+    2. Create an issue on [GitHub](https://github.com/namidaco/namida/issues)
+    3. Use the **[BUG]** template
+    4. Include steps to reproduce
+    5. Attach the log files
+    6. Add screenshots if possible
+  </Accordion>
+</AccordionGroup>
+
+## Community & Support
+
+<AccordionGroup>
+  <Accordion title="How can I join the Namida community?">
+    Join the community on:
+    - [Telegram (Updates Channel)](https://t.me/namida_official)
+    - [Telegram (Chat Group)](https://t.me/+FmdfsgKoGmM1ZGFk)
+    - [Discord Server](https://discord.gg/WeY7DTVChT)
+
+    <Warning>
+      There are no official websites for Namida other than GitHub and Telegram. Be cautious of downloading from other sources.
+    </Warning>
+  </Accordion>
+
+  <Accordion title="How can I contribute to Namida?">
+    You can contribute in several ways:
+    - **Code contributions**: See the [Contributing guide](/community/contributing)
+    - **Translations**: Help translate Namida to your language on the [Translation Repository](https://github.com/namidaco/namida-translations)
+    - **Bug reports**: Report issues on GitHub
+    - **Feature requests**: Suggest new features
+    - **Donations**: Support development via Buy Me a Coffee or Ko-fi
+  </Accordion>
+
+  <Accordion title="Can I donate to support Namida?">
+    Yes! You can support Namida development through:
+    - [Buy Me a Coffee](https://www.buymeacoffee.com/namidaco)
+    - [Ko-fi](https://ko-fi.com/namidaco)
+    - Cryptocurrency: `0x95b2834c84def92860df773d8b3d80d4c296d748` (Bitcoin/ETH/USDT BEP20)
+
+    Donations help improve Namida and show appreciation for the project.
+
+    <Info>
+      You can also support by starring the repository on GitHub!
+    </Info>
+  </Accordion>
+</AccordionGroup>

@@ -1,0 +1,588 @@
+---
+title: Linux
+description: Install and use Namida on Linux distributions
+---
+
+Namida is available for Linux as a beta release, providing a native desktop experience for Linux users.
+
+## Installation
+
+<Tabs>
+  <Tab title="Quick Install">
+    The fastest way to install Namida on Linux:
+    
+    ```bash
+    curl -fsSL https://raw.githubusercontent.com/namidaco/namida/main/scripts/install_linux_tar.sh | sudo bash
+    ```
+    
+    This script will:
+    - Download the latest beta release
+    - Install to `/opt/namida`
+    - Create a symlink in `/usr/bin`
+    - Install desktop file and icons
+    - Update system databases
+  </Tab>
+  
+  <Tab title="Arch Linux (AUR)">
+    Install from the Arch User Repository:
+    
+    ```bash
+    # Using yay
+    yay -S namida
+    
+    # Or using pacman (binary package)
+    sudo pacman -S namida-bin
+    ```
+  </Tab>
+  
+  <Tab title="Debian/Ubuntu">
+    Download and install the `.deb` package:
+    
+    ```bash
+    # Download from beta releases
+    wget [URL_TO_DEB_FILE]
+    
+    # Install the package
+    sudo dpkg -i namida.deb
+    
+    # Install dependencies if needed
+    sudo apt-get install -f
+    ```
+  </Tab>
+  
+  <Tab title="Fedora/RHEL">
+    Download and install the `.rpm` package:
+    
+    ```bash
+    # Download from beta releases
+    wget [URL_TO_RPM_FILE]
+    
+    # Install the package
+    sudo rpm -i namida.rpm
+    
+    # Or using dnf
+    sudo dnf install ./namida.rpm
+    ```
+  </Tab>
+  
+  <Tab title="Manual (Tarball)">
+    Download and extract the tarball manually:
+    
+    ```bash
+    # Download the latest .tar.gz
+    wget [URL_TO_TARBALL]
+    
+    # Extract
+    tar -xzf namida-linux.tar.gz
+    
+    # Move to /opt (optional)
+    sudo mv namida /opt/
+    
+    # Create symlink
+    sudo ln -s /opt/namida/namida /usr/bin/namida
+    ```
+  </Tab>
+</Tabs>
+
+<Warning>
+**Important**: Make sure `mpv` is installed on your system. Namida requires MPV for video playback.
+</Warning>
+
+## Install Dependencies
+
+### MPV (Required)
+
+MPV is essential for video playback:
+
+<CodeGroup>
+```bash Debian/Ubuntu/Mint
+sudo apt install mpv
+```
+
+```bash Fedora/RHEL
+sudo dnf install mpv
+```
+
+```bash Arch/Manjaro
+sudo pacman -S mpv
+```
+
+```bash openSUSE
+sudo zypper install mpv
+```
+</CodeGroup>
+
+### Additional Dependencies
+
+These are usually installed by default, but verify if you have issues:
+
+<CodeGroup>
+```bash Debian/Ubuntu
+sudo apt install libgtk-3-0 libmpv1 ffmpeg
+```
+
+```bash Fedora
+sudo dnf install gtk3 mpv-libs ffmpeg
+```
+
+```bash Arch
+sudo pacman -S gtk3 mpv ffmpeg
+```
+</CodeGroup>
+
+## System Requirements
+
+- **Kernel**: Linux 4.15 or newer
+- **Architecture**: x86_64 (64-bit)
+- **Desktop Environment**: Any (GNOME, KDE, XFCE, etc.)
+- **Display Server**: X11 or Wayland
+- **RAM**: 2GB minimum, 4GB recommended
+- **Storage**: 150MB for the app + space for media cache
+- **GTK**: GTK 3.0 or newer
+- **MPV**: MPV media player installed
+
+<Info>
+Namida uses GTK3 for its window system and integrates well with most Linux desktop environments.
+</Info>
+
+## Linux-Specific Features
+
+### Desktop Integration
+
+<Accordion title="MPRIS Support">
+  Namida implements the Media Player Remote Interfacing Specification (MPRIS):
+  
+  - Control playback from desktop media controls
+  - Integration with KDE Plasma media widget
+  - GNOME Shell media controls
+  - System tray media applets
+  - Third-party MPRIS clients
+  
+  **Package**: `mpris_service` from alexmercerind
+</Accordion>
+
+<Accordion title="D-Bus Integration">
+  Native Linux IPC through D-Bus:
+  
+  - System notifications
+  - Desktop integration
+  - Session management
+  - Media key handling
+  
+  **Package**: `dbus ^0.7.11`
+</Accordion>
+
+<Accordion title="Native File Picker">
+  Uses the system's native file picker:
+  
+  - GTK file chooser dialog
+  - Recent files integration
+  - Bookmarks support
+  - Network location support
+  
+  **Package**: `file_picker ^10.3.8`
+</Accordion>
+
+<Accordion title="Window Controls">
+  Modern title bar with native look:
+  
+  - Close, minimize, maximize buttons
+  - Custom title bar styling
+  - Respects GTK theme
+  - Adapts to desktop environment
+  
+  **Package**: `modern_titlebar_buttons ^1.1.2`
+</Accordion>
+
+### Application Files
+
+After installation, these files are created:
+
+```plaintext
+/opt/namida/                      # Main installation directory
+├── namida                        # Main executable
+├── bin/                          # FFmpeg binaries
+├── lib/                          # Shared libraries
+└── data/                         # Flutter assets
+
+/usr/bin/namida                   # Symlink to executable
+
+/usr/share/applications/namida.desktop      # Desktop entry
+/usr/share/metainfo/namida.metainfo.xml    # AppStream metadata
+/usr/share/icons/hicolor/*/apps/namida.png # Application icons
+```
+
+### Desktop Entry
+
+The `.desktop` file is installed to integrate with your application menu:
+
+- **Name**: Namida
+- **Application ID**: `com.msob7y.namida`
+- **Categories**: AudioVideo, Audio, Video, Player
+- **MIME Types**: Supports all audio and video formats
+
+## Configuration
+
+### Settings Location
+
+Namida stores its configuration in:
+
+```plaintext
+~/.local/share/namida/           # User data directory
+├── settings.json                # App settings
+├── library.db                   # Music library database
+├── history.db                   # Playback history
+├── playlists/                   # Playlist files
+└── cache/                       # Downloaded content and cache
+```
+
+### Library Setup
+
+<Steps>
+  <Step title="Launch Namida">
+    Open Namida from your application menu or run:
+    
+    ```bash
+    namida
+    ```
+  </Step>
+  
+  <Step title="Add Music Folders">
+    1. Go to **Settings** > **Indexer**
+    2. Click **Add Folder**
+    3. Browse to your music directory (e.g., `~/Music`)
+    4. Click **Select**
+  </Step>
+  
+  <Step title="Configure Indexing">
+    Set your preferences:
+    
+    - Minimum file size
+    - Minimum duration
+    - Artist/Genre separators
+    - Duplicate track prevention
+  </Step>
+  
+  <Step title="Start Indexing">
+    Click **Start Indexing** and wait for completion. Progress is shown in the status bar.
+  </Step>
+</Steps>
+
+## Media Playback
+
+### Audio Engine
+
+Namida uses Media Kit for audio/video on Linux:
+
+- **Media Kit Core**: `media_kit ^1.2.0`
+- **Video Support**: `media_kit_video ^2.0.1`  
+- **Linux Libraries**: `media_kit_libs_linux ^1.2.1`
+
+Features:
+- Hardware-accelerated video decoding
+- Low-latency audio playback
+- Multiple audio backend support (PulseAudio, ALSA, PipeWire)
+- Gapless playback
+
+### Video Playback
+
+Namida requires MPV for video:
+
+```bash
+# Verify MPV is installed
+mpv --version
+
+# If not installed, install it:
+sudo apt install mpv      # Debian/Ubuntu
+sudo dnf install mpv      # Fedora
+sudo pacman -S mpv        # Arch
+```
+
+<Note>
+MPV provides excellent video format support and hardware acceleration on Linux.
+</Note>
+
+## Features & Capabilities
+
+### Supported Features
+
+<CardGroup cols={2}>
+  <Card title="Full Library Support" icon="music">
+    - Multi-folder indexing
+    - Tag editing
+    - Album artwork
+    - Smart playlists
+  </Card>
+  
+  <Card title="YouTube Integration" icon="youtube">
+    - Stream content
+    - Download videos/audio
+    - Cache management
+    - Offline playback
+  </Card>
+  
+  <Card title="Video Playback" icon="video">
+    - MPV-powered playback
+    - Hardware acceleration
+    - Subtitle support
+    - Fullscreen mode
+  </Card>
+  
+  <Card title="Audio Processing" icon="wave-pulse">
+    - Crossfade
+    - Fade effects
+    - Equalizer
+    - Replay Gain
+  </Card>
+</CardGroup>
+
+### Format Support
+
+Supported through MPV and FFmpeg:
+
+**Audio**: MP3, FLAC, AAC, OGG, Opus, WAV, M4A, WMA, ALAC, APE, and more
+
+**Video**: MP4, MKV, AVI, WebM, MOV, FLV, WMV, and more
+
+## Performance Tips
+
+<CardGroup cols={2}>
+  <Card title="Hardware Acceleration" icon="microchip">
+    Enable VA-API or VDPAU in MPV for better video performance:
+    ```bash
+    # Edit ~/.config/mpv/mpv.conf
+    hwdec=auto
+    ```
+  </Card>
+  
+  <Card title="Audio Backend" icon="volume">
+    PipeWire offers better performance than PulseAudio on modern systems.
+  </Card>
+  
+  <Card title="File System" icon="hdd">
+    Use ext4 or Btrfs for best I/O performance with large libraries.
+  </Card>
+  
+  <Card title="Compositor" icon="window-maximize">
+    Disable compositor effects on older hardware for smoother playback.
+  </Card>
+</CardGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Application Won't Start">
+    If Namida fails to launch:
+    
+    ```bash
+    # Check for errors
+    namida --verbose
+    
+    # Verify dependencies
+    ldd /opt/namida/namida
+    
+    # Check GTK is installed
+    gtk-launch --version
+    ```
+    
+    Common fixes:
+    - Install missing GTK3 libraries
+    - Update graphics drivers
+    - Check system logs: `journalctl -xe`
+  </Accordion>
+  
+  <Accordion title="No Video Playback">
+    If videos won't play:
+    
+    ```bash
+    # Verify MPV is installed
+    which mpv
+    mpv --version
+    
+    # Test MPV directly
+    mpv /path/to/video.mp4
+    ```
+    
+    If MPV works but Namida doesn't:
+    - Reinstall Namida
+    - Check MPV is in PATH
+    - Verify permissions on MPV binary
+  </Accordion>
+  
+  <Accordion title="MPRIS Not Working">
+    If media controls don't work:
+    
+    ```bash
+    # Check if Namida is registered
+    busctl list | grep namida
+    
+    # Verify D-Bus is running
+    systemctl --user status dbus
+    ```
+    
+    Try:
+    - Restart Namida
+    - Restart your desktop session
+    - Check D-Bus configuration
+  </Accordion>
+  
+  <Accordion title="File Picker Crashes">
+    If the file picker causes issues:
+    
+    ```bash
+    # Install GTK file chooser portal
+    sudo apt install xdg-desktop-portal-gtk  # Debian/Ubuntu
+    sudo dnf install xdg-desktop-portal-gtk  # Fedora
+    sudo pacman -S xdg-desktop-portal-gtk    # Arch
+    ```
+  </Accordion>
+  
+  <Accordion title="High CPU Usage">
+    If Namida uses too much CPU:
+    
+    - Disable visual effects in settings
+    - Reduce animation settings
+    - Check if hardware acceleration is enabled
+    - Close other resource-intensive apps
+    - Monitor with: `top` or `htop`
+  </Accordion>
+</AccordionGroup>
+
+## Command Line Usage
+
+Run Namida from terminal:
+
+```bash
+# Launch normally
+namida
+
+# Open a specific file
+namida /path/to/audio.mp3
+
+# Open a playlist
+namida /path/to/playlist.m3u
+
+# Verbose output for debugging
+namida --verbose
+```
+
+## Desktop Environment Specific Notes
+
+### GNOME
+
+- Media controls appear in the top bar
+- Integrates with GNOME Shell media player
+- Use GNOME Tweaks to customize appearance
+
+### KDE Plasma
+
+- Appears in the media player widget
+- Integrates with Plasma media controls
+- System tray icon available
+
+### XFCE
+
+- Works with xfce4-panel plugins
+- Media controls through keyboard shortcuts
+- System tray integration
+
+### i3/Sway (Tiling WMs)
+
+- Launch via rofi/dmenu
+- Control via MPRIS command-line tools
+- Use `playerctl` for media key bindings
+
+```bash
+# Example i3 config
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+```
+
+## Updates
+
+Check for updates through your package manager:
+
+<CodeGroup>
+```bash AUR (Arch)
+yay -Syu namida
+```
+
+```bash Manual (Script)
+curl -fsSL https://raw.githubusercontent.com/namidaco/namida/main/scripts/install_linux_tar.sh | sudo bash
+```
+</CodeGroup>
+
+<Info>
+The install script always fetches the latest beta release from GitHub.
+</Info>
+
+## Uninstallation
+
+<Tabs>
+  <Tab title="AUR">
+    ```bash
+    yay -R namida
+    # or
+    sudo pacman -R namida-bin
+    ```
+  </Tab>
+  
+  <Tab title="Debian/Ubuntu">
+    ```bash
+    sudo dpkg -r namida
+    # or
+    sudo apt remove namida
+    ```
+  </Tab>
+  
+  <Tab title="Fedora/RHEL">
+    ```bash
+    sudo rpm -e namida
+    # or
+    sudo dnf remove namida
+    ```
+  </Tab>
+  
+  <Tab title="Manual">
+    ```bash
+    # Remove installation
+    sudo rm -rf /opt/namida
+    sudo rm /usr/bin/namida
+    
+    # Remove desktop files
+    sudo rm /usr/share/applications/namida.desktop
+    sudo rm /usr/share/metainfo/namida.metainfo.xml
+    sudo rm -rf /usr/share/icons/hicolor/*/apps/namida.png
+    
+    # Remove user data (optional)
+    rm -rf ~/.local/share/namida
+    ```
+  </Tab>
+</Tabs>
+
+## Developer Information
+
+- **Application ID**: `com.msob7y.namida`
+- **Binary Name**: `namida`
+- **Build System**: CMake with Flutter
+- **C++ Standard**: C++14
+- **GTK Version**: 3.0+
+- **Installation Prefix**: `/opt/namida`
+
+### Build Dependencies
+
+From `pubspec.yaml` Linux-specific packages:
+
+```yaml
+dbus: ^0.7.11                    # D-Bus integration
+file_picker: ^10.3.8             # Native file picker
+modern_titlebar_buttons: ^1.1.2  # Window controls
+mpris_service:                   # MPRIS support
+  git:
+    url: https://github.com/alexmercerind/mpris_service
+```
+
+<Info>
+For development and contribution information, visit the [GitHub repository](https://github.com/namidaco/namida).
+</Info>

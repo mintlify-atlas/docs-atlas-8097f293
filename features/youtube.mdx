@@ -1,0 +1,425 @@
+---
+title: YouTube Integration
+description: Stream, download, and cache YouTube content with advanced features like SponsorBlock and quality selection
+---
+
+Namida provides comprehensive YouTube integration, allowing you to stream music, download videos, cache content for offline playback, and enjoy advanced features like SponsorBlock segment skipping.
+
+## Overview
+
+The YouTube functionality is powered by youtipie and supports:
+
+- **Streaming**: Play YouTube content directly without downloading
+- **Downloads**: Save videos and audio for offline access
+- **Caching**: Automatic caching of frequently played content
+- **Quality Control**: Choose preferred video and audio quality
+- **SponsorBlock**: Skip sponsor segments, intros, and outros automatically
+
+<Info>
+Namida uses multi-library support, allowing you to seamlessly switch between local files, YouTube content, and other sources.
+</Info>
+
+## Streaming
+
+### Audio & Video Quality
+
+Select your preferred quality settings for streaming:
+
+<CardGroup cols={2}>
+  <Card title="Video Quality" icon="video">
+    - 144p (lowest)
+    - 240p
+    - 360p
+    - 480p
+    - 720p (HD)
+    - 1080p (Full HD)
+    - 1440p (2K)
+    - 2160p (4K)
+  </Card>
+  
+  <Card title="Audio Quality" icon="music">
+    - Opus format (WebM container)
+    - AAC format (M4A container)
+    - Automatic quality selection
+    - Best available bitrate
+  </Card>
+</CardGroup>
+
+### Playback Modes
+
+<Steps>
+  <Step title="Audio-Only Mode">
+    Stream only audio track to save bandwidth and battery
+  </Step>
+  
+  <Step title="Video Mode">
+    Stream both video and audio with full quality
+  </Step>
+  
+  <Step title="Data Saver Mode">
+    Automatically select lower quality to reduce data usage
+  </Step>
+</Steps>
+
+<Note>
+Audio-only mode is recommended for music listening to conserve battery and reduce data consumption.
+</Note>
+
+## Downloads
+
+### Download Management
+
+Namida features a sophisticated download system with parallel downloads and queue management:
+
+```dart
+// Downloads are organized by group names
+// Each video can have separate audio and video streams
+// Progress tracking for each download task
+```
+
+<Accordion title="Download Features">
+  - **Parallel Downloads**: Download multiple files simultaneously
+  - **Queue System**: Add videos to download queue
+  - **Pause/Resume**: Control downloads at any time
+  - **Progress Tracking**: Real-time progress and speed monitoring
+  - **Group Organization**: Organize downloads into named groups
+  - **Retry Failed**: Automatically retry failed downloads
+</Accordion>
+
+### Output Filename Builder
+
+Customize how downloaded files are named using a powerful template system similar to yt-dlp:
+
+<Accordion title="Available Format Variables">
+  - `%(video_id)s` or `%(id)s`: Video identifier
+  - `%(video_title)s` or `%(fulltitle)s`: Full video title
+  - `%(title)s`: Extracted music title from video title
+  - `%(artist)s`: Extracted artist or channel name
+  - `%(channel)s`: Channel name (excluding " - Topic")
+  - `%(upload_date)s`: Upload date (yyyyMMdd)
+  - `%(duration_string)s`: Duration formatted (3:24)
+  - `%(playlist_title)s`: Playlist title
+  - `%(playlist_autonumber)s`: Position in playlist (starts at 1)
+  - `%(ext)s`: File extension (automatically added)
+</Accordion>
+
+#### Filename Examples
+
+```bash
+# Basic format: music title [(channel name)]
+%(title)s [(%(channel)s)]
+
+# Numbered playlist format: [04] music title
+[%(playlist_autonumber)s] %(title)s
+
+# Organize into folders by playlist
+%(playlist)s/%(playlist_autonumber)s. %(title)s.%(ext)s
+# Example output: music playlist/02. music title.m4a
+
+# Artist - Title format
+%(artist)s - %(title)s
+```
+
+### Tags Configuration
+
+Automatically tag downloaded files with metadata:
+
+<Steps>
+  <Step title="Auto Title Extraction">
+    Extract clean music title from video title (removes "(Official Music Video)", "(Audio)", etc.)
+  </Step>
+  
+  <Step title="Auto Artist Extraction">
+    Extract artist name from video title or use channel name
+  </Step>
+  
+  <Step title="Album Configuration">
+    Set album name from playlist title or custom value
+  </Step>
+  
+  <Step title="Genre Detection">
+    Automatically set genre to "Nightcore" when detected in title
+  </Step>
+</Steps>
+
+<Info>
+Downloaded files are automatically integrated into your local library with proper tags for seamless playback.
+</Info>
+
+## Caching System
+
+### Intelligent Caching
+
+Namida employs a smart caching system to optimize storage and performance:
+
+- **Automatic Caching**: Frequently played content is cached automatically
+- **Cache Priority**: Keep important content based on play count
+- **Size Limits**: Configure maximum cache size
+- **Cleanup**: Automatic removal of least-used cached content
+
+<Accordion title="Cache Priority Levels">
+  1. **High Priority**: Manually downloaded content (never auto-deleted)
+  2. **Medium Priority**: Frequently played content (kept longer)
+  3. **Low Priority**: Streamed content (removed first when space needed)
+</Accordion>
+
+### Offline Playback
+
+Cached and downloaded content is available offline:
+
+<CardGroup cols={2}>
+  <Card title="Downloads" icon="download">
+    Permanently stored until manually deleted
+  </Card>
+  
+  <Card title="Cache" icon="database">
+    Temporarily stored, subject to cache management policies
+  </Card>
+</CardGroup>
+
+## Advanced Features
+
+### SponsorBlock Integration
+
+Automatically skip unwanted segments in videos:
+
+<Steps>
+  <Step title="Enable SponsorBlock">
+    Turn on SponsorBlock in YouTube settings
+  </Step>
+  
+  <Step title="Choose Categories">
+    Select which segment types to skip (sponsor, intro, outro, self-promo, etc.)
+  </Step>
+  
+  <Step title="Auto-Skip">
+    Segments are automatically skipped during playback
+  </Step>
+</Steps>
+
+#### Supported Segment Types
+
+- **Sponsor**: Paid promotion segments
+- **Intro**: Intermission/intro animation
+- **Outro**: Endcards/credits
+- **Self-Promotion**: Unpaid self-promotion
+- **Interaction Reminder**: "Like, subscribe, comment"
+- **Preview/Recap**: Preview of upcoming content or recap
+- **Music: Non-Music Section**: Non-music sections in music videos
+- **Filler**: Tangential content
+
+<Warning>
+SponsorBlock relies on community-submitted segments. Some videos may not have segment data available.
+</Warning>
+
+### Return YouTube Dislike
+
+View dislike counts on YouTube videos with Return YouTube Dislike integration:
+
+- Displays accurate dislike counts
+- Shows like/dislike ratio
+- Community-driven data source
+
+### Segments & Heatmap
+
+Visual representation of video segments:
+
+- **Segment Markers**: See sponsor segments on the seekbar
+- **Heatmap**: View most-replayed sections (based on YouTube data)
+- **Chapter Support**: Navigate video chapters easily
+
+## Search & Discovery
+
+### YouTube Search
+
+Search YouTube directly from Namida:
+
+```dart
+// Search supports:
+// - Videos
+// - Playlists
+// - Channels
+// - Filters (duration, upload date, type)
+```
+
+<Accordion title="Search Filters">
+  - **Duration**: Any, Short (&lt;4 min), Medium (4-20 min), Long (&gt;20 min)
+  - **Upload Date**: Any time, Hour, Today, Week, Month, Year
+  - **Type**: Video, Channel, Playlist
+  - **Features**: Live, 4K, HD, Subtitles, Creative Commons
+</Accordion>
+
+### History Import
+
+Import your YouTube history for personalized recommendations:
+
+<Steps>
+  <Step title="Export from YouTube">
+    Download your YouTube watch history from Google Takeout
+  </Step>
+  
+  <Step title="Import to Namida">
+    Load the history file into Namida
+  </Step>
+  
+  <Step title="Enjoy Recommendations">
+    Get personalized recommendations based on your YouTube habits
+  </Step>
+</Steps>
+
+<Info>
+You can import both YouTube and Last.fm history for comprehensive listening data.
+</Info>
+
+## Subscriptions & Playlists
+
+### YouTube Subscriptions
+
+Manage your YouTube channel subscriptions within Namida:
+
+- View latest uploads from subscribed channels
+- Sync subscriptions from your YouTube account
+- Get notifications for new content
+
+### YouTube Playlists
+
+Access and play YouTube playlists:
+
+- Import public playlists by URL
+- Play entire playlists seamlessly
+- Download playlists for offline access
+- Automatic playlist metadata extraction
+
+## Video Playback
+
+### Gestures Support
+
+Intuitive gesture controls for video playback:
+
+<CardGroup cols={2}>
+  <Card title="Swipe Gestures" icon="hand">
+    - Swipe left/right to seek
+    - Swipe up/down (left side) for brightness
+    - Swipe up/down (right side) for volume
+  </Card>
+  
+  <Card title="Tap Gestures" icon="hand-pointer">
+    - Double tap left to seek backward
+    - Double tap right to seek forward
+    - Single tap to show/hide controls
+  </Card>
+  
+  <Card title="Advanced Gestures" icon="arrows-maximize">
+    - Swipe up to enter fullscreen
+    - Pinch in to enter fullscreen
+    - Long press for 2x speed
+  </Card>
+  
+  <Card title="Zoom Controls" icon="magnifying-glass">
+    - Pinch to zoom video
+    - Aspect ratio adjustment
+    - Fit/Fill/Stretch modes
+  </Card>
+</CardGroup>
+
+### Fullscreen Mode
+
+Immersive video viewing experience:
+
+- Automatic rotation support
+- Hide system UI in fullscreen
+- Gesture controls optimized for fullscreen
+- Brightness and volume overlays
+
+## Data Management
+
+### Data Saver Mode
+
+Reduce data consumption:
+
+- **Lower Quality**: Automatically select lower video quality
+- **Audio-Only Preference**: Default to audio-only streaming
+- **Cache Less**: Reduce automatic caching
+- **Thumbnail Quality**: Load lower resolution thumbnails
+
+### Storage Management
+
+<Accordion title="Manage YouTube Content">
+  - **View Downloads**: See all downloaded content and sizes
+  - **Clear Cache**: Remove cached streams to free space
+  - **Delete Downloads**: Remove specific downloaded files
+  - **Download Location**: Choose where files are saved
+</Accordion>
+
+## Preferences
+
+### Quality Preferences
+
+```dart
+// Configure preferred formats
+// - Prefer Opus audio format (better quality at lower bitrate)
+// - Prefer specific video quality (e.g., always 720p)
+// - Allow experimental codecs (VP9, AV1)
+```
+
+<Note>
+**Opus vs AAC**: Opus typically provides better audio quality at the same bitrate but may have compatibility issues on some devices.
+</Note>
+
+### Codec Settings
+
+- **Standard Codecs**: H.264 (AVC), AAC (more compatible)
+- **Experimental Codecs**: VP9, AV1, Opus (better quality, newer devices)
+
+<Warning>
+Experimental codecs may not be supported on all devices. Disable if you experience playback issues.
+</Warning>
+
+## Best Practices
+
+<Steps>
+  <Step title="Set Quality Based on Connection">
+    Use data saver mode on mobile data, higher quality on Wi-Fi
+  </Step>
+  
+  <Step title="Download for Offline">
+    Download frequently played content to avoid repeated streaming
+  </Step>
+  
+  <Step title="Organize Downloads">
+    Use groups and filename templates to keep downloads organized
+  </Step>
+  
+  <Step title="Manage Cache Size">
+    Set appropriate cache limits based on available storage
+  </Step>
+  
+  <Step title="Enable SponsorBlock">
+    Skip unwanted segments for better listening experience
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordion title="Playback fails or buffers constantly">
+  - Check internet connection stability
+  - Try lower quality settings
+  - Enable data saver mode
+  - Clear cache and try again
+  - Update Namida to latest version
+</Accordion>
+
+<Accordion title="Downloads fail or get stuck">
+  - Ensure stable internet connection
+  - Check available storage space
+  - Pause and resume the download
+  - Try downloading one file at a time
+  - Check if video is still available on YouTube
+</Accordion>
+
+<Accordion title="Can't find downloaded files">
+  - Check download location in settings
+  - Ensure download completed successfully
+  - Refresh library to index downloaded files
+  - Look in YouTube downloads folder
+</Accordion>

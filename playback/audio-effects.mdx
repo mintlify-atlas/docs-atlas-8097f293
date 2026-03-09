@@ -1,0 +1,258 @@
+---
+title: Audio Effects
+description: Control audio playback quality with pitch, speed, and replay gain normalization
+---
+
+Namida provides powerful audio processing features to customize your listening experience, including speed and pitch control, replay gain normalization, skip silence, and an equalizer.
+
+## Speed & Pitch Control
+
+Adjust playback speed and pitch independently or link them together for natural sound changes.
+
+### Speed Settings
+
+<Steps>
+  <Step title="Access Speed Controls">
+    Navigate to **Settings → Playback** to configure playback speed
+  </Step>
+  
+  <Step title="Set Default Speed">
+    Choose from preset speeds: 0.25x, 0.5x, 0.75x, 0.9x, 1.0x, 1.1x, 1.25x, 1.5x, 1.75x, 2.0x
+  </Step>
+  
+  <Step title="Configure Long Press Speed">
+    Set a speed multiplier (default: 2.0x) that activates when long-pressing tracks
+  </Step>
+</Steps>
+
+<Info>
+Speed can be adjusted without affecting pitch quality, allowing you to speed up audiobooks or podcasts while maintaining natural sound.
+</Info>
+
+### Pitch Adjustment
+
+Control pitch independently from speed:
+
+```dart
+// From settings.player.dart
+final pitch = 1.0.obs; // Default pitch (normal)
+final speed = 1.0.obs; // Default speed (normal)
+final linkSpeedPitch = false.obs; // Link speed and pitch together
+final useSemitones = false.obs; // Use semitone adjustments
+```
+
+**Available Options:**
+
+- **Independent Pitch**: Adjust pitch without changing speed
+- **Linked Mode**: Link speed and pitch together for natural sound shifts
+- **Semitone Mode**: Use semitone-based adjustments for musical applications
+
+<Note>
+When `linkSpeedPitch` is enabled, changing speed will automatically adjust pitch proportionally, maintaining the natural sound quality.
+</Note>
+
+## Replay Gain Normalization
+
+Replay Gain normalizes audio volume across different tracks by reading gain metadata tags or YouTube loudness information.
+
+### How It Works
+
+Namida reads the following replay gain tags from your audio files:
+
+- `REPLAYGAIN_TRACK_GAIN` / `replaygain_track_gain`
+- `REPLAYGAIN_ALBUM_GAIN` / `replaygain_album_gain`
+- `REPLAYGAIN_TRACK_PEAK` / `replaygain_track_peak`
+- `REPLAYGAIN_ALBUM_PEAK` / `replaygain_album_peak`
+- `R128_TRACK_GAIN` / `R128_ALBUM_GAIN` (EBU R128 format)
+
+### Replay Gain Types
+
+<CardGroup cols={2}>
+  <Card title="Off" icon="xmark">
+    No volume normalization applied
+  </Card>
+  
+  <Card title="Platform Default" icon="microchip">
+    Uses loudness enhancer on Android/iOS, volume adjustment on desktop
+  </Card>
+  
+  <Card title="Loudness Enhancer" icon="wave-square">
+    Hardware-accelerated normalization (Android/iOS only)
+  </Card>
+  
+  <Card title="Volume" icon="volume-high">
+    Software-based volume adjustment (all platforms)
+  </Card>
+</CardGroup>
+
+### Volume Calculation
+
+Replay gain values are converted to volume using this formula:
+
+```dart
+// From replay_gain_data.dart
+static double? convertGainToVolume({required double gain, double withRespectiveVolume = 1.0}) {
+  final gainLinear = math.pow(10, gain / 20).clamp(0.1, kMaxPlatformVolume);
+  return gainLinear * withRespectiveVolume;
+}
+```
+
+<Info>
+**Platform Limits:**
+- Android/iOS: Maximum 1.0x (100%)
+- Desktop (MPV): Maximum 1.3x (130%) without distortion
+</Info>
+
+### Configuration
+
+Access replay gain settings:
+
+<Steps>
+  <Step title="Open Settings">
+    Go to **Settings → Playback**
+  </Step>
+  
+  <Step title="Select Replay Gain Type">
+    Choose from: Off, Platform Default, Loudness Enhancer, or Volume
+  </Step>
+  
+  <Step title="Automatic Adjustment">
+    Namida automatically applies normalization based on track metadata
+  </Step>
+</Steps>
+
+<Warning>
+If replay gain tags are missing from your audio files, normalization won't be applied. For YouTube videos, Namida uses loudness information provided by YouTube.
+</Warning>
+
+## Skip Silence
+
+Automatically skip silent portions of audio tracks for a more continuous listening experience.
+
+```dart
+// From settings.player.dart
+final skipSilenceEnabled = false.obs;
+```
+
+<Steps>
+  <Step title="Enable Skip Silence">
+    Navigate to **Settings → Playback**
+  </Step>
+  
+  <Step title="Toggle Feature">
+    Enable "Skip Silence" to automatically skip silent sections
+  </Step>
+  
+  <Step title="Playback Behavior">
+    The player will intelligently detect and skip silent portions during playback
+  </Step>
+</Steps>
+
+<Info>
+Skip silence is particularly useful for:
+- Audiobooks with long pauses
+- Podcasts with silent gaps
+- Live recordings with breaks
+- Lectures and educational content
+</Info>
+
+## Equalizer
+
+Namida includes a powerful equalizer for precise audio tuning (available on ExoPlayer and ExoPlayer SW backends).
+
+### Features
+
+- **Custom Band Control**: Adjust individual frequency bands
+- **Presets**: Use built-in equalizer presets
+- **Loudness Enhancer**: Additional loudness enhancement control
+- **Real-time Updates**: Changes apply instantly
+
+### Configuration
+
+```dart
+// From settings.equalizer.dart
+int? preset;                              // Selected preset
+bool equalizerEnabled = false;             // Equalizer on/off
+final equalizer = <double, double>{};      // Frequency → Gain mapping
+bool loudnessEnhancerEnabled = false;      // Loudness enhancer state
+double loudnessEnhancer = 0.0;             // Enhancer gain value
+```
+
+<Steps>
+  <Step title="Access Equalizer">
+    Go to **Settings → Audio → Equalizer**
+  </Step>
+  
+  <Step title="Enable Equalizer">
+    Toggle the equalizer on
+  </Step>
+  
+  <Step title="Choose Preset or Customize">
+    Select a preset or manually adjust frequency bands
+  </Step>
+  
+  <Step title="Configure Loudness Enhancer">
+    Optionally enable and adjust the loudness enhancer for additional boost
+  </Step>
+</Steps>
+
+<Note>
+The equalizer is only available when using ExoPlayer or ExoPlayer SW as your internal player. Other player backends do not support equalizer functionality.
+</Note>
+
+### Tap to Update
+
+By default, equalizer changes apply in real-time. You can enable "Tap to Update" mode to preview changes before applying them:
+
+```dart
+final uiTapToUpdate = true.obs; // Require manual confirmation for changes
+```
+
+## Play/Pause Fade Effects
+
+Smooth volume transitions when starting or pausing playback.
+
+```dart
+// From settings.player.dart
+final enableVolumeFadeOnPlayPause = true.obs;
+final playFadeDurInMilli = 300.obs;   // Fade in duration
+final pauseFadeDurInMilli = 300.obs;  // Fade out duration
+```
+
+<Accordion title="Configure Fade Duration">
+  **Play Fade Duration**: Controls how quickly volume fades in when starting playback (default: 300ms)
+  
+  **Pause Fade Duration**: Controls how quickly volume fades out when pausing (default: 300ms)
+  
+  Both values can be adjusted independently in **Settings → Playback**.
+</Accordion>
+
+<Info>
+Fade effects provide a more pleasant listening experience by preventing abrupt volume changes when starting or stopping playback.
+</Info>
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Replay Gain Tags" icon="tags">
+    Tag your audio files with replay gain values using tools like MP3Gain or foobar2000 for consistent volume
+  </Card>
+  
+  <Card title="Speed for Content" icon="gauge-high">
+    Use 1.25-1.5x speed for podcasts and audiobooks, keep music at 1.0x
+  </Card>
+  
+  <Card title="Equalizer Presets" icon="sliders">
+    Start with a preset before fine-tuning individual bands
+  </Card>
+  
+  <Card title="Skip Silence" icon="forward">
+    Enable for spoken content, disable for music to preserve artistic pauses
+  </Card>
+</CardGroup>
+
+## Related Features
+
+- [Crossfade](/playback/crossfade) - Smooth transitions between tracks
+- [Sleep Timer](/playback/sleep-timer) - Auto-pause after time or tracks
+- [Lyrics](/playback/lyrics) - View synced and plain lyrics

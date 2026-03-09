@@ -1,0 +1,201 @@
+---
+title: Themes & Colors
+description: Customize Namida's appearance with dynamic theming, static colors, and Material 3 design
+---
+
+## Overview
+
+Namida features a Material 3-like theme with powerful color customization options. You can use dynamic theming that adapts to your music artwork, set static colors, or even sync with your device wallpaper.
+
+## Theme Modes
+
+<Steps>
+  <Step title="Light, Dark, or System">
+    Namida supports three theme modes:
+    - **Light Mode**: Bright interface optimized for daylight viewing
+    - **Dark Mode**: Easy on the eyes in low-light conditions
+    - **System**: Automatically follows your device's theme setting
+    
+    <Info>
+    Enable **Pitch Black** mode for AMOLED displays to save battery and reduce eye strain in complete darkness.
+    </Info>
+  </Step>
+
+  <Step title="Configure in Settings">
+    Navigate to **Settings → Customization** to select your preferred theme mode.
+  </Step>
+</Steps>
+
+## Dynamic Theming
+
+The standout feature of Namida is its ability to extract and apply colors from album artwork in real-time.
+
+### Auto Color Extraction
+
+<Note>
+Dynamic theming automatically extracts colors from your currently playing track's artwork and applies them throughout the interface.
+</Note>
+
+When enabled, Namida analyzes the album artwork and extracts a color palette using the `palette_generator` package. The extracted colors are:
+- Cached to `AppDirs.PALETTES` for performance
+- Applied with appropriate alpha transparency (200 for dark mode, 120 for light mode)
+- Smoothly transitioned between tracks
+
+```dart
+// Color extraction happens in current_color.dart
+final nc = await extractPaletteFromImage(
+  imagePath,
+  track: track,
+  useIsolate: true,
+);
+```
+
+### Device Wallpaper Colors
+
+<Info>
+You can optionally pick colors from your device wallpaper instead of album artwork.
+</Info>
+
+Enable this option in settings to use your system wallpaper's accent color as the base theme color. This uses the `dynamic_color` package to extract wallpaper colors on Android 12+.
+
+## Static Colors
+
+Prefer a consistent look? Set static colors that don't change with your music.
+
+<Steps>
+  <Step title="Disable Auto Color">
+    Turn off **Auto Color** in customization settings.
+  </Step>
+
+  <Step title="Choose Your Colors">
+    Set separate static colors for:
+    - **Light Mode**: Default color when using light theme
+    - **Dark Mode**: Default color when using dark theme
+  </Step>
+</Steps>
+
+<Warning>
+When auto color is disabled, the player interface will use your chosen static color regardless of the artwork.
+</Warning>
+
+## Color Palette Features
+
+### Palette Generation
+
+Namida extracts up to 28 colors from each artwork to create a rich color palette:
+
+```dart
+final result = await PaletteGenerator.fromImageProvider(
+  imageProvider,
+  filters: const [],
+  maximumColorCount: 28,
+  timeout: Duration(seconds: 5),
+);
+```
+
+These palette colors are used for:
+- Gradient backgrounds
+- UI accents and highlights
+- Party mode effects
+- Mini-player edge breathing effects
+
+### Batch Palette Generation
+
+<Accordion title="Generate palettes for entire library">
+You can pre-generate color palettes for all tracks in your library:
+
+1. Go to **Settings → Customization**
+2. Tap **Generate All Color Palettes**
+3. Namida will process your entire library in the background
+4. Palettes are cached for instant application
+
+<Note>
+This process can take time depending on your library size, but dramatically improves color switching performance during playback.
+</Note>
+</Accordion>
+
+## Advanced Color Options
+
+### Animated Theme Transitions
+
+Enable **Animated Theme** for smooth color transitions when:
+- Switching between tracks
+- Changing theme modes
+- Navigating between pages
+
+### Force Miniplayer Track Color
+
+By default, the miniplayer uses the global theme color. Enable this option to force the miniplayer to always use the current track's extracted color, even when browsing other content.
+
+<Info>
+This creates a more immersive experience where the miniplayer always reflects your currently playing music.
+</Info>
+
+## Color Performance
+
+Namida is optimized for efficient color extraction:
+
+- **Isolate Processing**: Color extraction runs in a separate isolate to prevent UI blocking
+- **Caching System**: Extracted palettes are saved as `.palette` files
+- **Memory Mapping**: Frequently used colors are kept in memory
+- **Fallback Handling**: Uses folder artwork or YouTube thumbnails when track artwork is unavailable
+
+## Customization Reference
+
+<CardGroup cols={2}>
+  <Card title="Auto Color" icon="palette">
+    Automatically extract and apply colors from album artwork
+    
+    **Setting**: `settings.autoColor`
+  </Card>
+  
+  <Card title="Static Color (Light)" icon="sun">
+    Default color for light theme mode
+    
+    **Setting**: `settings.staticColor`
+  </Card>
+  
+  <Card title="Static Color (Dark)" icon="moon">
+    Default color for dark theme mode
+    
+    **Setting**: `settings.staticColorDark`
+  </Card>
+  
+  <Card title="Pitch Black" icon="circle">
+    Pure black backgrounds for AMOLED displays
+    
+    **Setting**: `settings.pitchBlack`
+  </Card>
+</CardGroup>
+
+## Technical Details
+
+### Color Extraction Process
+
+<Steps>
+  <Step title="Image Loading">
+    Load artwork from file, embedded tags, or fallback sources
+  </Step>
+  
+  <Step title="Palette Generation">
+    Extract 28 colors using `palette_generator` package with 5-second timeout
+  </Step>
+  
+  <Step title="Color Processing">
+    Apply lightness adjustments ("delightning") and alpha transparency
+  </Step>
+  
+  <Step title="Caching">
+    Save processed palette to `.palette` file in `AppDirs.PALETTES`
+  </Step>
+  
+  <Step title="Application">
+    Update UI with smooth transition animations
+  </Step>
+</Steps>
+
+### Source Code Reference
+
+The theming system is implemented in:
+- `lib/controller/current_color.dart`: Color extraction and management (lines 36-649)
+- `lib/controller/settings_controller.dart`: Theme settings (lines 59-64)

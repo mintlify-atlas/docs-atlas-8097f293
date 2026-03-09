@@ -1,0 +1,432 @@
+---
+title: Sleep Timer
+description: Automatically pause playback after a specified time or number of tracks
+---
+
+Namida's sleep timer allows you to automatically stop playback after a set duration (minutes) or after a specified number of tracks, perfect for listening before bed or during focused work sessions.
+
+## Features
+
+<CardGroup cols={2}>
+  <Card title="Time-Based Timer" icon="clock">
+    Stop playback after a specified number of minutes
+  </Card>
+  
+  <Card title="Track-Based Timer" icon="list-music">
+    Stop playback after a certain number of tracks
+  </Card>
+  
+  <Card title="Flexible Controls" icon="sliders">
+    Enable one or both timer types simultaneously
+  </Card>
+  
+  <Card title="Dynamic Adjustment" icon="arrows-rotate">
+    Modify timer settings while playback is active
+  </Card>
+</CardGroup>
+
+## Sleep Timer Types
+
+### Time-Based Timer
+
+Pause playback after a specified duration in minutes.
+
+```dart
+// From audio_handler.dart
+int get maximumSleepTimerMins => kMaximumSleepTimerMins; // 180 minutes (3 hours)
+```
+
+**Configuration:**
+
+- **Minimum**: 1 minute
+- **Maximum**: 180 minutes (3 hours)
+- **Precision**: 1-minute increments
+
+<Steps>
+  <Step title="Open Sleep Timer">
+    Navigate to **More → Sleep Timer** from the main menu
+  </Step>
+  
+  <Step title="Enable Time Timer">
+    Toggle "Sleep after minutes"
+  </Step>
+  
+  <Step title="Set Duration">
+    Adjust the slider to your desired duration (1-180 minutes)
+  </Step>
+  
+  <Step title="Start Playback">
+    The timer begins counting down immediately
+  </Step>
+</Steps>
+
+### Track-Based Timer
+
+Pause playback after a specified number of tracks have finished playing.
+
+```dart
+// From audio_handler.dart  
+int get maximumSleepTimerItems => kMaximumSleepTimerTracks; // 40 tracks
+```
+
+**Configuration:**
+
+- **Minimum**: 1 track
+- **Maximum**: 40 tracks
+- **Behavior**: Counts tracks from current position forward
+
+<Steps>
+  <Step title="Open Sleep Timer">
+    Navigate to **More → Sleep Timer** from the main menu
+  </Step>
+  
+  <Step title="Enable Track Timer">
+    Toggle "Sleep after tracks"
+  </Step>
+  
+  <Step title="Set Track Count">
+    Adjust the slider to your desired number of tracks (1-40)
+  </Step>
+  
+  <Step title="Track Position">
+    The timer shows which track will be the last to play
+  </Step>
+</Steps>
+
+<Info>
+The track-based timer calculates the final track index from your current position. For example, if you're on track 5 and set "sleep after 3 tracks", playback will stop after track 7.
+</Info>
+
+## Using Sleep Timer
+
+### Opening the Dialog
+
+Access the sleep timer dialog from multiple locations:
+
+- **Main Menu**: Tap **More → Sleep Timer**
+- **Player Menu**: Tap the menu icon in the player
+- **Quick Access**: Some queue screens include a sleep timer shortcut
+
+```dart
+// From main_page_wrapper.dart
+static void openSleepTimerDialog(BuildContext context) {
+  // Opens the sleep timer configuration dialog
+}
+```
+
+### Configuration Interface
+
+The sleep timer dialog provides:
+
+<Accordion title="Time-Based Configuration">
+  **Sleep After Minutes**
+  
+  - Toggle switch to enable/disable
+  - Slider for duration (1-180 minutes)
+  - Real-time display of remaining time
+  - Clear indication when timer is active
+</Accordion>
+
+<Accordion title="Track-Based Configuration">
+  **Sleep After Tracks**
+  
+  - Toggle switch to enable/disable
+  - Slider for track count (1-40 tracks)
+  - Display of final track index in queue
+  - Queue position visualization
+</Accordion>
+
+### Sleep Timer State
+
+The sleep timer maintains its configuration:
+
+```dart
+// From player_controller.dart
+RxBaseCore<SleepTimerConfig> get sleepTimerConfig => _audioHandler.sleepTimerConfig;
+
+void updateSleepTimerValues({
+  bool? enableSleepAfterItems,
+  bool? enableSleepAfterMins,
+  int? sleepAfterMin,
+  int? sleepAfterItems,
+}) {
+  _audioHandler.updateSleepTimerValues(
+    enableSleepAfterItems: enableSleepAfterItems,
+    enableSleepAfterMins: enableSleepAfterMins,
+    sleepAfterMin: sleepAfterMin,
+    sleepAfterItems: sleepAfterItems,
+  );
+}
+```
+
+## Sleep Timer Behavior
+
+### Time-Based Timer Behavior
+
+When the time-based timer expires:
+
+1. **Countdown**: Timer counts down in real-time
+2. **Pause Trigger**: When time reaches zero, playback pauses gracefully
+3. **Current Track**: The current track continues until the timer expires (doesn't wait for track end)
+4. **Fade Out**: Respects pause fade duration settings
+
+<Note>
+The time-based timer will pause immediately when the countdown reaches zero, even if a track is currently playing. This allows for precise timing control.
+</Note>
+
+### Track-Based Timer Behavior
+
+When the track-based timer expires:
+
+1. **Track Counting**: Counts each completed track
+2. **Final Track**: Plays the specified final track completely
+3. **Auto Pause**: Pauses after the final track finishes
+4. **Queue Position**: Updates as queue changes
+
+<Warning>
+If you shuffle, reorder, or modify the queue while the track-based timer is active, the final track index is recalculated from the current position.
+</Warning>
+
+### Combined Timers
+
+You can enable both timer types simultaneously:
+
+- **Whichever Comes First**: Playback stops when either condition is met
+- **Independent Tracking**: Each timer operates independently
+- **Status Display**: Both timers show in the interface
+
+<Steps>
+  <Step title="Enable Both Timers">
+    Toggle both "Sleep after minutes" and "Sleep after tracks"
+  </Step>
+  
+  <Step title="Configure Each">
+    Set different values for time and track counts
+  </Step>
+  
+  <Step title="Monitoring">
+    Watch both counters to see which will trigger first
+  </Step>
+  
+  <Step title="Auto Pause">
+    Playback stops when the first condition is met
+  </Step>
+</Steps>
+
+## Managing the Sleep Timer
+
+### Modifying Active Timer
+
+You can adjust the sleep timer while it's running:
+
+<CardGroup cols={2}>
+  <Card title="Extend Time" icon="plus">
+    Increase the duration or track count before it expires
+  </Card>
+  
+  <Card title="Reduce Time" icon="minus">
+    Decrease the duration or track count for earlier pause
+  </Card>
+  
+  <Card title="Switch Types" icon="arrow-right-arrow-left">
+    Toggle between time-based and track-based modes
+  </Card>
+  
+  <Card title="Cancel Timer" icon="xmark">
+    Disable both timers to continue playing indefinitely
+  </Card>
+</CardGroup>
+
+### Resetting the Timer
+
+Reset the sleep timer to its initial state:
+
+```dart
+// From player_controller.dart
+void resetSleepAfterTimer() {
+  _audioHandler.resetSleepTimer();
+}
+```
+
+<Steps>
+  <Step title="Open Sleep Timer Dialog">
+    Access the sleep timer settings
+  </Step>
+  
+  <Step title="Disable All Timers">
+    Toggle off both timer types
+  </Step>
+  
+  <Step title="Restart if Needed">
+    Re-enable and configure with new values
+  </Step>
+</Steps>
+
+## Quick Actions
+
+### Sleep After Current Track
+
+Some contexts offer a quick "Sleep after 1 track" option:
+
+```dart
+// From yt_utils.dart and general_popup_dialog.dart
+Player.inst.updateSleepTimerValues(
+  enableSleepAfterItems: true, 
+  sleepAfterItems: 1
+);
+```
+
+This immediately sets the timer to pause after the current track finishes.
+
+<Info>
+Quick actions are available in:
+- Track context menus
+- Player menu shortcuts  
+- Video player controls
+- YouTube playback interface
+</Info>
+
+## Use Cases
+
+<CardGroup cols={2}>
+  <Card title="Bedtime Listening" icon="bed">
+    Set a 30-minute timer to fall asleep to music
+  </Card>
+  
+  <Card title="Podcast Episodes" icon="podcast">
+    Set to pause after 2-3 episodes
+  </Card>
+  
+  <Card title="Workout Sessions" icon="dumbbell">
+    Use 45-60 minute timer for gym playlists
+  </Card>
+  
+  <Card title="Study Sessions" icon="book">
+    Pomodoro technique with 25-minute intervals
+  </Card>
+</CardGroup>
+
+## Best Practices
+
+### Time-Based Timer
+
+- ✓ **Estimate Duration**: Add a few extra minutes to avoid mid-track cuts
+- ✓ **Battery Saving**: Use shorter durations to save battery overnight
+- ✓ **Check Remaining**: Monitor the timer display before falling asleep
+
+### Track-Based Timer
+
+- ✓ **Count Tracks**: Check your queue length before setting count
+- ✓ **Album Playback**: Set timer to album length for complete albums
+- ✓ **Dynamic Queues**: Be aware that queue changes affect the final track
+
+### Combined Timers
+
+- ✓ **Safety Net**: Use time + tracks for flexible stopping
+- ✓ **Long Playlists**: Time prevents playing all night if you have many tracks
+- ✓ **Short Tracks**: Track count prevents stopping too soon on short songs
+
+<Warning>
+**Common Mistakes to Avoid:**
+
+- Setting timer after you start falling asleep (set it first!)
+- Forgetting to enable the timer toggle
+- Not accounting for queue shuffle/changes
+- Setting too short duration for album playback
+</Warning>
+
+## Troubleshooting
+
+<Accordion title="Timer Not Working">
+  **Check:**
+  
+  1. Timer toggle is enabled (blue/active state)
+  2. Values are set correctly (not at minimum or maximum unexpectedly)
+  3. Playback is active (timer only runs during playback)
+  4. No other app is controlling audio focus
+</Accordion>
+
+<Accordion title="Timer Stops Too Early">
+  **Possible Causes:**
+  
+  - Time-based timer set too short
+  - Track-based count doesn't account for short tracks
+  - Queue was modified after setting timer
+  
+  **Solutions:**
+  
+  - Increase time/track count
+  - Verify queue contents before setting
+  - Add buffer time/tracks
+</Accordion>
+
+<Accordion title="Timer Doesn't Stop Playback">
+  **Possible Causes:**
+  
+  - Timer was disabled or reset
+  - App was force-closed (interrupts timer)
+  - System killed background process
+  
+  **Solutions:**
+  
+  - Re-enable timer
+  - Keep app in background (don't force-close)
+  - Disable aggressive battery optimization for Namida
+</Accordion>
+
+## Advanced Features
+
+### Sleep Timer Index Calculation
+
+For track-based timers, the final track index is calculated:
+
+```dart
+// From player_controller.dart
+int sleepingItemIndex(int sleepAfterItems, int currentIndex) {
+  return sleepAfterItems + currentIndex - 1;
+}
+```
+
+**Example:**
+- Current track: #5
+- Sleep after: 3 tracks
+- Final track: 5 + 3 - 1 = #7
+
+### Integration with Queue
+
+The sleep timer integrates with Namida's queue system:
+
+- **Respects Queue Order**: Follows your queue exactly
+- **Shuffle Compatible**: Works with shuffle mode
+- **Repeat Aware**: Accounts for repeat settings
+- **Dynamic Updates**: Adjusts to queue modifications
+
+<Note>
+When using "Repeat One" mode with a track-based timer, the same track counts toward the timer each time it repeats.
+</Note>
+
+## Related Features
+
+- [Audio Effects](/playback/audio-effects) - Control pitch, speed, and replay gain
+- [Crossfade](/playback/crossfade) - Smooth transitions between tracks
+- [Lyrics](/playback/lyrics) - View synced and plain lyrics
+
+## Tips & Tricks
+
+<CardGroup cols={2}>
+  <Card title="Extend Before Expiry" icon="clock-rotate-left">
+    Re-open the dialog to add more time before it expires
+  </Card>
+  
+  <Card title="Quick Sleep" icon="gauge-high">
+    Use track count of 1 for instant "stop after current"
+  </Card>
+  
+  <Card title="Battery Saver" icon="battery-half">
+    Enable timer to prevent all-night playback draining battery
+  </Card>
+  
+  <Card title="Habit Formation" icon="calendar">
+    Use consistent timer durations to build healthy listening habits
+  </Card>
+</CardGroup>

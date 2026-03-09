@@ -1,0 +1,412 @@
+---
+title: Lyrics
+description: View synced and plain lyrics with automatic fetching from multiple sources
+---
+
+Namida automatically fetches and displays lyrics for your music, supporting both synced (LRC) and plain text formats, including word-synced lyrics from LRC and TTML files.
+
+## Features
+
+<CardGroup cols={2}>
+  <Card title="Auto-Fetching" icon="download">
+    Automatically search and download lyrics from multiple sources
+  </Card>
+  
+  <Card title="Synced Lyrics" icon="music">
+    Line-by-line synchronized lyrics with word-level timing support
+  </Card>
+  
+  <Card title="Multiple Sources" icon="database">
+    Embedded tags, local files, LRCLib database, and Google search
+  </Card>
+  
+  <Card title="Fullscreen Mode" icon="expand">
+    Long-press lyrics to enter fullscreen viewing mode
+  </Card>
+</CardGroup>
+
+## Lyrics Sources
+
+Namida searches for lyrics in the following priority order:
+
+### Priority Order
+
+<Steps>
+  <Step title="Device LRC Files">
+    Searches for `.lrc` files in the same directory as your audio file
+  </Step>
+  
+  <Step title="Cached Lyrics">
+    Previously downloaded lyrics stored in the cache
+  </Step>
+  
+  <Step title="Embedded Lyrics">
+    Reads lyrics from audio file metadata tags (if embedded)
+  </Step>
+  
+  <Step title="Internet Sources">
+    Fetches from LRCLib API or Google search results
+  </Step>
+</Steps>
+
+<Info>
+You can configure whether to prioritize embedded lyrics over online sources in **Settings → Extras → Lyrics**.
+</Info>
+
+### Source Configuration
+
+```dart
+// From lyrics_controller.dart
+enum LyricsSource {
+  local,    // Only device files and embedded tags
+  internet, // Only online sources
+  auto      // Try all sources in priority order
+}
+```
+
+Access via: `Settings.lyricsSource`
+
+## Supported Formats
+
+### Synced Lyrics (LRC)
+
+Namida supports standard LRC format with line-level and word-level synchronization:
+
+```lrc
+[ar:Artist Name]
+[al:Album Name]
+[ti:Track Title]
+[length:03:24]
+[00:12.50]First line of lyrics
+[00:18.30]Second line of lyrics
+[00:24.10]Third line of lyrics
+```
+
+<Accordion title="Word-Synced LRC/TTML">
+  Namida also supports word-level synchronization for precise karaoke-style highlighting:
+  
+  ```lrc
+  [00:12.50]<00:12.50>First <00:13.00>word <00:13.50>sync
+  ```
+  
+  TTML (Timed Text Markup Language) files are also supported for video content with word-level timing.
+</Accordion>
+
+### Plain Text Lyrics
+
+Plain text lyrics without timing information:
+
+```txt
+First line of lyrics
+Second line of lyrics
+Third line of lyrics
+```
+
+<Note>
+Plain lyrics are automatically cleaned of HTML tags and extra whitespace for better readability.
+</Note>
+
+## Automatic Fetching
+
+Namida automatically searches for lyrics when a track starts playing.
+
+### LRCLib Integration
+
+Lyrics are fetched from [LRCLib](https://lrclib.net/), a community-maintained lyrics database:
+
+```dart
+// Search parameters (from lyrics_controller.dart)
+final searchParams = [
+  'track_name=Song Title',
+  'artist_name=Artist Name',
+  'album_name=Album Name'
+].join('&');
+
+final url = "https://lrclib.net/api/search?$searchParams";
+```
+
+### Search Details
+
+The search uses these metadata fields from your audio files:
+
+- **Track Title**: Primary search term
+- **Artist Name**: Cleaned of text in parentheses/brackets for better matching
+- **Album Name**: Additional matching criteria
+- **Duration**: Prefers lyrics with matching duration
+
+<Info>
+When multiple results are found with the same track/artist, Namida prioritizes lyrics that match the track's duration more closely.
+</Info>
+
+### Google Search Fallback
+
+If no synced lyrics are found, Namida searches Google:
+
+```dart
+// Example search queries (in priority order):
+// 1. "Artist - Title lyrics"
+// 2. "Artist Title lyrics"
+// 3. "Title lyrics"
+```
+
+<Warning>
+Google search returns plain text lyrics without timing synchronization. The results are cached locally after the first fetch.
+</Warning>
+
+## Local LRC Files
+
+Namida automatically detects LRC files stored alongside your music.
+
+### File Naming
+
+Place `.lrc` files in the same directory as your audio files with matching names:
+
+```bash
+/Music/
+  Artist - Song.mp3
+  Artist - Song.lrc        # ✓ Automatically detected
+```
+
+### Supported Patterns
+
+Namida recognizes these naming patterns:
+
+- Exact filename match: `Song.mp3` → `Song.lrc`
+- Case-insensitive matching
+- Alternative naming in the same folder
+
+<Steps>
+  <Step title="Organize Files">
+    Place `.lrc` files in the same directory as audio files
+  </Step>
+  
+  <Step title="Match Names">
+    Ensure LRC filename matches the audio filename
+  </Step>
+  
+  <Step title="Automatic Detection">
+    Namida will automatically find and use the LRC file
+  </Step>
+</Steps>
+
+## Embedded Lyrics
+
+Lyrics can be embedded directly in audio file metadata.
+
+### Supported Tags
+
+- **ID3v2** (MP3): `USLT` (Unsynchronized Lyrics) and `SYLT` (Synchronized Lyrics)
+- **Vorbis Comments** (FLAC, OGG): `LYRICS` tag
+- **MP4** (M4A, MP4): `©lyr` atom
+
+### Priority Settings
+
+```dart
+// From lyrics_controller.dart
+final prioritizeEmbeddedLyrics = false.obs;
+```
+
+Enable "Prioritize Embedded Lyrics" in settings to:
+
+- Check embedded tags first before searching online
+- Use embedded lyrics even if synced versions exist online
+- Reduce network usage
+
+<Accordion title="IGNORE Tag Behavior">
+  If embedded lyrics start with the text `IGNORE`, Namida will skip lyrics fetching entirely for that track. This is useful for instrumental tracks or when you don't want lyrics displayed.
+  
+  ```dart
+  if (embedded.startsWith('IGNORE')) return; // Skip lyrics
+  ```
+</Accordion>
+
+## Lyrics Display
+
+### In-Player View
+
+Lyrics appear in the player interface with automatic scrolling:
+
+- **Synced Lyrics**: Automatically scroll to current line
+- **Plain Lyrics**: Manual scrolling with scroll position memory
+- **Word Highlighting**: Words highlight in sync with audio (for word-synced lyrics)
+
+### Fullscreen Mode
+
+<Steps>
+  <Step title="Enter Fullscreen">
+    Long-press the lyrics area in the player
+  </Step>
+  
+  <Step title="View Lyrics">
+    Lyrics display in fullscreen with larger text
+  </Step>
+  
+  <Step title="Exit">
+    Tap outside or press back to return to player
+  </Step>
+</Steps>
+
+<Info>
+The first time you view lyrics, Namida shows a tutorial about long-pressing to enter fullscreen mode.
+</Info>
+
+## Caching System
+
+Namida caches downloaded lyrics to improve performance and reduce network usage.
+
+### Cache Structure
+
+```bash
+Cache Directory/
+  Lyrics/
+    [track_hash].lrc     # Synced lyrics cache
+    [track_hash].txt     # Plain lyrics cache
+```
+
+### Cache Behavior
+
+- **Synced LRC**: Cached as `.lrc` files with full formatting
+- **Plain Text**: Cached as `.txt` files
+- **Preference Memory**: Once cached, Namida remembers your preference
+- **Offline Access**: Cached lyrics work without internet
+
+<Note>
+If a `.txt` cache exists, Namida assumes you've chosen plain lyrics over synced lyrics (or synced lyrics weren't available), so it won't search online again.
+</Note>
+
+## Settings & Configuration
+
+### Enable/Disable Lyrics
+
+```dart
+final enableLyrics = true.obs; // Master switch for lyrics feature
+```
+
+Toggle in **Settings → Extras → Lyrics**:
+
+- ✓ **Enable Lyrics**: Fetch and display lyrics
+- ✗ **Disable Lyrics**: Hide lyrics completely
+
+### Lyrics Source
+
+Choose where to search for lyrics:
+
+<CardGroup cols={3}>
+  <Card title="Local Only" icon="folder">
+    Device files and embedded tags only
+  </Card>
+  
+  <Card title="Internet Only" icon="globe">
+    Only fetch from online sources
+  </Card>
+  
+  <Card title="Auto (Default)" icon="wand-magic-sparkles">
+    Try all sources in priority order
+  </Card>
+</CardGroup>
+
+### Prioritize Embedded
+
+```dart
+final prioritizeEmbeddedLyrics = false.obs;
+```
+
+**When Enabled**:
+1. Check embedded lyrics first
+2. Use embedded if available (even if not synced)
+3. Skip online search
+
+**When Disabled (Default)**:
+1. Check local LRC files
+2. Check cache
+3. Try online sources
+4. Fall back to embedded lyrics
+
+## Manual Lyrics Search
+
+Search for lyrics manually if automatic fetching doesn't find the right match:
+
+<Steps>
+  <Step title="Open Lyrics Settings">
+    Tap the lyrics area or open track details
+  </Step>
+  
+  <Step title="Search Manually">
+    Enter custom search terms or select from results
+  </Step>
+  
+  <Step title="Choose Lyrics">
+    Pick the best match from search results
+  </Step>
+  
+  <Step title="Save to Cache">
+    Selected lyrics are automatically cached
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordion title="Lyrics Not Showing">
+  **Possible Causes:**
+  
+  - Lyrics are disabled in settings
+  - Track metadata is missing or incorrect
+  - No lyrics available for this track
+  - Network connection issue (for online fetch)
+  
+  **Solutions:**
+  
+  1. Enable lyrics in **Settings → Extras → Lyrics**
+  2. Verify track title and artist in file metadata
+  3. Try manual lyrics search
+  4. Check internet connection
+</Accordion>
+
+<Accordion title="Wrong Lyrics Displayed">
+  **Solutions:**
+  
+  1. Clear lyrics cache for the track
+  2. Use manual search with corrected terms
+  3. Check/fix metadata tags in audio file
+  4. Place correct `.lrc` file alongside audio file
+</Accordion>
+
+<Accordion title="Synced Lyrics Not Synchronizing">
+  **Possible Causes:**
+  
+  - LRC file has incorrect timing format
+  - LRC file is corrupted
+  - Plain lyrics cached instead of synced
+  
+  **Solutions:**
+  
+  1. Validate LRC file format
+  2. Clear cache and re-fetch
+  3. Manually download correct synced LRC
+</Accordion>
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Metadata Quality" icon="tag">
+    Ensure accurate track title, artist, and album tags for better search results
+  </Card>
+  
+  <Card title="Local LRC Files" icon="file">
+    Use local LRC files for best accuracy and offline access
+  </Card>
+  
+  <Card title="Embedded Lyrics" icon="code">
+    Embed lyrics in audio files for portable lyrics across devices
+  </Card>
+  
+  <Card title="Cache Management" icon="database">
+    Let Namida cache lyrics automatically to reduce network usage
+  </Card>
+</CardGroup>
+
+## Related Features
+
+- [Audio Effects](/playback/audio-effects) - Control pitch, speed, and replay gain
+- [Sleep Timer](/playback/sleep-timer) - Auto-pause after time or tracks
+- [Crossfade](/playback/crossfade) - Smooth transitions between tracks

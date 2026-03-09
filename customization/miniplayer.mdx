@@ -1,0 +1,447 @@
+---
+title: Miniplayer
+description: Customize the miniplayer with visual effects, animations, and advanced features
+---
+
+## Overview
+
+The miniplayer is Namida's persistent playback control that stays accessible while browsing your library. It supports advanced features like party mode, parallax effects, and smooth animations that enhance your listening experience.
+
+## Miniplayer States
+
+The miniplayer has three distinct states with smooth transitions between them:
+
+<Steps>
+  <Step title="Minimized">
+    Compact bar at the bottom showing basic track info and controls.
+    
+    **Animation Value**: `0.0` to `1.0`
+  </Step>
+
+  <Step title="Expanded">
+    Full-screen player with artwork, lyrics, and complete controls.
+    
+    **Animation Value**: `1.0`
+  </Step>
+
+  <Step title="Queue View">
+    Scrollable queue list above the expanded player.
+    
+    
+    **Animation Value**: `1.0` to `2.03`
+  </Step>
+</Steps>
+
+<Info>
+The miniplayer uses an `AnimationController` with bounds from `-0.2` (dismissing) to `2.03` (queue overscroll).
+</Info>
+
+## Visual Effects
+
+### Animating Thumbnail
+
+The album artwork pulses and scales in sync with audio peaks.
+
+<Accordion title="Thumbnail Animation Settings">
+Customize how the artwork responds to music:
+
+**Scale Multiplier** (default: `1.0`)
+```dart
+settings.animatingThumbnailScaleMultiplier.value = 1.0;
+```
+
+Base scale factor for thumbnail animations.
+
+**Intensity** (default: `25`)
+```dart
+settings.animatingThumbnailIntensity.value = 25;
+```
+
+How much the artwork reacts to audio peaks in expanded view.
+
+**Intensity - Lyrics** (default: `10`)
+```dart
+settings.animatingThumbnailIntensityLyrics.value = 10;
+```
+
+Reduced intensity when lyrics are displayed.
+
+**Intensity - Minimized** (default: `10`)
+```dart
+settings.animatingThumbnailIntensityMinimized.value = 10;
+```
+
+Subtle animation when miniplayer is collapsed.
+
+**Inversed Animation**
+```dart
+settings.animatingThumbnailInversed.value = false;
+```
+
+Reverse the scaling direction (shrink on peaks instead of grow).
+</Accordion>
+
+<Note>
+A thumbnail that animates with the current audio peak - looks cool and adds life to your player!
+</Note>
+
+### Party Mode
+
+Create an immersive visual experience with edge breathing effects and dynamic colors.
+
+<Steps>
+  <Step title="Enable Party Mode">
+    Turn on party mode effects in the miniplayer:
+    
+    ```dart
+    settings.enablePartyModeInMiniplayer.value = true;
+    ```
+  </Step>
+
+  <Step title="Color Swap">
+    Enable automatic color palette rotation:
+    
+    ```dart
+    settings.enablePartyModeColorSwap.value = true;
+    ```
+    
+    <Info>
+    Colors cycle every 150ms when playing, 2200ms when paused, using the extracted color palette from the current artwork.
+    </Info>
+  </Step>
+</Steps>
+
+#### Edge Breathing Effect
+
+Party mode applies an animated glow around the miniplayer edges:
+
+- **Static Colors**: Use the main theme color
+- **Dynamic Colors**: Cycle through all colors extracted from the artwork
+
+```dart
+// Party mode color cycling in current_color.dart
+final durms = isPlaying ? 150 : 2200;
+_colorsSwitchTimer = Timer.periodic(Duration(milliseconds: durms), (timer) {
+  if (settings.enablePartyModeColorSwap.value) {
+    // Rotate palette colors
+    final lastItem = paletteFirstHalf.value.last;
+    paletteFirstHalf.remove(lastItem);
+    paletteFirstHalf.insertSafe(0, lastItem);
+  }
+});
+```
+
+### Particle Effects
+
+Add floating particles that react to music:
+
+```dart
+settings.enableMiniplayerParticles.value = true;
+```
+
+<Note>
+Particles speed up with the audio peak, creating a dynamic visual that responds to your music's energy.
+</Note>
+
+### Parallax Effect
+
+Enable depth and motion with parallax scrolling:
+
+```dart
+settings.enableMiniplayerParallaxEffect.value = true;
+```
+
+<Info>
+The parallax effect creates subtle movement of background elements as you interact with the player, adding a sense of depth.
+
+Parallax constants:
+- **Track Info**: `1.0x` speed
+- **Side Info**: `1.15x` speed
+</Info>
+
+## Color Options
+
+### Force Track Color
+
+By default, the miniplayer uses the global app theme color. You can force it to always display the current track's color:
+
+```dart
+settings.forceMiniplayerTrackColor.value = true;
+```
+
+<Accordion title="How Track Colors Work">
+When enabled:
+1. Color is extracted from the currently playing track's artwork
+2. Applied exclusively to the miniplayer
+3. Remains visible even when browsing other content
+4. Updates when tracks change
+
+When disabled:
+- Miniplayer uses the same color as the rest of the app
+- Color changes when browsing different albums/artists
+- Creates a unified theme throughout
+
+<Note>
+Enable this for an immersive "now playing" experience that's always visible.
+</Note>
+</Accordion>
+
+## Display Options
+
+### Audio Info Display
+
+Show technical audio information in the miniplayer:
+
+```dart
+settings.displayAudioInfoMiniplayer.value = false;
+```
+
+When enabled, displays:
+- Bitrate (kbps)
+- Sample rate (Hz)
+- Audio format
+- Codec information
+
+### Waveform Seekbar
+
+Replace the standard progress bar with an audio waveform visualization.
+
+<Steps>
+  <Step title="Waveform Settings">
+    Configure the waveform display:
+    
+    ```dart
+    settings.waveformTotalBars.value = 80; // Number of bars
+    ```
+    
+    Higher values = more detail (but more processing)
+    Lower values = simpler waveform (better performance)
+  </Step>
+
+  <Step title="Visual Feedback">
+    The waveform shows:
+    - **Past segments**: Dimmed to show progress
+    - **Current position**: Highlighted
+    - **Future segments**: Full brightness
+    - **Peaks**: Represent audio intensity
+  </Step>
+</Steps>
+
+<Warning>
+Waveform extraction happens in the background. Very long tracks may take time to process.
+</Warning>
+
+## Behavior Settings
+
+### Dismissible Miniplayer
+
+Allow swiping down to dismiss the miniplayer and clear the queue:
+
+```dart
+settings.dismissibleMiniplayer.value = true;
+```
+
+<Warning>
+When enabled, swiping down past the threshold will:
+1. Minimize the miniplayer
+2. Clear the current queue  
+3. Stop playback
+
+This action cannot be undone!
+</Warning>
+
+### Hide Status Bar
+
+Create an immersive full-screen experience:
+
+```dart
+settings.hideStatusBarInExpandedMiniplayer.value = false;
+```
+
+<Info>
+When enabled, the system status bar (time, battery, etc.) hides when the miniplayer is expanded, giving you more screen space for artwork and controls.
+
+Status bar behavior:
+- **Portrait Mode**: Hides when expanded
+- **Landscape/Widescreen**: Always hidden  
+- **Minimized**: Always visible
+</Info>
+
+## Widescreen Mode
+
+On tablets and desktops, the miniplayer adapts to widescreen layouts.
+
+### Automatic Widescreen Detection
+
+<Steps>
+  <Step title="Aspect Ratio Check">
+    When screen width/height ratio > 1.0, widescreen mode activates
+  </Step>
+
+  <Step title="Layout Adjustment">
+    Miniplayer becomes a sidebar:
+    - Maximum width: 40% of screen (or up to 400px for very wide screens)
+    - Always visible (cannot minimize)
+    - Content area adjusts to remaining space
+  </Step>
+
+  <Step title="Immersive Mode">
+    In widescreen, immersive mode is always active when enabled, hiding system UI elements
+  </Step>
+</Steps>
+
+```dart
+// Widescreen calculation in miniplayer_controller.dart
+if (screenWidth / screenHeight > 1) {
+  double fixedW = 400.0;
+  if (screenWidth / screenHeight > 1.5) {
+    fixedW = screenWidth.withMaximum(screenHeight) * 0.68;
+  }
+  fixedW = fixedW.withMaximum(screenWidth * 0.4);
+  maxWidth = maxWidth.withMaximum(fixedW);
+  isWidescreen = true;
+}
+```
+
+<Note>
+Widescreen mode provides a desktop-class experience with persistent controls and maximum content visibility.
+</Note>
+
+## Performance Considerations
+
+### Artwork Compression
+
+```dart
+bool get shouldCompressArtwork => !(animation.value > 0 && animation.value < 2);
+```
+
+Artwork is:
+- **Compressed** when minimized or in queue (saves memory)
+- **Full quality** when expanded (better visuals)
+
+### Animation Optimization
+
+The miniplayer uses efficient animation techniques:
+
+- **60 FPS target**: Smooth 500ms transition duration
+- **Bouncing curves**: Custom cubic bezier curves for natural motion
+- **Lazy updates**: Only redraws when animation values change
+- **Velocity tracking**: Predictive animations based on gesture speed
+
+```dart
+// Custom animation curves
+static const _bouncingCurve = Cubic(0.175, 0.885, 0.32, 1.125);
+static const _bouncingCurveSoft = Cubic(0.150, 0.96, 0.28, 1.04);
+```
+
+## YouTube Miniplayer
+
+When playing YouTube videos, Namida uses a specialized YouTube miniplayer with additional features:
+
+<CardGroup cols={2}>
+  <Card title="Video Preview" icon="play-circle">
+    Thumbnail preview with play/pause overlay
+  </Card>
+  
+  <Card title="Quality Badge" icon="star">
+    Display current video quality (720p, 1080p, etc.)
+  </Card>
+  
+  <Card title="Channel Info" icon="user">
+    Show uploader/channel name and subscriber count
+  </Card>
+  
+  <Card title="Engagement Stats" icon="heart">
+    Display likes, views, and upload date
+  </Card>
+</CardGroup>
+
+<Info>
+Access the YouTube miniplayer state via:
+
+```dart
+MiniPlayerController.inst.ytMiniplayerKey.currentState
+```
+</Info>
+
+## Queue Integration
+
+### Auto-Scroll to Current Track
+
+When opening the queue view, Namida automatically scrolls to the currently playing track:
+
+```dart
+void animateQueueToCurrentTrack({bool jump = false, bool minZero = false}) {
+  final trackTileItemScrollOffsetInQueue = 
+    _currentItemExtent * Player.inst.currentIndex.value - screenSize.height * 0.3;
+  
+  queueScrollController.animateToEff(
+    finalOffset,
+    duration: const Duration(milliseconds: 600),
+    curve: Curves.fastEaseInToSlowEaseOut,
+  );
+}
+```
+
+### Queue Scroll Indicator
+
+The arrow icon changes based on queue scroll position:
+
+- **↑**: Currently playing track is below viewport
+- **↓**: Currently playing track is above viewport  
+- **●**: Currently playing track is visible
+
+## Miniplayer API Reference
+
+<CardGroup cols={2}>
+  <Card title="snapToExpanded()" icon="expand">
+    Animate miniplayer to full-screen expanded state
+  </Card>
+  
+  <Card title="snapToMini()" icon="minimize">
+    Animate miniplayer to minimized bottom bar
+  </Card>
+  
+  <Card title="snapToQueue()" icon="list">
+    Animate miniplayer to queue view
+  </Card>
+  
+  <Card title="animateMiniplayer()" icon="wand-magic-sparkles">
+    Manually animate to specific value (0.0 to 2.03)
+  </Card>
+</CardGroup>
+
+## Visual Effects Summary
+
+<Steps>
+  <Step title="Animations">
+    - Animating thumbnail with audio peak sync
+    - Smooth state transitions with custom curves
+    - Waveform seekbar visualization
+  </Step>
+
+  <Step title="Party Mode">
+    - Edge breathing effects
+    - Color palette rotation
+    - Dynamic vs. static color modes
+  </Step>
+
+  <Step title="Effects">
+    - Particle animations
+    - Parallax scrolling
+    - Blur and glow overlays
+  </Step>
+
+  <Step title="Responsiveness">
+    - Velocity-based gesture detection
+    - Haptic feedback
+    - Performance-optimized rendering
+  </Step>
+</Steps>
+
+## Source Code Reference
+
+Miniplayer implementation:
+- `lib/controller/miniplayer_controller.dart`: Core miniplayer logic (lines 25-526)
+- `lib/controller/settings_controller.dart`: Miniplayer settings (lines 159-176)
+- `lib/controller/current_color.dart`: Color and party mode effects (lines 82-107)

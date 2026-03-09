@@ -1,0 +1,542 @@
+---
+title: Troubleshooting Guide
+description: Solutions for common issues in Namida music and video player
+---
+
+This guide covers common issues and their solutions. If you don't find your issue here, please check the [FAQ](/community/faq) or reach out to the community.
+
+## Getting Help
+
+<Steps>
+  <Step title="Check this troubleshooting guide">
+    Look for your issue in the sections below.
+  </Step>
+  
+  <Step title="Collect logs">
+    Go to **Settings > About > Share Logs** to export error logs.
+  </Step>
+  
+  <Step title="Search existing issues">
+    Check the [GitHub issues](https://github.com/namidaco/namida/issues) to see if your problem has been reported.
+  </Step>
+  
+  <Step title="Ask the community">
+    Join the [Telegram chat](https://t.me/+FmdfsgKoGmM1ZGFk) or [Discord server](https://discord.gg/WeY7DTVChT) for help.
+  </Step>
+  
+  <Step title="Report a bug">
+    If it's a new issue, create a bug report on GitHub with your logs attached.
+  </Step>
+</Steps>
+
+<Warning>
+  **DO NOT IGNORE LOGS** when reporting issues. You will likely not get help without providing log files from Settings > About > Share Logs.
+</Warning>
+
+## Installation & Startup Issues
+
+### App Stuck on Splash Screen
+
+**Problem:** Namida freezes or gets stuck on the splash screen, especially after device reboot.
+
+**Solutions:**
+
+<AccordionGroup>
+  <Accordion title="Solution 1: Clear app cache">
+    1. Go to **Android Settings > Apps > Namida**
+    2. Select **Storage**
+    3. Tap **Clear Cache** (not Clear Data)
+    4. Restart the app
+  </Accordion>
+
+  <Accordion title="Solution 2: Wait for indexing to complete">
+    If you have a large music library, the first launch may take time:
+    - Wait 2-5 minutes for the indexer to complete
+    - Check if indexing is stuck in Settings > Indexer
+    - Try reducing the number of indexed folders
+  </Accordion>
+
+  <Accordion title="Solution 3: Reinstall the app">
+    As a last resort:
+    1. Backup your data from Settings > Backup & Restore
+    2. Uninstall Namida
+    3. Reinstall from the latest release
+    4. Restore your backup
+  </Accordion>
+</AccordionGroup>
+
+<Info>
+  **Fixed in:** This issue has been addressed in v5.6.1 and later versions.
+</Info>
+
+### Indexing Stuck or Not Completing
+
+**Problem:** The music library indexer gets stuck and doesn't complete scanning.
+
+**Solutions:**
+
+1. **Check folder permissions**: Ensure Namida has storage permissions
+2. **Reduce folder count**: Try indexing fewer folders at once
+3. **Set minimum duration**: In Settings > Indexer, set minimum file size and duration to filter out problematic files
+4. **Clear and reindex**: Clear the library and start fresh
+
+<Note>
+  Fixed in v5.6.1. If you're using an older version, consider updating.
+</Note>
+
+### White Screen on Startup
+
+**Problem:** App shows a white/blank screen after launching.
+
+**Solutions:**
+
+- Update to the latest version (fixed in v5.3.9+)
+- Check if you're on Android 12 and the splash screen is misconfigured
+- Clear app cache and restart
+- Check logs for specific errors
+
+## Playback Issues
+
+### Audio Not Playing or Skipping
+
+**Problem:** Tracks won't play, skip immediately, or playback is interrupted.
+
+**Possible Causes & Solutions:**
+
+<AccordionGroup>
+  <Accordion title="Corrupted audio files">
+    - Check if the file plays in other players
+    - Re-download or replace corrupted files
+    - Use the tag editor to verify file integrity
+  </Accordion>
+
+  <Accordion title="Format compatibility issues">
+    While Namida supports many formats (MP3, M4A, FLAC, OGG, etc.), some exotic formats may not work:
+    - Convert problematic files to MP3 or M4A
+    - Update to the latest version for better format support
+  </Accordion>
+
+  <Accordion title="Audio focus conflicts">
+    - Check Settings > Audio for pause scenarios
+    - Disable other apps that might be using audio focus
+    - Check if "Pause on notification" is enabled
+  </Accordion>
+
+  <Accordion title="Queue issues">
+    - Check if the queue is empty or corrupted
+    - Try clearing the queue and creating a new one
+    - Restart the app
+  </Accordion>
+</AccordionGroup>
+
+### No Sound from Videos
+
+**Problem:** Videos play but there's no audio.
+
+**Solutions:**
+
+1. Check if **Audio Only Mode** is disabled in video settings
+2. Verify volume isn't muted or set to zero
+3. Check if **Data Saver Mode** is preventing video audio
+4. Try restarting playback
+
+### Crossfade Not Working
+
+**Problem:** Crossfade effect doesn't apply between tracks.
+
+**Check:**
+
+- Crossfade is enabled in Settings > Audio
+- Crossfade duration is set above 0 seconds
+- Replay Gain is configured correctly (can interfere with crossfade)
+- Queue has multiple tracks to crossfade between
+
+## YouTube Issues
+
+### YouTube Playback Failing
+
+**Problem:** YouTube videos won't play or constantly buffer.
+
+**Solutions:**
+
+<Steps>
+  <Step title="Check internet connection">
+    Ensure you have a stable internet connection.
+  </Step>
+  
+  <Step title="Update the app">
+    YouTube playback issues are often fixed in updates. Make sure you're on the latest version.
+  </Step>
+  
+  <Step title="Refresh video info">
+    In the video player, tap the refresh button to reload video information.
+  </Step>
+  
+  <Step title="Clear cache">
+    Go to Settings > YouTube > Clear Cache and try again.
+  </Step>
+  
+  <Step title="Set custom visitor data/potoken">
+    In some regions, you may need to set custom visitor data. Check YouTube flags in Settings.
+  </Step>
+</Steps>
+
+<Warning>
+  YouTube's backend changes frequently. If playback fails, check for app updates or report the issue on GitHub.
+</Warning>
+
+### Downloads Failing or Stuck
+
+**Problem:** YouTube downloads fail, get stuck, or restart after app restart.
+
+**Solutions:**
+
+1. **Check storage space**: Ensure you have enough free space
+2. **Disable battery optimization**: Android may kill downloads in the background
+   - Go to Settings and disable battery optimization for Namida
+3. **Check network connection**: Stable connection required for downloads
+4. **Update the app**: Download logic has been improved in recent versions
+5. **Clear download queue**: Remove stuck downloads and try again
+
+<Info>
+  Download improvements were made in v5.3.9, including better error handling for unavailable videos.
+</Info>
+
+### Video Thumbnails Not Loading
+
+**Problem:** YouTube video thumbnails show as blank or fail to load.
+
+**Solutions:**
+
+- Enable internet connection (thumbnails need network access)
+- Check Data Saver settings
+- Clear thumbnail cache in Settings
+- Wait a few seconds for lazy loading to complete
+
+## Library & Metadata Issues
+
+### Tags Not Saving or Updating
+
+**Problem:** Edited tags don't save or revert to old values.
+
+**Required:**
+
+<Warning>
+  Tag editing requires **All Files Access** (MANAGE_EXTERNAL_STORAGE) permission on Android 10+.
+</Warning>
+
+**Grant permission:**
+
+1. Go to Android Settings > Apps > Namida
+2. Tap Permissions
+3. Enable **All Files Access**
+
+**Additional checks:**
+
+- Ensure files aren't read-only
+- Check if files are on external SD card (may have restrictions)
+- For Opus files: Use v5.6.1+ (fixed Opus tag editing bug)
+
+### Duplicate Tracks in Library
+
+**Problem:** Same track appears multiple times in the library.
+
+**Solutions:**
+
+1. **Enable duplicate prevention**:
+   - Go to Settings > Indexer
+   - Enable "Prevent Duplicated Tracks"
+   - Set minimum file size and duration
+
+2. **Clean up duplicates**:
+   - Use the "Global Tracks Selection" feature
+   - Manually remove duplicate files
+   - Re-index the library
+
+3. **Check for duplicated artists**:
+   - Enable "Prevent duplicated artist tracks" if artist name appears in both tags and title
+
+### Missing Album Artwork
+
+**Problem:** Album artwork doesn't display for some tracks.
+
+**Solutions:**
+
+<AccordionGroup>
+  <Accordion title="Embedded artwork">
+    - Use the tag editor to check if artwork is embedded
+    - Add artwork manually through the tag editor
+  </Accordion>
+
+  <Accordion title="Folder artwork">
+    Place an image file named `cover.jpg`, `folder.jpg`, or `album.jpg` in the music folder.
+  </Accordion>
+
+  <Accordion title="Network artwork (v5.3.9+)">
+    - Go to Settings > Artwork
+    - Enable "Fetch album/artist images from network"
+    - Choose your preferred source
+  </Accordion>
+
+  <Accordion title="YouTube thumbnails">
+    If the track has a YouTube ID, Namida can fallback to the YouTube thumbnail.
+  </Accordion>
+</AccordionGroup>
+
+### M3U Playlists Not Importing
+
+**Problem:** M3U playlist files won't import or show empty.
+
+**Check:**
+
+- File paths in M3U are correct (absolute or relative)
+- Files referenced in M3U actually exist
+- M3U file doesn't have empty lines causing duplicates
+- File encoding is UTF-8
+- Use v5.3.9+ for improved M3U path extraction
+
+## Video Playback Issues
+
+### Videos Not Playing for Local Tracks
+
+**Problem:** Local music tracks don't show associated videos.
+
+**How video matching works:**
+
+Namida looks for videos in your indexed folders by matching:
+
+1. The music filename
+2. Title + first artist of the track
+3. YouTube ID (in comment tag or filename)
+
+**Ensure:**
+
+- Video files are in indexed folders
+- Video filename contains track info (e.g., "Alan Walker - Faded.mp4")
+- Symbols and whitespaces are ignored during matching
+- For YouTube matching, comment tag contains YouTube URL or filename has `v=video_id` or `id=video_id`
+
+### Video Quality Issues
+
+**Problem:** Videos play in low quality or buffer constantly.
+
+**Solutions:**
+
+1. **Check quality settings**:
+   - Tap the quality button in the video player
+   - Select a higher quality (if available)
+   - Disable "Data Saver Mode"
+
+2. **Enable video streaming**:
+   - Disable "Audio Only Mode"
+   - Check "Best Video & Audio Quality" setting
+
+3. **Clear video cache** if videos are cached in low quality
+
+### Fullscreen Video Controls Hidden
+
+**Problem:** Can't access controls in fullscreen video mode.
+
+**Gestures:**
+
+- **Single tap**: Show/hide controls
+- **Double tap left/right**: Seek backward/forward
+- **Swipe left/right**: Seek through video
+- **Swipe up/down (left side)**: Adjust brightness
+- **Swipe up/down (right side)**: Adjust volume
+- **Long press**: 2x speed (while held)
+- **Swipe up/Pinch in**: Enter fullscreen
+- **Swipe down/Pinch out**: Exit fullscreen
+
+## Performance Issues
+
+### App Lagging or Slow
+
+**Problem:** Namida feels sluggish or unresponsive.
+
+**Optimization tips:**
+
+<AccordionGroup>
+  <Accordion title="Reduce library size">
+    - Set minimum file duration to exclude tiny files
+    - Exclude unnecessary folders from indexing
+    - Limit the number of tracks in "Tracks" page (has a 1000 track limit for performance)
+  </Accordion>
+
+  <Accordion title="Disable visual effects">
+    - Disable particles effect
+    - Reduce waveform animation intensity
+    - Disable blur effects
+    - Turn off auto coloring in Settings > Theme
+  </Accordion>
+
+  <Accordion title="Clear cache">
+    - Clear artwork cache
+    - Clear YouTube cache
+    - Clear thumbnails
+  </Accordion>
+
+  <Accordion title="Update the app">
+    Performance improvements are continuously added. Update to the latest version.
+  </Accordion>
+</AccordionGroup>
+
+### High Battery Drain
+
+**Problem:** Namida uses excessive battery.
+
+**Solutions:**
+
+1. **Disable background downloads** if not needed
+2. **Reduce update frequency** for YouTube subscriptions
+3. **Disable visual effects** (particles, animations)
+4. **Use audio-only mode** for YouTube instead of video
+5. **Grant battery optimization exemption** properly (paradoxically, this can help by preventing constant restarts)
+
+## Permission Issues
+
+### Storage Permission Denied
+
+**Problem:** App can't access music files.
+
+**Required permissions:**
+
+<Card title="Android 10 and below" icon="android">
+  - **READ_EXTERNAL_STORAGE**: To list files
+  - **WRITE_EXTERNAL_STORAGE**: For tag editing and file management
+</Card>
+
+<Card title="Android 11-12" icon="android">
+  - **READ_EXTERNAL_STORAGE**: To list files from indexer folders
+  - **MANAGE_EXTERNAL_STORAGE**: For advanced features (tag editing, backups, downloads)
+</Card>
+
+<Card title="Android 13+" icon="android">
+  - **READ_MEDIA_AUDIO**: List audio files
+  - **READ_MEDIA_VIDEO**: List video files
+  - **READ_MEDIA_IMAGES**: List images for fallback covers
+  - **MANAGE_EXTERNAL_STORAGE**: For advanced features
+</Card>
+
+**Grant permissions:**
+
+1. Go to Android Settings > Apps > Namida > Permissions
+2. Grant all requested permissions
+3. For "All Files Access", tap it and enable the toggle
+
+### Notification Permission Issues
+
+**Problem:** No playback notifications showing.
+
+**Android 13+ requires explicit permission:**
+
+1. Go to Settings > Apps > Namida > Notifications
+2. Enable notifications
+3. In Namida, go to Settings > Notifications and configure
+
+## Sync & Backup Issues
+
+### Backup/Restore Failing
+
+**Problem:** Backup creation or restoration fails.
+
+**Requirements:**
+
+- **All Files Access** permission granted
+- Sufficient storage space
+- Valid backup location exists
+
+**Solutions:**
+
+1. **Check backup location**: Ensure the folder exists and is writable
+2. **Manual backup**: Use Settings > Backup & Restore
+3. **Check logs**: Export logs to see specific error messages
+
+<Info>
+  For cross-platform backup sync, check out [namida_sync](https://github.com/010101-sans/namida_sync) by @010101-sans.
+</Info>
+
+### History Import Issues
+
+**Problem:** YouTube or Last.fm history won't import.
+
+**Solutions:**
+
+<AccordionGroup>
+  <Accordion title="YouTube Takeout">
+    1. Ensure you downloaded the correct Takeout data (watch history)
+    2. Extract ZIP files before importing (or select the ZIP directly)
+    3. Namida supports multiple Takeouts and merges duplicates
+    4. Check for proper JSON formatting
+  </Accordion>
+
+  <Accordion title="Last.fm">
+    - Verify the file format is correct
+    - Check if the file is corrupted
+    - Try importing in smaller batches if it's very large
+  </Accordion>
+
+  <Accordion title="Large imports freezing">
+    Fixed in v5.3.9+ with improved performance for huge/multiple Takeouts.
+  </Accordion>
+</AccordionGroup>
+
+## Known Issues & Workarounds
+
+### Building From Source Not Possible
+
+**Issue:** Direct building from source is not currently possible.
+
+**Reason:** The project includes proprietary components that are not open-sourced.
+
+**More info:** See [GitHub issue #37](https://github.com/namidaco/namida/issues/37#issuecomment-1780341883)
+
+<Note>
+  You can still read and study the code for personal learning and contribute through pull requests.
+</Note>
+
+### Linux Requires mpv
+
+**Issue:** Namida for Linux requires mpv to be installed.
+
+**Solution:**
+
+```bash
+# Debian/Ubuntu/Mint
+sudo apt install mpv
+
+# Fedora/RHEL
+sudo dnf install mpv
+
+# Arch/Manjaro
+sudo pacman -S mpv
+```
+
+## Still Having Issues?
+
+<CardGroup cols={2}>
+  <Card title="Report a Bug" icon="bug" href="https://github.com/namidaco/namida/issues">
+    Create a detailed bug report on GitHub with logs attached.
+  </Card>
+  
+  <Card title="Join Community" icon="messages" href="https://t.me/+FmdfsgKoGmM1ZGFk">
+    Ask for help in the Telegram chat group.
+  </Card>
+  
+  <Card title="Check FAQ" icon="circle-question" href="/community/faq">
+    Review frequently asked questions.
+  </Card>
+  
+  <Card title="Discord Server" icon="discord" href="https://discord.gg/WeY7DTVChT">
+    Get support on Discord.
+  </Card>
+</CardGroup>
+
+<Warning>
+  When reporting issues, always include:
+  - Namida version number
+  - Android/Windows/Linux version
+  - Steps to reproduce
+  - Log files from Settings > About > Share Logs
+  - Screenshots or screen recordings if applicable
+</Warning>

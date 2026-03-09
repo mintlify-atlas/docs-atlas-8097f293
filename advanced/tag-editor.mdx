@@ -1,0 +1,404 @@
+---
+title: Tag Editor
+description: Edit audio metadata tags directly within Namida using the powerful built-in tag editor
+---
+
+Namida includes a comprehensive tag editor powered by native platform extractors, allowing you to modify audio file metadata without leaving the app.
+
+## Editing Track Metadata
+
+### Supported Tag Fields
+
+The tag editor supports a wide range of metadata fields:
+
+<CardGroup cols={3}>
+  <Card title="Basic Info" icon="music">
+    - Title
+    - Artist
+    - Album
+    - Album Artist
+    - Composer
+  </Card>
+  
+  <Card title="Organization" icon="folder-tree">
+    - Track Number
+    - Track Total
+    - Disc Number
+    - Disc Total
+    - Year
+  </Card>
+  
+  <Card title="Classification" icon="tags">
+    - Genre
+    - Mood
+    - Tags
+    - Rating
+    - Language
+  </Card>
+</CardGroup>
+
+### Additional Fields
+
+<Accordion title="Advanced Metadata">
+- **Lyrics**: Full lyric text (supports synced .lrc import)
+- **Comment**: General comments or notes
+- **Description**: Detailed track description
+- **Synopsis**: Brief summary
+- **Remixer**: Remix artist information
+- **Lyricist**: Lyric author
+- **Record Label**: Publishing label
+- **Country**: Country of origin
+</Accordion>
+
+<Accordion title="Sort Fields">
+Customize how tracks appear in sorted lists:
+
+- Title Sort
+- Album Sort
+- Album Artist Sort
+- Artist Sort
+- Composer Sort
+
+These fields don't change display names but affect alphabetical ordering.
+</Accordion>
+
+## Batch Editing
+
+### Edit Multiple Tracks
+
+Apply changes to multiple files simultaneously:
+
+```dart
+await updateTracksMetadata(
+  tracks: selectedTracks,
+  editedTags: {
+    TagField.genre: 'Electronic',
+    TagField.year: '2024',
+    TagField.albumArtist: 'Various Artists',
+  },
+  trimWhiteSpaces: true,
+);
+```
+
+<Steps>
+  <Step title="Select Tracks">
+    Use Namida's global track selection to choose multiple tracks across different views (albums, artists, playlists).
+  </Step>
+  
+  <Step title="Open Tag Editor">
+    Long-press on selected tracks and choose "Edit Tags" from the context menu.
+  </Step>
+  
+  <Step title="Modify Fields">
+    Enter new values for the fields you want to change. Leave fields empty to preserve existing values.
+  </Step>
+  
+  <Step title="Apply Changes">
+    Confirm to write changes to all selected files simultaneously.
+  </Step>
+</Steps>
+
+<Info>
+Batch editing preserves unique values. For example, editing the artist field on multiple tracks won't overwrite their individual titles.
+</Info>
+
+## Artwork Management
+
+### Embedding Album Art
+
+Add or replace embedded artwork in audio files:
+
+```dart
+await updateTracksMetadata(
+  tracks: tracks,
+  editedTags: {},
+  imagePath: '/storage/music/cover.jpg',
+);
+```
+
+<CardGroup cols={2}>
+  <Card title="Supported Formats" icon="image">
+    - JPEG (.jpg, .jpeg)
+    - PNG (.png)
+    - WebP (.webp)
+    - BMP (.bmp)
+  </Card>
+  
+  <Card title="Recommendations" icon="circle-check">
+    - **Size**: 500x500 to 1000x1000 pixels
+    - **Format**: JPEG for best compatibility
+    - **Quality**: 85-95% compression
+  </Card>
+</CardGroup>
+
+<Warning>
+Embedding large images (>5MB) may increase file size significantly and cause compatibility issues with some players.
+</Warning>
+
+### Extract Artwork
+
+Extract embedded artwork from audio files:
+
+```dart
+FArtwork? artwork = await extractArtwork(
+  trackPath: track.path,
+  isVideo: track is Video,
+);
+
+if (artwork.file != null) {
+  // Save or use the extracted artwork
+  await artwork.file.copy(destinationPath);
+}
+```
+
+## Rating System
+
+Namida supports a percentage-based rating system (0-100):
+
+```dart
+// Set rating to 80%
+await updateTracksMetadata(
+  tracks: [track],
+  editedTags: {
+    TagField.rating: '80',
+  },
+);
+```
+
+<Note>
+Ratings are stored in the file's metadata and also maintained in Namida's track statistics database.
+</Note>
+
+## Comment Insertion
+
+Add timestamped comments to track history:
+
+```dart
+// Insert comment (appends to existing comments)
+await updateTracksMetadata(
+  tracks: [track],
+  editedTags: {},
+  commentToInsert: 'Downloaded from YouTube: video_id',
+);
+```
+
+**Use cases**:
+- YouTube video ID tracking
+- Download source attribution
+- Personal notes and reminders
+- Timestamp markers
+
+## Advanced Features
+
+### Whitespace Trimming
+
+Automatically clean up metadata by removing extra whitespace:
+
+```dart
+await updateTracksMetadata(
+  tracks: tracks,
+  editedTags: editedTags,
+  trimWhiteSpaces: true, // Removes leading/trailing spaces
+);
+```
+
+### Preserve File Dates
+
+Maintain original file creation and modification timestamps:
+
+<Accordion title="File Date Preservation">
+```dart
+// Keep original file dates after editing
+await file.executeAndKeepStats(
+  () async {
+    // Perform tag editing operations
+  },
+  keepStats: settings.editTagsKeepFileDates.value,
+);
+```
+
+When enabled:
+- Original creation date preserved
+- Original modification date preserved  
+- Access time updated normally
+
+**Enable in**: Settings → Tags → Keep File Dates
+</Accordion>
+
+### Track Statistics Integration
+
+Some fields are stored separately in Namida's statistics database:
+
+<CardGroup cols={3}>
+  <Card title="Mood" icon="face-smile">
+    Comma-separated mood tags
+  </Card>
+  <Card title="Tags" icon="tag">
+    Custom classification tags
+  </Card>
+  <Card title="Rating" icon="star">
+    0-100 percentage rating
+  </Card>
+</CardGroup>
+
+```dart
+// Update both file tags AND statistics
+await Indexer.inst.updateTrackStats(
+  track,
+  ratingString: '85',
+  tagsString: 'favorites, workout, energy',
+  moodsString: 'happy, energetic',
+);
+```
+
+## Network Track Handling
+
+<Warning>
+For network-sourced tracks (streaming, remote servers), only statistics fields (mood, tags, rating) can be edited. File-based tags cannot be modified.
+</Warning>
+
+```dart
+if (track.isNetwork) {
+  // Only update statistics, not file tags
+  final newStats = await Indexer.inst.updateTrackStats(track, ...);
+  // Error: "Not Supported for network files"
+}
+```
+
+## Error Handling
+
+### Common Issues
+
+<Accordion title="File Not Found">
+**Error**: `file not found`
+
+**Causes**:
+- Track file was moved or deleted
+- SD card unmounted
+- Insufficient permissions
+
+**Solution**: Verify file location or refresh library
+</Accordion>
+
+<Accordion title="Permission Denied">
+**Error**: Requires `MANAGE_EXTERNAL_STORAGE` permission
+
+**Solution**:
+1. Navigate to Settings → Permissions
+2. Grant "All Files Access" permission
+3. Restart the app if needed
+</Accordion>
+
+<Accordion title="Tag Writing Failed">
+**Possible causes**:
+- Corrupted file header
+- Unsupported audio format
+- File is in use by another app
+- Read-only file system
+
+**Troubleshooting**:
+1. Close other music apps
+2. Check file permissions  
+3. Try editing a single field first
+4. Copy file to internal storage and retry
+</Accordion>
+
+## Callbacks & Progress
+
+Track tag editing progress with callbacks:
+
+```dart
+await updateTracksMetadata(
+  tracks: tracks,
+  editedTags: editedTags,
+  onEdit: (didUpdate, error, track) {
+    if (didUpdate) {
+      print('✓ Updated: ${track.title}');
+    } else {
+      print('✗ Failed: ${track.title} - $error');
+    }
+  },
+  onUpdatingTracksStart: () {
+    // All file operations complete
+    // Now updating internal library
+  },
+  onStatsEdit: (newStats) {
+    // Statistics database updated
+  },
+);
+```
+
+## Library Reindexing
+
+After editing tags, Namida automatically reindexes affected tracks:
+
+<Steps>
+  <Step title="Write Tags to File">
+    Tag data is written to the audio file using platform-native extractors.
+  </Step>
+  
+  <Step title="Update Track Maps">
+    Internal track database is updated with new metadata.
+  </Step>
+  
+  <Step title="Rebuild Media Lists">
+    Albums, artists, genres, and other media lists are regenerated.
+  </Step>
+  
+  <Step title="Refresh UI">
+    All views displaying the edited tracks are automatically refreshed.
+  </Step>
+</Steps>
+
+<Info>
+The entire process is atomic - if tag writing fails, the library is not modified.
+</Info>
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Before Editing" icon="clipboard-check">
+    - Backup important files
+    - Close other music apps
+    - Ensure sufficient storage
+    - Verify file permissions
+  </Card>
+  
+  <Card title="During Editing" icon="pen">
+    - Use consistent formatting
+    - Enable whitespace trimming
+    - Add specific genre/mood tags
+    - Include year information
+  </Card>
+</CardGroup>
+
+### Format Compatibility
+
+<Accordion title="Fully Supported Formats">
+- **MP3** (.mp3) - ID3v2 tags
+- **M4A/MP4** (.m4a, .mp4) - iTunes tags
+- **FLAC** (.flac) - Vorbis comments
+- **OGG** (.ogg) - Vorbis comments
+- **OPUS** (.opus) - Vorbis comments
+- **WMA** (.wma) - Windows Media tags
+</Accordion>
+
+<Accordion title="Limited Support">
+- **WAV** (.wav) - Basic ID3 tags
+- **APE** (.ape) - APEv2 tags
+- **WV** (.wv) - APEv2 tags
+
+<Note>
+Some formats have limited tag field support. Test with a single file first.
+</Note>
+</Accordion>
+
+## Tag Extraction Settings
+
+Configure extraction behavior in Settings:
+
+- **Artist Separators**: Customize how multi-artist tracks are split
+- **Genre Separators**: Configure genre delimiter characters
+- **Extract Feat. Artists**: Auto-detect featured artists in titles
+- **Keep File Dates**: Preserve timestamps after editing
+- **Trim Whitespace**: Auto-clean metadata strings

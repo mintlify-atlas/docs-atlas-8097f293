@@ -1,0 +1,445 @@
+---
+title: Contributing to Namida
+description: How to contribute to Namida music and video player development
+---
+
+Thank you for your interest in contributing to Namida! This guide will help you understand how you can contribute to the project.
+
+## Ways to Contribute
+
+There are many ways to contribute to Namida, even if you're not a developer:
+
+<CardGroup cols={2}>
+  <Card title="Translation" icon="language" href="/community/translations">
+    Help translate Namida to your language
+  </Card>
+  
+  <Card title="Bug Reports" icon="bug">
+    Report issues you encounter
+  </Card>
+  
+  <Card title="Feature Requests" icon="lightbulb">
+    Suggest new features and improvements
+  </Card>
+  
+  <Card title="Documentation" icon="book">
+    Improve documentation and guides
+  </Card>
+  
+  <Card title="Code Review" icon="code">
+    Review pull requests and provide feedback
+  </Card>
+  
+  <Card title="Community Support" icon="users">
+    Help other users in chat groups
+  </Card>
+</CardGroup>
+
+## Important Note About Building
+
+<Warning>
+  **Building Namida from source is not currently directly possible.**
+  
+  The project includes proprietary or private components that are not covered by the open source license. While the main project is open source, certain components remain the intellectual property of namidaco.
+  
+  For more information, see [GitHub issue #37](https://github.com/namidaco/namida/issues/37#issuecomment-1780341883).
+</Warning>
+
+### What This Means
+
+<AccordionGroup>
+  <Accordion title="You CAN:">
+    - Read and study the source code for personal learning
+    - Modify the code locally for educational purposes
+    - Submit pull requests with improvements
+    - Fork the repository for personal experimentation
+    - Contribute to discussions and code reviews
+  </Accordion>
+
+  <Accordion title="You CANNOT:">
+    - Build and run the app directly from source
+    - Redistribute the app under a different name or license
+    - Use the code for commercial purposes without permission
+    - Rebrand or repackage the software
+  </Accordion>
+</AccordionGroup>
+
+## Reporting Bugs
+
+Found a bug? Here's how to report it effectively:
+
+<Steps>
+  <Step title="Check existing issues">
+    Search the [GitHub issues](https://github.com/namidaco/namida/issues) to see if the bug has already been reported.
+  </Step>
+  
+  <Step title="Collect logs">
+    Go to **Settings > About > Share Logs** in Namida to export error logs.
+    
+    <Warning>
+      **DO NOT SKIP THIS STEP.** You will likely not get help without providing logs.
+    </Warning>
+  </Step>
+  
+  <Step title="Create a new issue">
+    Use the **[BUG]** issue template on GitHub.
+  </Step>
+  
+  <Step title="Provide detailed information">
+    Include:
+    - **Expected behavior**: What should have happened?
+    - **Current behavior**: What actually happens?
+    - **Steps to reproduce**: Detailed steps (1, 2, 3...)
+    - **Screenshots/videos**: Visual aids are very helpful
+    - **Logs**: Attach the log files from Step 2
+    - **Device info**: Android/Windows/Linux version, Namida version
+    - **Possible solution**: If you have coding knowledge, suggest how it might be fixed
+  </Step>
+</Steps>
+
+### Bug Report Template
+
+When creating a bug report, use this structure:
+
+```markdown
+## Expected Behavior
+[What should have happened?]
+
+## Current Behavior
+[What actually happens?]
+
+## Steps to Reproduce
+1. Go to...
+2. Click on...
+3. Scroll to...
+4. See error
+
+## Screenshots
+[Upload any screenshots or videos]
+
+## Logs
+[Attach log files from Settings > About > Share Logs]
+
+## Environment
+- Namida Version: [e.g., v5.6.1]
+- Platform: [Android 13 / Windows 11 / Linux]
+- Device: [e.g., Samsung Galaxy S21]
+
+## Possible Solution
+[If you have coding knowledge, suggest a fix]
+```
+
+<Note>
+  Good bug reports with clear steps and logs get fixed faster!
+</Note>
+
+## Requesting Features
+
+Have an idea for a new feature? Here's how to request it:
+
+<Steps>
+  <Step title="Search existing requests">
+    Check if someone has already requested this feature in the [GitHub issues](https://github.com/namidaco/namida/issues).
+  </Step>
+  
+  <Step title="Create a feature request">
+    Use the **[FEATURE REQUEST]** issue template.
+  </Step>
+  
+  <Step title="Describe the feature clearly">
+    Explain:
+    - **The problem**: What issue would this feature solve?
+    - **Your solution**: What exactly do you want to happen?
+    - **Alternatives**: What other solutions have you considered?
+    - **Additional context**: Screenshots, examples from other apps
+    - **Similar apps**: Apps that implement this feature well
+  </Step>
+</Steps>
+
+### Feature Request Template
+
+```markdown
+## Is your feature request related to a problem?
+I'm frustrated when [describe the problem]
+
+## Describe the solution you'd like
+[Clear description of what you want to happen]
+
+## Describe alternatives you've considered
+[Alternative solutions or features you've considered]
+
+## Additional context
+[Screenshots, mockups, or additional information]
+
+## Apps
+[Other apps or services that implement this feature well]
+```
+
+## Contributing Code
+
+While building from source isn't possible, you can still contribute code improvements:
+
+### Code Contribution Process
+
+<Steps>
+  <Step title="Study the codebase">
+    - Read through the source code on GitHub
+    - Understand the architecture and coding patterns
+    - Look at recent commits to see the coding style
+  </Step>
+  
+  <Step title="Identify an improvement">
+    - Find a bug to fix or feature to implement
+    - Check if someone is already working on it
+    - Comment on the issue to let others know you're working on it
+  </Step>
+  
+  <Step title="Create a pull request">
+    - Fork the repository
+    - Make your changes in a new branch
+    - Write clear commit messages
+    - Create a pull request with a detailed description
+  </Step>
+  
+  <Step title="Respond to feedback">
+    - Address code review comments
+    - Make requested changes
+    - Be patient and respectful
+  </Step>
+</Steps>
+
+<Info>
+  The maintainer will test and integrate your changes if they're approved.
+</Info>
+
+### Code Quality Guidelines
+
+When contributing code:
+
+- **Follow Flutter/Dart best practices**
+- **Write clear, descriptive commit messages**
+- **Comment complex logic**
+- **Keep changes focused** - one feature/fix per PR
+- **Test your changes** thoroughly
+- **Respect the existing code style**
+
+## Helping with Documentation
+
+Improving documentation is a valuable contribution:
+
+<AccordionGroup>
+  <Accordion title="Documentation improvements">
+    - Fix typos and grammar errors
+    - Clarify confusing explanations
+    - Add missing information
+    - Create guides and tutorials
+    - Update outdated documentation
+  </Accordion>
+
+  <Accordion title="Where to contribute">
+    - README.md file
+    - GitHub wiki (if available)
+    - Issue comments and discussions
+    - Community guides in Telegram/Discord
+  </Accordion>
+</AccordionGroup>
+
+## Community Support
+
+Help other users in the community:
+
+### Where to Help
+
+<CardGroup cols={2}>
+  <Card title="Telegram Chat" icon="telegram" href="https://t.me/+FmdfsgKoGmM1ZGFk">
+    Answer questions in the community chat
+  </Card>
+  
+  <Card title="Discord Server" icon="discord" href="https://discord.gg/WeY7DTVChT">
+    Provide support on Discord
+  </Card>
+  
+  <Card title="GitHub Issues" icon="github" href="https://github.com/namidaco/namida/issues">
+    Help troubleshoot reported issues
+  </Card>
+  
+  <Card title="GitHub Discussions" icon="comments" href="https://github.com/namidaco/namida/discussions">
+    Participate in discussions
+  </Card>
+</CardGroup>
+
+### How to Help
+
+- **Answer questions** from new users
+- **Share workarounds** for known issues
+- **Guide users** through troubleshooting steps
+- **Link to documentation** when relevant
+- **Be patient and friendly** - remember you were new once too!
+
+## Translation Contributions
+
+Help make Namida accessible to users worldwide:
+
+<Card title="Translation Repository" icon="language" href="/community/translations">
+  Visit the dedicated translations guide for detailed instructions
+</Card>
+
+## Testing Beta Versions
+
+Help test new features before stable release:
+
+<Steps>
+  <Step title="Download beta builds">
+    Get the latest beta from the [snapshots repository](https://github.com/namidaco/namida-snapshots/releases/latest).
+  </Step>
+  
+  <Step title="Test thoroughly">
+    - Try new features
+    - Look for bugs or regressions
+    - Test edge cases
+  </Step>
+  
+  <Step title="Report issues">
+    Report any bugs you find following the bug reporting guidelines above.
+  </Step>
+</Steps>
+
+<Warning>
+  Beta versions may be unstable. Always backup your data before testing beta builds.
+</Warning>
+
+## Financial Support
+
+Support Namida's development through donations:
+
+<CardGroup cols={2}>
+  <Card title="Buy Me a Coffee" icon="coffee" href="https://www.buymeacoffee.com/namidaco">
+    One-time or recurring donations
+  </Card>
+  
+  <Card title="Ko-fi" icon="heart" href="https://ko-fi.com/namidaco">
+    Support through Ko-fi
+  </Card>
+</CardGroup>
+
+**Cryptocurrency donations:**
+
+```
+Bitcoin / ETH / USDT (BEP20):
+0x95b2834c84def92860df773d8b3d80d4c296d748
+```
+
+<Info>
+  Donations help improve Namida and show appreciation. You can also support by starring the repository on GitHub!
+</Info>
+
+## Code of Conduct
+
+When contributing to Namida:
+
+### Be Respectful
+
+- Treat all community members with respect
+- Use welcoming and inclusive language
+- Accept constructive criticism gracefully
+- Focus on what's best for the community
+
+### Be Professional
+
+- Keep discussions on-topic
+- Provide constructive feedback
+- Avoid personal attacks or inflammatory language
+- Respect differing viewpoints
+
+### Be Helpful
+
+- Share knowledge generously
+- Help newcomers get started
+- Acknowledge others' contributions
+- Celebrate successes together
+
+## License Information
+
+Before contributing, understand the project's license:
+
+<Info>
+  **License:** Custom End User License Agreement (EULA)
+  
+  **Copyright:** © Copyright (C) 2023-present Namidaco &lt;namida.coo@gmail.com&gt;
+</Info>
+
+### What the License Allows
+
+- Read, compile, and modify the code for **personal usage**
+- Contribute to the software
+- Study the code for learning
+
+### What the License Prohibits
+
+- Redistributing the program under a different name or license without permission
+- Commercial use without explicit permission
+- Rebranding or repackaging the software
+
+See the [LICENSE](https://github.com/namidaco/namida/blob/main/LICENSE) file for complete details.
+
+## Getting Started
+
+Ready to contribute? Here's how to begin:
+
+<Steps>
+  <Step title="Join the community">
+    Join [Telegram](https://t.me/+FmdfsgKoGmM1ZGFk) or [Discord](https://discord.gg/WeY7DTVChT) to introduce yourself.
+  </Step>
+  
+  <Step title="Explore the project">
+    - Browse the [GitHub repository](https://github.com/namidaco/namida)
+    - Read the README and documentation
+    - Look at existing issues and pull requests
+  </Step>
+  
+  <Step title="Find your first contribution">
+    - Look for "good first issue" labels
+    - Check the translation repository
+    - Answer questions in the community
+  </Step>
+  
+  <Step title="Make your contribution">
+    Follow the guidelines in this document for your chosen contribution type.
+  </Step>
+</Steps>
+
+## Special Thanks
+
+Namida exists thanks to contributors like:
+
+- **[@MSOB7YY](https://github.com/MSOB7YY)** - YouTube client powering the YouTube section
+- **[@010101-sans](https://github.com/010101-sans)** - Creator of [namida_sync](https://github.com/010101-sans/namida_sync)
+- **[@cameralis](https://github.com/cameralis)** - Awesome miniplayer physics
+- **[@alexmercerind](https://github.com/alexmercerind)** - Technical assistance
+- **[@lusaxweb](https://github.com/lusaxweb)** - Iconsax icon pack
+- **All package maintainers** who made Namida possible
+- **Community translators** on the translation repository
+- **All contributors** who report bugs, suggest features, and help others
+
+<Note>
+  Your contribution, no matter how small, makes Namida better for everyone. Thank you!
+</Note>
+
+## Questions?
+
+If you have questions about contributing:
+
+- Ask in the [Telegram chat](https://t.me/+FmdfsgKoGmM1ZGFk)
+- Ask in the [Discord server](https://discord.gg/WeY7DTVChT)
+- Create a [GitHub discussion](https://github.com/namidaco/namida/discussions)
+- Open a [question issue](https://github.com/namidaco/namida/issues) using the question template
+
+<CardGroup cols={2}>
+  <Card title="Translation Guide" icon="language" href="/community/translations">
+    Learn how to translate Namida
+  </Card>
+  
+  <Card title="Troubleshooting" icon="wrench" href="/community/troubleshooting">
+    Get help with common issues
+  </Card>
+</CardGroup>

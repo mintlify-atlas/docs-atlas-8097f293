@@ -1,0 +1,305 @@
+---
+title: UI Settings
+description: Customize the appearance and layout of Namida's interface elements
+---
+
+## Overview
+
+Namida offers extensive UI customization options to tailor the app's appearance to your preferences. Adjust sizes, shapes, layouts, and visual effects to create your perfect music player interface.
+
+## Layout Customization
+
+### Border Radius
+
+Control the roundness of UI elements throughout the app.
+
+<Note>
+**Border Radius Multiplier** scales the roundness of all corners globally. Values range from 0.0 (sharp corners) to higher values for more rounded elements.
+
+Default: `1.0`
+</Note>
+
+### Font Scaling
+
+Adjust text size across the entire interface:
+
+- **Font Scale Factor**: Global text size multiplier (default: `0.9`)
+- **LRC Font Scale**: Lyrics display text size
+- **LRC Full Font Scale**: Full-screen lyrics text size
+
+```dart
+// Settings reference
+settings.fontScaleFactor.value = 0.9;
+settings.fontScaleLRC = 1.0;
+settings.fontScaleLRCFull = 1.0;
+```
+
+## Track List Appearance
+
+<CardGroup cols={2}>
+  <Card title="Track Thumbnails" icon="image">
+    **Size**: Adjust thumbnail dimensions (default: 70px)
+    
+    **Height**: Set tile height (default: 70px)
+    
+    **Force Squared**: Make all thumbnails perfect squares
+  </Card>
+  
+  <Card title="Album Thumbnails" icon="album">
+    **Size**: Adjust album art dimensions (default: 90px)
+    
+    **Height**: Set tile height (default: 90px)
+    
+    **Force Squared**: Make all album art perfect squares
+  </Card>
+</CardGroup>
+
+### Track Tile Layout
+
+<Steps>
+  <Step title="Row Configuration">
+    Customize what information appears in each row of track tiles:
+    
+    - **Row 1**: Title, subtitle, or custom fields
+    - **Row 2**: Artist, album, or custom fields  
+    - **Row 3**: Album, year, duration, or custom fields
+    - **Right Items**: Duration, rating, or custom fields
+  </Step>
+
+  <Step title="Display Options">
+    - **Display Third Row**: Toggle visibility of the third information row
+    - **Display Third Item in Each Row**: Show or hide the third item per row
+    - **Track Tile Separator**: Choose separator character (default: `•`)
+    - **Display Artist Before Title**: Swap title and artist order
+  </Step>
+</Steps>
+
+<Info>
+Track tile configuration is stored in `settings.trackItem` as a map of positions to display items.
+</Info>
+
+## Visual Effects
+
+### Gradient and Glow Effects
+
+<Accordion title="Enable Blur Effect">
+Applies a subtle blur to backgrounds and overlays for depth.
+
+**Setting**: `settings.enableBlurEffect`
+
+<Note>
+Blur effects are enabled by default on desktop platforms for a more polished look.
+</Note>
+</Accordion>
+
+<Accordion title="Enable Glow Effect">
+Adds a glowing outline effect to UI elements, synchronized with the current theme color.
+
+**Setting**: `settings.enableGlowEffect`
+</Accordion>
+
+<Accordion title="Enable Glow Behind Video">
+Applies a colored glow effect behind video playback for an immersive experience.
+
+**Setting**: `settings.enableGlowBehindVideo`
+</Accordion>
+
+### Gradient Tiles
+
+Enable gradient backgrounds on track tiles for a more dynamic appearance:
+
+```dart
+settings.gradientTiles.value = true;
+```
+
+<Warning>
+Heavy visual effects may impact performance on older devices. Adjust performance mode in settings if needed.
+</Warning>
+
+## Library Views
+
+### Grid Layout Configuration
+
+Customize the number of columns in grid views for different library sections:
+
+```dart
+settings.mediaGridCounts.value = {
+  LibraryTab.albums: CountPerRow(3),
+  LibraryTab.artists: CountPerRow(2),
+  LibraryTab.genres: CountPerRow(2),
+  LibraryTab.playlists: CountPerRow(1),
+};
+```
+
+<Steps>
+  <Step title="Albums View">
+    - **Use Staggered Grid**: Enable Pinterest-style staggered layout
+    - **Columns**: Set number of album columns per row
+    - **Display Track Number**: Show track numbers in album pages
+    - **Top Right Date**: Display date on album cards
+  </Step>
+
+  <Step title="Artists & Genres">
+    Configure grid columns for artists and genres sections independently.
+  </Step>
+</Steps>
+
+## Artwork Customization
+
+### Cache Settings
+
+<Note>
+**Artwork Cache Height Multiplier** controls the resolution of cached artwork.
+
+Higher values = better quality but more storage
+Lower values = reduced quality but less storage
+
+Default: `0.9`
+</Note>
+
+### Artwork Behavior
+
+- **Cache Artworks**: Enable local caching of album artwork
+- **Group Artworks by Album**: Use album as the primary grouping for artwork
+- **Unique Artwork Hash**: Generate unique identifiers for each artwork variant
+
+## Interface Elements
+
+### Bottom Navigation Bar
+
+```dart
+settings.enableBottomNavBar.value = true;
+```
+
+Toggle the bottom navigation bar for quick access to main sections. When disabled, use the drawer menu instead.
+
+### Floating Action Button (FAB)
+
+Choose FAB behavior:
+- **None**: No FAB displayed
+- **Search**: Quick search access
+- **Shuffle**: Shuffle play entire library
+
+```dart
+settings.floatingActionButton.value = FABType.search;
+```
+
+### Status Bar
+
+<Info>
+**Hide Status Bar in Expanded Miniplayer** creates an immersive full-screen player experience.
+
+This automatically enables immersive mode when the player is expanded.
+</Info>
+
+## Date & Time Formatting
+
+<Accordion title="Date Format Configuration">
+Customize how dates and times are displayed:
+
+- **Hour Format**: 12-hour or 24-hour format
+- **Date Time Format**: Custom date format string (default: `'MMM yyyy'`)
+
+Examples:
+- `'MMM yyyy'` → Dec 2023
+- `'[dd.MM.yyyy] EEE'` → [15.12.2023] Fri
+- `'yyyy-MM-dd'` → 2023-12-15
+
+```dart
+settings.hourFormat12.value = true;
+settings.dateTimeFormat.value = 'MMM yyyy';
+```
+</Accordion>
+
+## Performance Mode
+
+Balance between appearance and performance:
+
+<CardGroup cols={3}>
+  <Card title="Battery Saver" icon="battery-quarter">
+    Minimal animations and effects for maximum battery life
+  </Card>
+  
+  <Card title="Balanced" icon="battery-half">
+    Moderate effects with good performance (default for mobile)
+  </Card>
+  
+  <Card title="Good Looking" icon="sparkles">
+    Full visual effects enabled (default for desktop)
+  </Card>
+</CardGroup>
+
+```dart
+settings.performanceMode.value = PerformanceMode.balanced;
+```
+
+## Advanced UI Options
+
+### Collapsed Tiles in Settings
+
+```dart
+settings.useSettingCollapsedTiles.value = true;
+```
+
+Collapse settings categories by default for a cleaner settings interface.
+
+### Always Expanded Search Bar
+
+```dart
+settings.alwaysExpandedSearchbar.value = false;
+```
+
+Keep the search bar always visible and expanded instead of requiring a tap to activate.
+
+### Desktop Title Bar
+
+<Info>
+On desktop platforms, you can customize the title bar appearance:
+
+- **Desktop Titlebar**: Enable custom title bar styling
+- **Desktop Titlebar Type**: Choose icon style (auto, material, fluent, etc.)
+
+```dart
+settings.desktopTitlebar.value = true;
+settings.desktopTitlebarType.value = DesktopTitlebarIconsType.auto;
+```
+</Info>
+
+## Display Options Summary
+
+<Steps>
+  <Step title="Sizing">
+    Configure all size-related settings:
+    - Border radius multiplier
+    - Font scale factors
+    - Thumbnail and tile dimensions
+    - Artwork cache resolution
+  </Step>
+
+  <Step title="Layout">
+    Customize layout options:
+    - Track tile rows and items
+    - Grid column counts
+    - Album and artist layouts
+  </Step>
+
+  <Step title="Visual Effects">
+    Enable or disable effects:
+    - Blur, glow, and gradient effects
+    - Animated theme transitions
+    - Performance mode selection
+  </Step>
+
+  <Step title="Interface">
+    Configure interface elements:
+    - Bottom navigation bar
+    - Floating action button
+    - Status bar behavior
+    - Date and time formatting
+  </Step>
+</Steps>
+
+## Source Code Reference
+
+UI settings are defined in:
+- `lib/controller/settings_controller.dart`: Main settings configuration (lines 74-256)

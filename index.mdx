@@ -1,97 +1,160 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Namida - Beautiful Music & Video Player"
+description: "A feature-rich music and video player with YouTube support, built in Flutter"
 ---
 
-## Setting up
+<div style="background: linear-gradient(135deg, #94cb04 0%, #7aa503 100%); padding: 60px 30px; border-radius: 8px; margin: -20px -20px 40px -20px;">
+  <div style="max-width: 900px; margin: 0 auto;">
+    <h1 style="color: #ffffff; font-size: 48px; font-weight: 700; margin-bottom: 20px; text-align: center;">
+      Namida
+    </h1>
+    <p style="color: #ffffff; font-size: 18px; text-align: center; margin-bottom: 30px; opacity: 0.95;">
+      A Beautiful and Feature-rich Music & Video Player with YouTube Support, Built in Flutter
+    </p>
+    <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+      <a href="/installation" style="background: #ffffff; color: #1a1a1a; padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block;">
+        Get Started
+      </a>
+      <a href="https://github.com/namidaco/namida" style="background: rgba(255,255,255,0.2); color: #ffffff; padding: 12px 28px; border-radius: 6px; text-decoration: none; font-weight: 600; display: inline-block; border: 2px solid rgba(255,255,255,0.3);">
+        View on GitHub
+      </a>
+    </div>
+  </div>
+</div>
 
-Get your documentation site up and running in minutes.
+## Why Namida?
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+Namida is more than just a music player. It's a complete audio and video experience that brings together local library management, YouTube streaming, and powerful customization features in one beautiful app.
 
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
+<CardGroup cols={3}>
+  <Card title="Local Library" icon="music" href="/features/library">
+    Powerful indexer with tag editor, artist separators, and smart folder management
   </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
+  <Card title="YouTube Integration" icon="youtube" href="/features/youtube">
+    Stream, download, and cache YouTube content with SponsorBlock support
   </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+  <Card title="Video Playback" icon="video" href="/features/video-playback">
+    Play local and YouTube videos with gesture controls and fullscreen support
   </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
+  <Card title="Advanced Playlists" icon="list" href="/features/playlists">
+    Create custom playlists with artwork and flexible management
   </Card>
-</Columns>
+  <Card title="Synced Lyrics" icon="closed-captioning" href="/playback/lyrics">
+    Auto-fetch synced and plain lyrics with word-level synchronization
+  </Card>
+  <Card title="Audio Effects" icon="waveform" href="/playback/audio-effects">
+    Crossfade, replay gain, pitch control, equalizer, and skip silence
+  </Card>
+</CardGroup>
 
-## Create beautiful pages
+## Quick Start
 
-Everything you need to create world-class documentation.
+<Steps>
+  <Step title="Install Namida">
+    Download the latest release for your platform: Android, Windows, or Linux
+    
+    <CardGroup cols={2}>
+      <Card title="Installation Guide" icon="download" href="/installation">
+        Get installation instructions
+      </Card>
+      <Card title="Platform Support" icon="desktop" href="/platforms/android">
+        Check platform-specific details
+      </Card>
+    </CardGroup>
+  </Step>
+  
+  <Step title="Set Up Your Library">
+    Configure folder paths and let Namida index your music collection
+    
+    <Card title="Library Setup" icon="folder-open" href="/features/library">
+      Learn about library management
+    </Card>
+  </Step>
+  
+  <Step title="Start Listening">
+    Explore your music, create playlists, and enjoy advanced playback features
+    
+    <Card title="Quickstart Guide" icon="rocket" href="/quickstart">
+      Get started with Namida
+    </Card>
+  </Step>
+</Steps>
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+## Key Features
 
-## Need inspiration?
+<AccordionGroup>
+  <Accordion title="Library & Indexing" icon="database">
+    - Powerful audio and video indexer with tag editor support
+    - Smart artist and genre separators
+    - Duplicate track prevention
+    - Minimum file size and duration filters
+    - Folder-based library with exclusion support
+    - Sort by any track or album property
+  </Accordion>
+  
+  <Accordion title="YouTube & Streaming" icon="youtube">
+    - Best video and audio quality streaming
+    - Audio-only mode and data saver options
+    - Download and caching for offline playback
+    - SponsorBlock integration with segment skipping
+    - Return YouTube Dislike integration
+    - Multi-library support: Local, YouTube, Subsonic, WebDAV
+  </Accordion>
+  
+  <Accordion title="Look & Feel" icon="palette">
+    - Material3-like design language
+    - Dynamic theming from album artwork
+    - Waveform seekbar visualization
+    - Animating thumbnail with audio peaks
+    - Miniplayer party mode with edge effects
+    - Extensive customization options
+  </Accordion>
+  
+  <Accordion title="Advanced Features" icon="sparkles">
+    - Import YouTube and Last.fm history
+    - Backup and restore system
+    - Smart track generation based on listening patterns
+    - History tracking with configurable thresholds
+    - Most played playlists and statistics
+    - Lost memories feature to rediscover old tracks
+  </Accordion>
+</AccordionGroup>
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+## Platform Support
+
+Namida is available on multiple platforms with native support:
+
+<CardGroup cols={3}>
+  <Card title="Android" icon="android" href="/platforms/android">
+    Stable release with full feature support
+  </Card>
+  <Card title="Windows" icon="windows" href="/platforms/windows">
+    Beta release with desktop optimizations
+  </Card>
+  <Card title="Linux" icon="linux" href="/platforms/linux">
+    Beta release for Linux distributions
+  </Card>
+</CardGroup>
+
+## Community & Support
+
+Join thousands of users in the Namida community:
+
+<CardGroup cols={2}>
+  <Card title="GitHub" icon="github" href="https://github.com/namidaco/namida">
+    Source code, issues, and releases
+  </Card>
+  <Card title="Discord" icon="discord" href="https://discord.gg/WeY7DTVChT">
+    Chat with the community
+  </Card>
+  <Card title="FAQ" icon="circle-question" href="/community/faq">
+    Common questions answered
+  </Card>
+  <Card title="Contributing" icon="code-pull-request" href="/community/contributing">
+    Help improve Namida
+  </Card>
+</CardGroup>
+
+<Note>
+  Namida is actively maintained with regular updates and new features. Check the [GitHub releases](https://github.com/namidaco/namida/releases) for the latest version.
+</Note>

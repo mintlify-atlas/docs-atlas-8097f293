@@ -1,0 +1,419 @@
+---
+title: Translating Namida
+description: Help translate Namida music and video player to your language
+---
+
+Help make Namida accessible to users worldwide by contributing translations to your language!
+
+## Translation Repository
+
+All translations are managed in a separate repository:
+
+<Card title="Namida Translations" icon="language" href="https://github.com/namidaco/namida-translations">
+  **GitHub Repository:** https://github.com/namidaco/namida-translations
+  
+  Visit this repository to contribute translations or add a new language.
+</Card>
+
+## Why Translate?
+
+Translating Namida helps:
+
+<CardGroup cols={2}>
+  <Card title="Expand Accessibility" icon="globe">
+    Make Namida usable for non-English speakers worldwide
+  </Card>
+  
+  <Card title="Grow Community" icon="users">
+    Welcome users from different countries and cultures
+  </Card>
+  
+  <Card title="Improve Experience" icon="star">
+    Users can navigate the app in their native language
+  </Card>
+  
+  <Card title="Personal Contribution" icon="heart">
+    Make a meaningful contribution to open source
+  </Card>
+</CardGroup>
+
+## How to Contribute Translations
+
+<Steps>
+  <Step title="Visit the translation repository">
+    Go to [github.com/namidaco/namida-translations](https://github.com/namidaco/namida-translations)
+  </Step>
+  
+  <Step title="Check existing languages">
+    - Browse the repository to see which languages are already available
+    - Check if your language needs improvements or is missing
+  </Step>
+  
+  <Step title="Fork the repository">
+    Click the "Fork" button on GitHub to create your own copy of the translation repository.
+  </Step>
+  
+  <Step title="Add or edit translations">
+    - For a new language: Create a new file following the existing structure
+    - For improvements: Edit the existing language file
+    - Follow the format and naming conventions used in the repository
+  </Step>
+  
+  <Step title="Submit a pull request">
+    - Commit your changes with a clear description
+    - Create a pull request to the main repository
+    - Wait for review and feedback
+  </Step>
+</Steps>
+
+## Translation Guidelines
+
+When translating Namida, follow these best practices:
+
+### General Principles
+
+<AccordionGroup>
+  <Accordion title="Maintain context">
+    Understand the context where each string is used. A word might have different translations depending on whether it's a button, menu item, or description.
+  </Accordion>
+
+  <Accordion title="Keep it concise">
+    Try to match the length of the original English text when possible. Very long translations may not fit in the UI.
+  </Accordion>
+
+  <Accordion title="Use consistent terminology">
+    Use the same translation for technical terms throughout the app. For example, if you translate "playlist" as "liste de lecture" in French, use that consistently.
+  </Accordion>
+
+  <Accordion title="Preserve placeholders">
+    Keep any placeholders (like `%s`, `{0}`, etc.) exactly as they appear. These are replaced with dynamic content at runtime.
+    
+    Example:
+    ```
+    English: "Added %s tracks to playlist"
+    French: "Ajouté %s pistes à la liste de lecture"
+    ```
+  </Accordion>
+
+  <Accordion title="Respect formatting">
+    Maintain any special formatting like line breaks, capitalization patterns, or punctuation that serves a purpose.
+  </Accordion>
+</AccordionGroup>
+
+### Technical Terms
+
+<Info>
+  Some technical terms might be better left in English or transliterated, depending on common usage in your language:
+  - Playlist
+  - Queue
+  - Equalizer
+  - Buffer
+  - Cache
+  
+  Research how music apps in your language typically handle these terms.
+</Info>
+
+### Tone and Style
+
+- **Friendly but professional**: Namida has a casual, user-friendly tone
+- **Clear and direct**: Avoid overly formal or complex language
+- **Consistent voice**: Maintain the same tone throughout all translations
+
+## What to Translate
+
+The translation repository includes strings for:
+
+### User Interface Elements
+
+- Menu items and navigation
+- Button labels
+- Settings options
+- Tab names
+- Dialog titles and messages
+
+### Features and Functions
+
+- Music library terms (albums, artists, genres, etc.)
+- Playback controls
+- YouTube integration features
+- Download and cache options
+- Playlist and queue management
+
+### Messages and Notifications
+
+- Status messages
+- Error messages
+- Success confirmations
+- Tooltips and hints
+
+### Settings and Preferences
+
+- Setting categories
+- Setting descriptions
+- Option labels
+- Help text
+
+<Note>
+  Focus on the most commonly used strings first, then work on more specialized features.
+</Note>
+
+## Testing Your Translations
+
+After contributing translations:
+
+<Steps>
+  <Step title="Wait for merge">
+    Your pull request will be reviewed by the maintainers.
+  </Step>
+  
+  <Step title="Download beta build">
+    Once merged, translations will be included in the next beta or stable release.
+  </Step>
+  
+  <Step title="Test in the app">
+    - Download the updated version
+    - Change language to your translation
+    - Check for:
+      - Correctness of translations
+      - Text that doesn't fit in the UI
+      - Missing translations (falling back to English)
+      - Context mismatches
+  </Step>
+  
+  <Step title="Report issues">
+    If you find problems, create an issue or submit corrections through another pull request.
+  </Step>
+</Steps>
+
+## Translation Tools and Resources
+
+### Useful Tools
+
+<CardGroup cols={2}>
+  <Card title="GitHub Desktop" icon="github">
+    Makes it easier to fork, edit, and submit translations without command-line knowledge.
+  </Card>
+  
+  <Card title="VS Code" icon="code">
+    A good text editor with syntax highlighting for easier editing.
+  </Card>
+  
+  <Card title="Google Translate" icon="language">
+    Can help with initial translations, but always review and adjust for context.
+  </Card>
+  
+  <Card title="DeepL" icon="robot">
+    Often provides more natural translations than Google Translate.
+  </Card>
+</CardGroup>
+
+<Warning>
+  **Never rely solely on machine translation.** Always review and adjust translations to ensure they're natural and contextually appropriate.
+</Warning>
+
+### Reference Materials
+
+- Look at how other music apps are translated in your language
+- Check official Flutter/Material Design translations for standard UI terms
+- Consult with native speakers when unsure
+- Use the app yourself to understand the context
+
+## Common Translation Challenges
+
+<AccordionGroup>
+  <Accordion title="Pluralization">
+    Different languages have different plural rules. Make sure you understand how your language handles:
+    - Zero items ("no tracks")
+    - One item ("1 track")
+    - Few items (in some languages)
+    - Many items ("5 tracks")
+    
+    The translation framework should provide separate strings for these cases.
+  </Accordion>
+
+  <Accordion title="Gender and formality">
+    Some languages have gendered nouns or formal/informal forms. Choose the appropriate level of formality for a music app (usually informal/neutral).
+  </Accordion>
+
+  <Accordion title="Right-to-left languages">
+    If you're translating to Arabic, Hebrew, or other RTL languages:
+    - The translation framework should handle text direction
+    - Test thoroughly to ensure UI elements appear correctly
+    - Report any RTL-specific layout issues
+  </Accordion>
+
+  <Accordion title="Text expansion/contraction">
+    Some languages are significantly longer or shorter than English:
+    - German often expands significantly
+    - Chinese/Japanese often contract
+    - Try to keep translations compact to avoid UI overflow
+    - Report if the UI cannot accommodate your language's text length
+  </Accordion>
+</AccordionGroup>
+
+## Updating Existing Translations
+
+As Namida evolves, translations need updates:
+
+### When Updates Are Needed
+
+- **New features** added to the app
+- **Changed terminology** in English version
+- **Corrections** to existing translations
+- **Improvements** in clarity or naturalness
+
+### How to Update
+
+<Steps>
+  <Step title="Check for changes">
+    Compare your language file with recent English updates in the translation repository.
+  </Step>
+  
+  <Step title="Identify missing strings">
+    New features often add new strings that need translation.
+  </Step>
+  
+  <Step title="Submit updates">
+    Follow the same pull request process as for new translations.
+  </Step>
+</Steps>
+
+## Language-Specific Considerations
+
+### Currently Available Languages
+
+Check the [translation repository](https://github.com/namidaco/namida-translations) for the current list of supported languages.
+
+### Adding a New Language
+
+To add a language not yet supported:
+
+<Steps>
+  <Step title="Create a new file">
+    Create a new translation file following the naming convention in the repository (e.g., `strings_fr.json` for French).
+  </Step>
+  
+  <Step title="Copy the English template">
+    Use the English strings file as your template.
+  </Step>
+  
+  <Step title="Translate all strings">
+    Translate every string in the file. Mark any strings you're unsure about for review.
+  </Step>
+  
+  <Step title="Submit for review">
+    Create a pull request with your new language file.
+  </Step>
+</Steps>
+
+<Info>
+  Even partial translations are helpful! If you can't translate everything, submit what you have and others may help complete it.
+</Info>
+
+## Recognition and Credits
+
+Translation contributors are valued members of the Namida community:
+
+- Your GitHub username will appear in the repository's contributors
+- Translators may be credited in release notes
+- You're helping thousands of users enjoy Namida in their language
+
+<Note>
+  Consider joining the Namida community on [Telegram](https://t.me/+FmdfsgKoGmM1ZGFk) or [Discord](https://discord.gg/WeY7DTVChT) to coordinate with other translators!
+</Note>
+
+## Quality Assurance
+
+### Before Submitting
+
+Review your translations for:
+
+- [ ] **Accuracy**: Does it convey the correct meaning?
+- [ ] **Naturalness**: Does it sound natural in your language?
+- [ ] **Consistency**: Are terms used consistently?
+- [ ] **Completeness**: Are all strings translated?
+- [ ] **Placeholders preserved**: Are `%s`, `{0}`, etc. intact?
+- [ ] **Length**: Will it fit in the UI?
+- [ ] **Spelling and grammar**: No typos or errors?
+
+### Peer Review
+
+If possible, have another native speaker review your translations before submitting.
+
+## Getting Help
+
+Need help with translations?
+
+<CardGroup cols={2}>
+  <Card title="Telegram Chat" icon="telegram" href="https://t.me/+FmdfsgKoGmM1ZGFk">
+    Ask translation questions in the community chat
+  </Card>
+  
+  <Card title="Discord Server" icon="discord" href="https://discord.gg/WeY7DTVChT">
+    Coordinate with other translators on Discord
+  </Card>
+  
+  <Card title="GitHub Issues" icon="github" href="https://github.com/namidaco/namida-translations/issues">
+    Report translation issues or ask questions
+  </Card>
+  
+  <Card title="GitHub Discussions" icon="comments" href="https://github.com/namidaco/namida-translations/discussions">
+    Discuss translation approaches and conventions
+  </Card>
+</CardGroup>
+
+## Translation Best Practices Summary
+
+<CardGroup cols={2}>
+  <Card title="Do" icon="check">
+    - Understand context before translating
+    - Keep translations concise
+    - Use consistent terminology
+    - Preserve placeholders and formatting
+    - Test your translations
+    - Ask for help when unsure
+  </Card>
+  
+  <Card title="Don't" icon="xmark">
+    - Rely solely on machine translation
+    - Change placeholder syntax
+    - Use overly formal language
+    - Submit without reviewing
+    - Translate technical terms unnecessarily
+    - Ignore UI length constraints
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+Ready to start translating?
+
+<Steps>
+  <Step title="Visit the repository">
+    Go to [github.com/namidaco/namida-translations](https://github.com/namidaco/namida-translations)
+  </Step>
+  
+  <Step title="Read the repository README">
+    Check for any additional guidelines or instructions in the translation repository.
+  </Step>
+  
+  <Step title="Start translating">
+    Follow the contribution process outlined above.
+  </Step>
+  
+  <Step title="Join the community">
+    Connect with other contributors on [Telegram](https://t.me/+FmdfsgKoGmM1ZGFk) or [Discord](https://discord.gg/WeY7DTVChT).
+  </Step>
+</Steps>
+
+<Info>
+  Thank you for helping make Namida accessible to users around the world! Every translation makes a difference.
+</Info>
+
+## Questions?
+
+If you have questions about translating Namida:
+
+<Card title="Contributing Guide" icon="hands-helping" href="/community/contributing">
+  Check the general contributing guide for more information about participating in the Namida project.
+</Card>

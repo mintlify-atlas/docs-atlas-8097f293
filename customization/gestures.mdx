@@ -1,0 +1,348 @@
+---
+title: Gesture Controls
+description: Master gesture controls for tracks, artwork, and player interactions in Namida
+---
+
+## Overview
+
+Namida provides intuitive gesture controls throughout the app for quick actions without navigating through menus. Customize swipe actions, artwork gestures, and player controls to match your workflow.
+
+## Track Swipe Actions
+
+Swipe left or right on any track to perform quick actions.
+
+### Configure Swipe Actions
+
+<Steps>
+  <Step title="Access Swipe Settings">
+    Navigate to **Settings → Customization → Swipe Actions**
+  </Step>
+
+  <Step title="Choose Left Swipe Action">
+    Select what happens when you swipe a track from right to left:
+    - Play After Current
+    - Play Next  
+    - Add to Queue
+    - Add to Playlist
+    - Open Track Info
+    - Edit Tags
+    - And more...
+  </Step>
+
+  <Step title="Choose Right Swipe Action">
+    Select what happens when you swipe a track from left to right (default: Open Info)
+  </Step>
+</Steps>
+
+<Note>
+Swipe actions work on track tiles throughout the app - in library views, search results, playlists, and queue.
+</Note>
+
+```dart
+// Settings reference
+settings.onTrackSwipeLeft.value = TrackExecuteActions.playafter;
+settings.onTrackSwipeRight.value = TrackExecuteActions.openinfo;
+```
+
+### Available Swipe Actions
+
+<CardGroup cols={2}>
+  <Card title="Play Actions" icon="play">
+    - **Play**: Start playing immediately
+    - **Play Next**: Insert after current track
+    - **Play After**: Add to end of queue
+    - **Play Last**: Add as last in queue
+  </Card>
+  
+  <Card title="Queue Actions" icon="list">
+    - **Add to Queue**: Append to current queue
+    - **Insert to Queue**: Add at specific position
+  </Card>
+  
+  <Card title="Management" icon="pencil">
+    - **Open Info**: View track details
+    - **Edit Tags**: Modify track metadata
+    - **Add to Playlist**: Save to playlist
+    - **Share**: Share track
+  </Card>
+  
+  <Card title="Quick Actions" icon="bolt">
+    - **None**: Disable swipe action
+    - **Set as Ringtone**: Use as phone ringtone
+    - **Go to Artist**: Navigate to artist page
+    - **Go to Album**: Navigate to album page
+  </Card>
+</CardGroup>
+
+## Artwork Gestures
+
+Interact with album artwork in the player for quick actions.
+
+### Tap Gesture
+
+<Accordion title="Configure Tap Action">
+Set what happens when you tap the album artwork:
+
+```dart
+settings.artworkTapAction.value = TrackExecuteActions.none;
+```
+
+Options include:
+- **None**: No action (default)
+- **Open Track Info**: Display full track details
+- **Show Lyrics**: Toggle lyrics view
+- **Open Queue**: Jump to queue view
+- **Navigate**: Go to album or artist page
+</Accordion>
+
+### Double Tap Gesture
+
+<Info>
+**Double Tap for Lyrics** is a quick way to toggle lyrics display.
+
+```dart
+settings.artworkGestureDoubleTapLRC.value = true;
+```
+
+When enabled, double-tapping artwork shows/hides lyrics. When disabled, double-tap action uses the same setting as single tap.
+</Info>
+
+### Long Press Gesture
+
+<Accordion title="Configure Long Press Action">
+Set what happens when you long-press the album artwork:
+
+```dart
+settings.artworkLongPressAction.value = TrackExecuteActions.none;
+```
+
+Common uses:
+- **Extract Colors**: Regenerate color palette
+- **Share Artwork**: Share album art image
+- **Set as Wallpaper**: Use artwork as device wallpaper
+- **Open Full Screen**: View artwork in full screen
+</Accordion>
+
+## Miniplayer Gestures
+
+The miniplayer supports advanced gesture controls for navigation and playback.
+
+### Vertical Gestures
+
+<Steps>
+  <Step title="Swipe Up to Expand">
+    Swipe up on the miniplayer to expand to full player view
+    
+    The animation threshold is `100px` with bottom navigation enabled, `60px` without.
+  </Step>
+
+  <Step title="Swipe Down to Minimize">
+    From expanded player, swipe down to minimize back to miniplayer
+    
+    <Warning>
+    If **Dismissible Miniplayer** is enabled, swiping down past the threshold will dismiss the miniplayer entirely and clear the queue.
+    </Warning>
+  </Step>
+
+  <Step title="Swipe Up to Queue">
+    From expanded player, swipe up again to open the queue view
+  </Step>
+</Steps>
+
+```dart
+// Miniplayer gesture configuration
+settings.dismissibleMiniplayer.value = true;
+```
+
+### Horizontal Gestures
+
+<Info>
+**Swipe horizontally** on the miniplayer to skip tracks:
+
+- **Swipe Left**: Next track
+- **Swipe Right**: Previous track
+
+The swipe threshold is `1.5x` the actuation offset for reliable detection.
+</Info>
+
+```dart
+// Horizontal swipe implementation in miniplayer_controller.dart
+void gestureDetectorOnHorizontalDragUpdate(DragUpdateDetails details) {
+  if (_offset > maxOffset) return;
+  
+  _sOffset -= details.primaryDelta ?? 0.0;
+  _sOffset = _sOffset.clampDouble(-sMaxOffset, sMaxOffset);
+  
+  sAnim.animateTo(_sOffset / sMaxOffset * 1.25, duration: Duration.zero);
+}
+```
+
+### Velocity-Based Actions
+
+Miniplayer gestures use velocity detection for responsive feedback:
+
+- **Fast flicks** (>500px/s) trigger immediate action
+- **Slow drags** require crossing actuation threshold
+- **Bounce animations** provide haptic-like visual feedback
+
+<Note>
+Velocity tracking ensures that quick swipes feel natural and responsive, even if you don't drag the full distance.
+</Note>
+
+## Video Player Gestures
+
+When playing videos, Namida supports additional gesture controls.
+
+### Video Controls
+
+<CardGroup cols={2}>
+  <Card title="Volume Control" icon="volume">
+    **Swipe up/down** on the left side of the video to adjust volume
+  </Card>
+  
+  <Card title="Brightness Control" icon="sun">
+    **Swipe up/down** on the right side to adjust brightness
+  </Card>
+  
+  <Card title="Seek Control" icon="forward">
+    **Swipe left/right** anywhere on video to seek backward/forward
+  </Card>
+  
+  <Card title="Fullscreen Toggle" icon="expand">
+    **Pinch in** or **swipe up** to enter/exit fullscreen mode
+  </Card>
+</CardGroup>
+
+### Playback Speed
+
+<Info>
+**Long press** on video to enable 2x playback speed temporarily.
+
+Configure the long press speed multiplier:
+
+```dart
+settings.player.longPressSpeed.value = 2.0; // 2x speed
+```
+</Info>
+
+### Double Tap to Seek
+
+<Accordion title="YouTube-Style Double Tap">
+Double tap on left or right side of video to seek:
+
+- **Left side**: Seek backward (default: 10 seconds)
+- **Right side**: Seek forward (default: 10 seconds)
+
+This mimics YouTube's double-tap-to-seek behavior for familiar controls.
+</Accordion>
+
+## Drawer Gesture
+
+<Note>
+**Swipeable Drawer** allows opening the navigation drawer by swiping from the left edge.
+
+```dart
+settings.swipeableDrawer.value = true;
+```
+
+When disabled, you must tap the menu button to open the drawer.
+</Note>
+
+## Haptic Feedback
+
+Gestures can trigger haptic feedback for tactile confirmation.
+
+### Vibration Type
+
+Choose your preferred haptic feedback style:
+
+```dart
+settings.vibrationType.value = VibrationType.vibration;
+```
+
+Options:
+- **None**: No haptic feedback
+- **Vibration**: Standard vibration motor feedback
+- **Haptic**: Use device haptic engine (if available)
+- **Light**: Subtle haptic feedback
+- **Very Light**: Minimal haptic feedback
+
+<Info>
+Haptic feedback is triggered when:
+- Snapping miniplayer states
+- Swiping to skip tracks  
+- Long pressing controls
+- Crossing gesture thresholds
+</Info>
+
+## Gesture Performance
+
+Namida's gesture system is optimized for smooth, responsive interactions:
+
+- **VelocityTracker**: Tracks pointer velocity for natural physics
+- **Bouncing Curves**: Custom cubic curves for satisfying animations
+- **Threshold Detection**: Smart actuation prevents accidental triggers
+- **Dead Zones**: Bottom edge dead space prevents conflicts with system gestures
+
+### Animation Curves
+
+```dart
+// Defined in miniplayer_controller.dart
+static const _bouncingCurve = Cubic(0.175, 0.885, 0.32, 1.125);
+static const _bouncingCurveSoft = Cubic(0.150, 0.96, 0.28, 1.04);
+```
+
+## Accessibility
+
+All gesture actions have alternative access methods:
+
+<Steps>
+  <Step title="Long Press Menus">
+    Long press any track to open a context menu with all available actions.
+  </Step>
+
+  <Step title="Button Controls">
+    All player controls are available via on-screen buttons.
+  </Step>
+
+  <Step title="Keyboard Shortcuts">
+    Desktop users can use keyboard shortcuts as gesture alternatives.
+  </Step>
+</Steps>
+
+## Gesture Settings Summary
+
+<CardGroup cols={2}>
+  <Card title="Track Swipes" icon="hand">
+    **Left Swipe**: `settings.onTrackSwipeLeft`
+    
+    **Right Swipe**: `settings.onTrackSwipeRight`
+  </Card>
+  
+  <Card title="Artwork Gestures" icon="image">
+    **Tap**: `settings.artworkTapAction`
+    
+    **Long Press**: `settings.artworkLongPressAction`
+    
+    **Double Tap LRC**: `settings.artworkGestureDoubleTapLRC`
+  </Card>
+  
+  <Card title="Miniplayer" icon="window-minimize">
+    **Dismissible**: `settings.dismissibleMiniplayer`
+    
+    **Swipeable Drawer**: `settings.swipeableDrawer`
+  </Card>
+  
+  <Card title="Feedback" icon="bell">
+    **Vibration Type**: `settings.vibrationType`
+    
+    **Haptic Enabled**: System-dependent
+  </Card>
+</CardGroup>
+
+## Source Code Reference
+
+Gesture implementations:
+- `lib/controller/miniplayer_controller.dart`: Miniplayer gestures (lines 250-524)
+- `lib/controller/settings_controller.dart`: Gesture settings (lines 233-236)
+- `lib/ui/widgets/video_widget.dart`: Video player gestures

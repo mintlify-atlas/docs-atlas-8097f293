@@ -1,0 +1,438 @@
+---
+title: Backup & Restore
+description: Create and restore complete backups of your Namida data including history, playlists, and settings
+---
+
+Namida's backup system creates comprehensive archives of all your app data, allowing you to preserve your library metadata, listening history, playlists, and settings.
+
+## Creating Backups
+
+### Manual Backup
+
+Create an on-demand backup of all Namida data:
+
+<Steps>
+  <Step title="Navigate to Backup Settings">
+    Open **Settings → Backup & Restore → Create Backup**
+  </Step>
+  
+  <Step title="Grant Storage Permission">
+    Ensure "All Files Access" permission (`MANAGE_EXTERNAL_STORAGE`) is granted for backup creation.
+  </Step>
+  
+  <Step title="Wait for Completion">
+    The backup process creates a compressed archive:
+    
+    `Namida Backup - YYYY-MM-DD HH.mm.ss.zip`
+  </Step>
+  
+  <Step title="Locate Backup File">
+    Find your backup in:
+    - Default location: `/storage/emulated/0/Namida/Backups/`
+    - Custom location: As configured in settings
+  </Step>
+</Steps>
+
+<Info>
+Backup creation automatically checkpoints database files to ensure data consistency and prevent corruption.
+</Info>
+
+### What Gets Backed Up
+
+A complete Namida backup includes:
+
+<CardGroup cols={2}>
+  <Card title="Library Data" icon="database">
+    - Tracks database
+    - Track statistics
+    - Video cache data
+    - Local video index
+    - Album identifiers
+  </Card>
+  
+  <Card title="User Data" icon="user">
+    - Listening history
+    - Play counts & timestamps
+    - Favorites playlist
+    - Custom playlists
+    - Playlist artworks
+    - Queue history
+  </Card>
+  
+  <Card title="Settings" icon="gear">
+    - App preferences
+    - Equalizer settings  
+    - Player configuration
+    - YouTube settings
+    - Keyboard shortcuts
+    - Tutorial progress
+  </Card>
+  
+  <Card title="YouTube Data" icon="youtube">
+    - Liked videos
+    - Subscriptions
+    - Subscription groups
+    - YouTube playlists
+    - YouTube history
+    - Video statistics
+    - Download tasks
+  </Card>
+</CardGroup>
+
+### Backup Structure
+
+```bash
+Namida Backup - 2024-03-15 14.30.45.zip
+├── LOCAL_FILES.zip              # Local music data
+│   ├── tracks.db                # Track metadata database
+│   ├── tracks_stats.db          # Play counts & ratings
+│   ├── history/                 # Listening history
+│   ├── playlists/               # Custom playlists
+│   ├── queues/                  # Saved queues
+│   └── settings.json            # App settings
+├── YOUTUBE_FILES.zip            # YouTube-related data
+│   ├── yt_history/              # YouTube watch history
+│   ├── yt_playlists/            # YouTube playlists
+│   └── yt_stats/                # YouTube video stats
+├── TEMPDIR_*.zip                # Compressed directories
+└── YOUTUBE_TEMPDIR_*.zip        # YouTube directories
+```
+
+## Automatic Backups
+
+### Configure Auto-Backup
+
+Enable automatic periodic backups:
+
+```dart
+// Set backup interval (in days)
+settings.autoBackupIntervalDays.value = 7; // Weekly backups
+
+// Auto-backup runs on app startup
+await BackupController.inst.checkForAutoBackup();
+```
+
+<Steps>
+  <Step title="Enable Auto-Backup">
+    **Settings → Backup & Restore → Automatic Backup**
+    
+    Set the interval (in days) between automatic backups.
+  </Step>
+  
+  <Step title="Set Backup Location">
+    Choose where automatic backups are stored:
+    ```dart
+    settings.defaultBackupLocation.value = '/storage/emulated/0/Backups/';
+    ```
+  </Step>
+  
+  <Step title="Verify Permissions">
+    Auto-backup requires storage permission. Grant when prompted or enable manually.
+  </Step>
+</Steps>
+
+<Note>
+Automatic backups are created only if the specified interval has passed since the last backup. The system maintains up to **10 auto-backup files** and automatically removes older ones.
+</Note>
+
+### Auto-Backup Behavior
+
+```dart
+// Automatic backup logic
+final latestBackupDate = getLatestBackupFileDate();
+final daysSinceLastBackup = DateTime.now().difference(latestBackupDate).inDays;
+
+if (daysSinceLastBackup > settings.autoBackupIntervalDays.value) {
+  await createBackupFile(itemsToBackup, fileSuffix: " - auto");
+}
+```
+
+**Auto-backup naming**: `Namida Backup - YYYY-MM-DD HH.mm.ss - auto.zip`
+
+## Restoring Backups
+
+### Restore Process
+
+<Warning>
+Restoring a backup will **replace all current data** with the backup contents. Current playlists, history, and settings will be overwritten.
+</Warning>
+
+<Steps>
+  <Step title="Select Backup Source">
+    Choose between:
+    - **Auto-restore**: Uses the most recent backup from backup directory
+    - **Manual selection**: Browse and select a specific `.zip` backup file
+  </Step>
+  
+  <Step title="Begin Restoration">
+    Namida extracts the backup archive to the app data directory:
+    ```dart
+    await extractZip(
+      zipFile: backupFile,
+      destinationDir: Directory(AppDirs.USER_DATA),
+    );
+    ```
+  </Step>
+  
+  <Step title="Extract Sub-Archives">
+    Nested `.zip` files (LOCAL_FILES.zip, YOUTUBE_FILES.zip) are automatically extracted.
+  </Step>
+  
+  <Step title="Database Checkpointing">
+    All database files are checkpointed and WAL files are cleaned:
+    ```dart
+    await ensureDbCheckpointedAndDeleteWALFiles();
+    ```
+  </Step>
+  
+  <Step title="Reload Data">
+    Namida reloads all configuration files, playlists, and history:
+    - Settings files
+    - Track database
+    - Playlists
+    - Listening history
+    - YouTube data
+  </Step>
+  
+  <Step title="Confirmation">
+    A success message appears when restoration completes.
+  </Step>
+</Steps>
+
+### Post-Restore Operations
+
+```dart
+await _readNewFiles() {
+  // Reload all settings
+  settings.prepareSettingsFile();
+  settings.equalizer.prepareSettingsFile();
+  settings.player.prepareSettingsFile();
+  settings.youtube.prepareSettingsFile();
+  
+  // Reload library data
+  Indexer.inst.prepareTracksFile();
+  
+  // Reload playlists and history
+  PlaylistController.inst.prepareAllPlaylists();
+  HistoryController.inst.prepareHistoryFile();
+  
+  // Reload YouTube data
+  YoutubePlaylistController.inst.prepareAllPlaylists();
+  YoutubeHistoryController.inst.prepareHistoryFile();
+}
+```
+
+## Backup Management
+
+### Custom Backup Location
+
+Change where backups are stored:
+
+```dart
+// Set custom backup directory
+settings.defaultBackupLocation.value = '/sdcard/MyBackups/';
+
+// Falls back to default if custom path is invalid
+final path = settings.defaultBackupLocation.value ?? AppDirs.BACKUPS;
+```
+
+<Accordion title="Choosing a Backup Location">
+**Recommended locations**:
+- Internal storage: `/storage/emulated/0/Namida/Backups/`
+- SD card: `/storage/XXXX-XXXX/Namida/Backups/`
+- Cloud sync folder: `/storage/emulated/0/Sync/NamidaBackups/`
+
+**Avoid**:
+- App data directory (deleted on uninstall)
+- Temporary directories
+- System-protected locations
+</Accordion>
+
+### Backup File Management
+
+<CardGroup cols={2}>
+  <Card title="Recent Backups" icon="clock">
+    View all backups sorted by date:
+    ```dart
+    final sortedBackups = getBackupFilesSorted(backupDir);
+    sortedBackups.sortByReverse((e) => e.lastModifiedSync());
+    ```
+  </Card>
+  
+  <Card title="Cleanup Old Backups" icon="trash">
+    Auto-backups are limited to 10 files. Older backups are automatically deleted:
+    ```dart
+    const maxAutoBackups = 10;
+    trimExtraBackupFiles(backupDirectory);
+    ```
+  </Card>
+</CardGroup>
+
+## Error Handling
+
+### Common Backup Issues
+
+<Accordion title="Permission Denied">
+**Error**: Storage permission denied
+
+**Solution**:
+1. Grant "All Files Access" permission
+2. Navigate to: Settings → Apps → Namida → Permissions
+3. Enable "Files and media" permission
+4. Retry backup creation
+</Accordion>
+
+<Accordion title="Directory Doesn't Exist">
+**Error**: Backup directory not found
+
+**Solution**:
+- Ensure the backup directory path is valid
+- Check if SD card is mounted
+- Verify no typos in custom path
+- Reset to default backup location
+</Accordion>
+
+<Accordion title="Backup Creation Failed">
+**Possible causes**:
+- Insufficient storage space
+- SD card write-protected
+- Background process interrupted
+- Database locked by another process
+
+**Troubleshooting**:
+1. Check available storage (backups can be 10-100+ MB)
+2. Close Namida and retry
+3. Use internal storage instead of SD card
+4. Verify no file manager apps are accessing Namida data
+</Accordion>
+
+### Common Restore Issues
+
+<Accordion title="Corrupted Backup">
+**Error**: Failed to extract backup archive
+
+**Causes**:
+- Incomplete download
+- Corrupted .zip file
+- Incompatible backup version
+
+**Solution**:
+- Verify backup file size
+- Try older backup if available
+- Create new backup from working installation
+</Accordion>
+
+<Accordion title="Partial Restore">
+If restoration partially completes:
+
+1. **Don't panic** - Namida creates checksums
+2. Check which data was restored successfully
+3. Re-run restore operation
+4. Verify all database files are present
+5. Manually trigger library refresh if needed
+</Accordion>
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Backup Schedule" icon="calendar">
+    **Recommendations**:
+    - Daily users: Weekly auto-backup
+    - Casual users: Monthly auto-backup
+    - Before major updates: Manual backup
+    - After playlist creation: Manual backup
+  </Card>
+  
+  <Card title="Storage Strategy" icon="hard-drive">
+    **Best practices**:
+    - Keep 2-3 recent backups
+    - Store one backup off-device
+    - Sync to cloud storage
+    - Test restore periodically
+  </Card>
+</CardGroup>
+
+### Backup Rotation
+
+```dart
+// Implement custom backup rotation
+final backups = getBackupFilesSorted(backupDir);
+if (backups.length > maxBackups) {
+  // Delete oldest backups
+  final toDelete = backups.skip(maxBackups);
+  for (final backup in toDelete) {
+    backup.deleteSync();
+  }
+}
+```
+
+### Backup Verification
+
+Verify backup integrity:
+
+<Steps>
+  <Step title="Check File Size">
+    Ensure backup file is not 0 bytes or suspiciously small.
+  </Step>
+  
+  <Step title="Test Extraction">
+    Extract backup to temporary location to verify it's not corrupted.
+  </Step>
+  
+  <Step title="Compare Dates">
+    Verify backup timestamp matches expected creation time.
+  </Step>
+</Steps>
+
+## Cross-Device Sync
+
+### Syncing Between Devices
+
+<Info>
+Check out [namida_sync](https://github.com/010101-sans/namida_sync) - a community tool for syncing Namida backups across Android, Windows, and Linux.
+</Info>
+
+Manual sync workflow:
+
+1. Create backup on Device A
+2. Copy backup to cloud storage (Google Drive, Dropbox, etc.)
+3. Download backup on Device B
+4. Restore backup on Device B
+
+<Warning>
+Backups include absolute file paths. Syncing between devices requires identical music library locations.
+</Warning>
+
+## Advanced Options
+
+### Selective Backup
+
+Customize what gets backed up:
+
+```dart
+// Backup only specific items
+final itemsToBackup = [
+  AppPaths.TRACKS_DB_INFO.file.path,
+  AppPaths.SETTINGS,
+  AppDirs.PLAYLISTS,
+  AppDirs.HISTORY_PLAYLIST,
+];
+
+await createBackupFile(itemsToBackup);
+```
+
+### Database Optimization
+
+Before backup, optimize databases:
+
+```dart
+// Checkpoint and optimize database
+await db.claimFreeSpaceAndCheckpoint();
+await db.close();
+
+// This reduces backup size and improves reliability
+```
+
+<Note>
+Namida automatically performs database optimization during backup creation.
+</Note>

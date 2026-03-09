@@ -1,0 +1,448 @@
+---
+title: Playlists
+description: Create, manage, and customize playlists with advanced features like auto-generated playlists and mood tracking
+---
+
+Namida offers powerful playlist management capabilities with support for custom playlists, auto-generated smart playlists, custom artwork, and advanced organization features.
+
+## Overview
+
+Playlist functionality includes:
+
+- **Custom Playlists**: Create and manage your own playlists
+- **Auto-Generated Playlists**: Smart playlists based on your listening habits
+- **Most Played**: Dynamic playlist of your top tracks
+- **M3U Support**: Import/export standard M3U playlist files
+- **Custom Artwork**: Set unique artwork for each playlist
+- **Mood Tags**: Organize playlists by mood
+
+<Info>
+All playlists in Namida are persistent and reliably saved, ensuring you never lose your carefully curated collections.
+</Info>
+
+## Creating Playlists
+
+### Manual Playlist Creation
+
+Create custom playlists with full control:
+
+<Steps>
+  <Step title="Create New Playlist">
+    Name your playlist and optionally add a comment/description
+  </Step>
+  
+  <Step title="Add Tracks">
+    Select tracks from your library to add to the playlist
+  </Step>
+  
+  <Step title="Set Metadata">
+    Add mood tags, custom artwork, and creation date
+  </Step>
+  
+  <Step title="Save & Organize">
+    Playlist is automatically saved and available in the Playlists tab
+  </Step>
+</Steps>
+
+### Adding Tracks to Playlists
+
+Multiple ways to add tracks to playlists:
+
+<CardGroup cols={2}>
+  <Card title="From Track Menu" icon="music">
+    Long press any track → Add to Playlist → Select playlist
+  </Card>
+  
+  <Card title="Bulk Selection" icon="list-check">
+    Select multiple tracks → Add to Playlist
+  </Card>
+  
+  <Card title="From Queue" icon="layer-group">
+    Add currently playing queue to a playlist
+  </Card>
+  
+  <Card title="Drag & Drop" icon="hand">
+    Drag tracks directly into playlist (desktop/tablet)
+  </Card>
+</CardGroup>
+
+### Duplicate Handling
+
+When adding tracks that already exist in a playlist:
+
+<Accordion title="Duplicate Actions">
+  - **Add Anyway**: Add duplicate (allows same track multiple times)
+  - **Skip**: Don't add duplicates
+  - **Replace**: Remove old instance and add new one
+  - **Ask Every Time**: Show dialog to choose action
+  - **Remember Choice**: Save preference for future duplicates
+</Accordion>
+
+<Note>
+You can configure default behavior for duplicate handling in playlist settings.
+</Note>
+
+## Playlist Management
+
+### Organizing Tracks
+
+Full control over playlist track order:
+
+- **Drag to Reorder**: Long press and drag tracks to new positions
+- **Sort Options**: Sort by title, artist, album, date added, duration, etc.
+- **Reverse Order**: Flip the entire playlist order
+- **Shuffle**: Randomize track order
+
+### Editing Playlists
+
+<Steps>
+  <Step title="Rename">
+    Change playlist name at any time
+  </Step>
+  
+  <Step title="Update Metadata">
+    Modify description, moods, and other properties
+  </Step>
+  
+  <Step title="Add/Remove Tracks">
+    Continuously update playlist contents
+  </Step>
+  
+  <Step title="Set Artwork">
+    Choose custom image or auto-generate from track artworks
+  </Step>
+</Steps>
+
+### Custom Order
+
+Playlists themselves can be reordered:
+
+```dart
+// Playlists maintain custom order in the Playlists tab
+// Drag playlists to reorder them
+// Order is preserved across app restarts
+```
+
+## Smart Playlists
+
+### Most Played Playlist
+
+Automatic playlist of your most-played tracks:
+
+<Accordion title="Most Played Features">
+  - **Dynamic Updates**: Automatically updates based on play count
+  - **Time Range Filter**: View top tracks from specific time periods
+    - All time
+    - This year
+    - This month
+    - This week
+    - Custom date range
+  - **Play Count Display**: See exact number of plays for each track
+  - **Historical Data**: Track listening trends over time
+</Accordion>
+
+### Auto-Generated Playlists
+
+Namida can generate playlists based on various criteria:
+
+<CardGroup cols={2}>
+  <Card title="Recently Added" icon="clock">
+    Tracks recently added to your library, sorted by date
+  </Card>
+  
+  <Card title="Recently Played" icon="history">
+    Your recently played tracks in chronological order
+  </Card>
+  
+  <Card title="Favorites" icon="heart">
+    Tracks you've marked as favorites
+  </Card>
+  
+  <Card title="Lost Memories" icon="brain">
+    Tracks you listened to years ago but haven't played recently
+  </Card>
+</CardGroup>
+
+### Smart Track Generation
+
+Generate related tracks based on listening patterns:
+
+<Accordion title="Generation Algorithms">
+  **Recommended Tracks**: Based on listening history, finds tracks you often played around the same time as the current track
+  
+  **Similar Release Date**: Tracks released around the same time (same year/month)
+  
+  **From Time Range**: Tracks you listened to during a specific period
+  
+  **By Rating**: Generate playlist from top-rated tracks
+  
+  **By Mood**: Create playlist from tracks tagged with specific moods
+  
+  **Random**: Randomly selected tracks from your library
+</Accordion>
+
+## Playlist Features
+
+### Custom Artwork
+
+Personalize playlists with custom images:
+
+<Steps>
+  <Step title="Choose Image">
+    Select image from gallery or file browser
+  </Step>
+  
+  <Step title="Auto-Generate">
+    Create collage from track artworks in playlist
+  </Step>
+  
+  <Step title="Use Track Artwork">
+    Use artwork from a specific track in the playlist
+  </Step>
+  
+  <Step title="Remove Artwork">
+    Clear artwork to use default
+  </Step>
+</Steps>
+
+<Info>
+Custom artwork is stored separately and won't affect your music files.
+</Info>
+
+### Mood Tags
+
+Organize playlists by mood:
+
+```dart
+// Examples of mood tags:
+// - Energetic, Calm, Happy, Sad, Focus
+// - Workout, Sleep, Party, Study, Chill
+// - Custom moods you define
+```
+
+- **Multiple Moods**: Assign multiple mood tags to one playlist
+- **Filter by Mood**: View all playlists with a specific mood
+- **Custom Moods**: Create your own mood categories
+
+### Comments & Descriptions
+
+Add notes to playlists:
+
+- **Playlist Description**: Write detailed description of playlist purpose
+- **Creation Context**: Note when and why you created the playlist
+- **Update Notes**: Track changes made to the playlist over time
+
+## M3U Playlist Support
+
+### Importing M3U Playlists
+
+Import standard M3U and M3U8 playlist files:
+
+<Steps>
+  <Step title="Locate M3U File">
+    Find .m3u or .m3u8 playlist file on your device
+  </Step>
+  
+  <Step title="Import">
+    Open with Namida or use Import Playlist option
+  </Step>
+  
+  <Step title="Match Tracks">
+    Namida matches playlist entries to your library tracks
+  </Step>
+  
+  <Step title="Verify">
+    Review imported playlist and fix any unmatched tracks
+  </Step>
+</Steps>
+
+<Accordion title="M3U Format Support">
+  - **Extended M3U**: Full support for #EXTINF metadata
+  - **Relative Paths**: Paths relative to M3U file location
+  - **Absolute Paths**: Full file paths
+  - **UTF-8 Encoding**: Proper support for international characters
+  - **M3U8**: Full support for UTF-8 M3U8 format
+</Accordion>
+
+### Exporting Playlists
+
+Export playlists to M3U format:
+
+- **Portable Format**: Share playlists with other music players
+- **Path Options**: Choose between relative and absolute paths
+- **Extended Format**: Include metadata in exported file
+- **Custom Location**: Save M3U files anywhere on device
+
+<Note>
+Exporting playlists requires MANAGE_EXTERNAL_STORAGE permission on Android 10+.
+</Note>
+
+## Playlist Playback
+
+### Play Modes
+
+Different ways to play playlists:
+
+<CardGroup cols={2}>
+  <Card title="Sequential" icon="list-ol">
+    Play tracks in order from first to last
+  </Card>
+  
+  <Card title="Shuffle" icon="shuffle">
+    Randomize track order during playback
+  </Card>
+  
+  <Card title="Repeat Playlist" icon="repeat">
+    Loop entire playlist continuously
+  </Card>
+  
+  <Card title="Repeat Track" icon="arrows-rotate">
+    Repeat current track N times or infinitely
+  </Card>
+</CardGroup>
+
+### Queue Integration
+
+Playlists work seamlessly with the queue system:
+
+- **Add to Queue**: Insert playlist tracks into current queue
+- **Play Next**: Add playlist after current track
+- **Play Last**: Add playlist to end of queue
+- **Replace Queue**: Clear queue and play playlist
+
+## Advanced Features
+
+### Global Track Selection
+
+Select tracks from multiple locations into one list:
+
+<Steps>
+  <Step title="Enable Selection Mode">
+    Long press a track to enter selection mode
+  </Step>
+  
+  <Step title="Select from Anywhere">
+    Navigate between different pages while maintaining selection
+  </Step>
+  
+  <Step title="Add to Playlist">
+    Create new playlist or add to existing from global selection
+  </Step>
+</Steps>
+
+<Info>
+Global selection allows you to curate tracks from albums, artists, search results, and more into a single playlist without switching contexts.
+</Info>
+
+### Playlist Statistics
+
+View detailed information about your playlists:
+
+- **Total Duration**: Combined length of all tracks
+- **Track Count**: Number of tracks in playlist
+- **Creation Date**: When playlist was created
+- **Last Modified**: When playlist was last updated
+- **Total Size**: Disk space used by playlist tracks
+- **Average Rating**: If you rate tracks, see playlist average
+
+### Track Source Tracking
+
+Know where tracks in playlist came from:
+
+```dart
+// Each track in playlist can have a source:
+// - Local library
+// - YouTube download
+// - Imported from M3U
+// - External storage
+```
+
+## YouTube Playlists
+
+Manage YouTube playlists separately:
+
+- **Import YouTube Playlists**: Load public playlists by URL
+- **Sync**: Keep YouTube playlists updated
+- **Download**: Save entire playlist for offline access
+- **Mixed Content**: Combine local and YouTube tracks in one playlist
+
+<Warning>
+YouTube playlists require internet connection unless all videos are downloaded.
+</Warning>
+
+## Backup & Sync
+
+### Playlist Backup
+
+Playlists are included in Namida backups:
+
+- **Automatic Backup**: Playlists saved in app data backups
+- **Manual Export**: Export individual playlists as M3U
+- **Cloud Sync**: Use third-party sync tools for cross-device playlists
+- **Restore**: Recover playlists from backups
+
+### Cross-Device Sync
+
+Sync playlists between devices:
+
+<Info>
+Use [namida_sync](https://github.com/010101-sans/namida_sync) to sync playlists and other data between Android, Windows, and Linux.
+</Info>
+
+## Best Practices
+
+<Steps>
+  <Step title="Name Descriptively">
+    Use clear, descriptive names that indicate playlist content or mood
+  </Step>
+  
+  <Step title="Add Metadata">
+    Use comments and mood tags to organize and find playlists easily
+  </Step>
+  
+  <Step title="Set Custom Artwork">
+    Visual distinction makes playlists easier to identify
+  </Step>
+  
+  <Step title="Regular Maintenance">
+    Periodically review and update playlists, remove outdated tracks
+  </Step>
+  
+  <Step title="Backup Regularly">
+    Export important playlists as M3U for safekeeping
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordion title="Tracks missing after importing M3U">
+  - Ensure all track files still exist at specified paths
+  - Check if paths in M3U file are correct (absolute vs relative)
+  - Verify tracks are indexed in Namida's library
+  - Try using absolute paths when exporting
+  - Re-index library if tracks exist but aren't found
+</Accordion>
+
+<Accordion title="Can't export playlist to M3U">
+  - Grant MANAGE_EXTERNAL_STORAGE permission (Android 10+)
+  - Check available storage space
+  - Verify write permissions for target directory
+  - Try exporting to internal storage first
+  - Ensure playlist isn't empty
+</Accordion>
+
+<Accordion title="Playlist order keeps changing">
+  - Check if auto-sort is enabled for the playlist
+  - Verify you're saving changes after reordering
+  - Ensure app has permission to write data
+  - Try force-closing and reopening app
+  - Check if another device is syncing different order
+</Accordion>
+
+<Accordion title="Duplicate tracks keep appearing">
+  - Review duplicate handling settings
+  - Check if tracks actually have different file paths
+  - Use "Remove Duplicates" option if available
+  - Verify tracks aren't being re-added by auto-sync
+  - Check for both local and YouTube versions of same track
+</Accordion>

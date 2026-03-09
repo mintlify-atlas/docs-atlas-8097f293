@@ -1,0 +1,261 @@
+---
+title: Installation
+description: Install Namida on Android, Windows, or Linux with step-by-step instructions
+---
+
+# Installation Guide
+
+Namida is available for Android (stable/beta), Windows (beta), and Linux (beta). Choose your platform below for installation instructions.
+
+## Android Installation
+
+Namida for Android is available in both stable and beta versions.
+
+### Download Options
+
+<Tabs>
+  <Tab title="Stable Release">
+    <Steps>
+      <Step title="Download from GitHub">
+        Visit the [latest release page](https://github.com/namidaco/namida/releases/latest) and download the APK file.
+        
+        <Note>
+        Look for the file named `namida-vX.X.X-release.apk` (where X.X.X is the version number).
+        </Note>
+      </Step>
+      
+      <Step title="Install the APK">
+        Open the downloaded APK file on your Android device and follow the installation prompts.
+        
+        <Warning>
+        You may need to enable "Install from Unknown Sources" in your device settings.
+        </Warning>
+      </Step>
+      
+      <Step title="Grant Permissions">
+        When you first open Namida, grant the necessary permissions for storage access to scan your music library.
+      </Step>
+    </Steps>
+    
+    ### Alternative: Obtainium
+    
+    You can also install Namida using [Obtainium](https://github.com/ImranR98/Obtainium) for automatic updates:
+    
+    [Add to Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/namidaco/namida/)
+  </Tab>
+  
+  <Tab title="Beta Release">
+    <Steps>
+      <Step title="Download from Snapshots">
+        Visit the [beta snapshots page](https://github.com/namidaco/namida-snapshots/releases/latest) for the latest beta version.
+        
+        <Info>
+        Beta versions include the newest features but may have occasional bugs.
+        </Info>
+      </Step>
+      
+      <Step title="Install the APK">
+        Download and install the APK file. You may need to uninstall the stable version first if you have it installed.
+      </Step>
+      
+      <Step title="Grant Permissions">
+        Grant necessary permissions when prompted.
+      </Step>
+    </Steps>
+    
+    ### Alternative: Obtainium (Beta)
+    
+    [Add Beta to Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/namidaco/namida-snapshots/)
+  </Tab>
+</Tabs>
+
+### Required Permissions
+
+<Accordion title="Why does Namida need these permissions?">
+  Namida requests the following permissions:
+  
+  - **WAKE_LOCK** & **FOREGROUND_SERVICE** - Keep app alive for media playback
+  - **INTERNET** - Download artwork, stream YouTube content, etc.
+  - **READ_MEDIA_AUDIO** (Android 13+) / **READ_EXTERNAL_STORAGE** (Android ≤12) - List audio files from indexer folders
+  - **READ_MEDIA_VIDEO** (Android 13+) - List video files for video playback
+  - **READ_MEDIA_IMAGES** (Android 13+) - List image files for fallback covers
+  - **MANAGE_EXTERNAL_STORAGE** (Android 10+, requested when needed) - For editing tags, backups, downloading, etc.
+  - **VIBRATE** - Haptic feedback (can be disabled in settings)
+  - **POST_NOTIFICATIONS** - Download progress and history import notifications
+</Accordion>
+
+## Windows Installation
+
+<Note>
+Windows support is in beta. Some features may not work as expected.
+</Note>
+
+Namida for Windows is available in the beta releases.
+
+<Steps>
+  <Step title="Download the Installer">
+    Go to the [beta releases page](https://github.com/namidaco/namida-snapshots/releases/latest) and download the Windows installer:
+    - **MSIX file** for Windows Store-style installation
+    - **EXE installer** for traditional installation
+  </Step>
+  
+  <Step title="Run the Installer">
+    Double-click the downloaded file and follow the installation wizard.
+    
+    <Warning>
+    Windows may show a SmartScreen warning. Click "More info" and then "Run anyway" if you trust the source.
+    </Warning>
+  </Step>
+  
+  <Step title="Launch Namida">
+    After installation, launch Namida from the Start Menu or desktop shortcut.
+  </Step>
+  
+  <Step title="Configure Music Library">
+    On first launch, set up your music folders to start indexing your library.
+  </Step>
+</Steps>
+
+### Windows Requirements
+
+- Windows 10 or later
+- 4GB RAM minimum (8GB recommended)
+- 500MB free disk space (more for library and cache)
+
+## Linux Installation
+
+<Note>
+Linux support is new and in beta. Please report any issues on GitHub.
+</Note>
+
+### Quick Install (Recommended)
+
+The easiest way to install Namida on Linux:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/namidaco/namida/main/scripts/install_linux_tar.sh | sudo bash
+```
+
+### Package Managers
+
+<CodeGroup>
+
+```bash Arch Linux (AUR)
+# Using yay
+yay namida
+
+# Or using pacman (from AUR)
+sudo pacman -S namida-bin
+```
+
+```bash Debian/Ubuntu
+# Download the .deb file from beta releases first
+sudo dpkg -i namida.deb
+
+# Fix dependencies if needed
+sudo apt-get install -f
+```
+
+```bash Fedora/RHEL
+# Download the .rpm file from beta releases first
+sudo rpm -i namida.rpm
+```
+
+</CodeGroup>
+
+### Install MPV (Required)
+
+Namida requires MPV for video playback on Linux:
+
+<CodeGroup>
+
+```bash Debian/Ubuntu/Mint
+sudo apt install mpv
+```
+
+```bash Fedora/RHEL
+sudo dnf install mpv
+```
+
+```bash Arch/Manjaro
+sudo pacman -S mpv
+```
+
+</CodeGroup>
+
+### Linux Requirements
+
+- Modern Linux distribution (kernel 5.0+)
+- MPV media player
+- 4GB RAM minimum
+- 500MB free disk space
+
+## Verification
+
+After installation, verify Namida is working correctly:
+
+<Steps>
+  <Step title="Launch the App">
+    Open Namida from your application launcher or menu.
+  </Step>
+  
+  <Step title="Check Version">
+    Go to Settings → About to verify you have the correct version installed.
+    
+    Current stable version: **v5.6.1**
+  </Step>
+  
+  <Step title="Grant Permissions">
+    Allow storage access when prompted (Android) or configure folders (Desktop).
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Installation failed on Android">
+    - Make sure you have enough storage space (at least 200MB free)
+    - Enable "Install from Unknown Sources" in Settings → Security
+    - Try uninstalling any previous version first
+    - Reboot your device and try again
+  </Accordion>
+  
+  <Accordion title="Windows SmartScreen blocking installation">
+    Windows SmartScreen may block the installer because it's not from the Microsoft Store:
+    1. Click "More info" when the warning appears
+    2. Click "Run anyway" to proceed with installation
+    3. This is normal for open-source applications
+  </Accordion>
+  
+  <Accordion title="Linux: App won't start">
+    - Verify MPV is installed: `mpv --version`
+    - Check dependencies: `ldd $(which namida)`
+    - Try running from terminal to see error messages
+    - Make sure you have necessary permissions
+  </Accordion>
+  
+  <Accordion title="Permissions denied on Android">
+    Go to Android Settings → Apps → Namida → Permissions and manually grant:
+    - Storage/Files and media
+    - Notifications (optional)
+    
+    For "All files access" (needed for some features):
+    1. Go to Settings → Storage → Manage storage
+    2. Find Namida and enable "Allow management of all files"
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Quick Start Guide" icon="rocket" href="/quickstart">
+    Learn how to set up your library and start playing music
+  </Card>
+  <Card title="Join Community" icon="users" href="https://t.me/namida_official">
+    Get help and updates from the Namida community
+  </Card>
+</CardGroup>
+
+<Info>
+**Keep Namida Updated**: Using Obtainium (Android) or checking the GitHub releases page regularly ensures you get the latest features and bug fixes.
+</Info>

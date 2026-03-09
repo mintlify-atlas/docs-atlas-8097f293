@@ -1,0 +1,531 @@
+---
+title: Import History
+description: Import your listening history from YouTube, YouTube Music, Last.fm, and other sources
+---
+
+Namida can import listening history from external sources, allowing you to preserve your music listening data when migrating from other platforms.
+
+## Supported Sources
+
+<CardGroup cols={3}>
+  <Card title="YouTube" icon="youtube">
+    Import watch history from YouTube's data export
+  </Card>
+  <Card title="YouTube Music" icon="youtube">
+    Import listening history from YouTube Music
+  </Card>
+  <Card title="Last.fm" icon="lastfm">
+    Import scrobble history from Last.fm exports
+  </Card>
+</CardGroup>
+
+## YouTube History Import
+
+### Exporting YouTube Data
+
+<Steps>
+  <Step title="Request Your Data">
+    1. Visit [Google Takeout](https://takeout.google.com/)
+    2. Deselect all products
+    3. Select only "YouTube and YouTube Music"
+    4. Click "Next Step"
+  </Step>
+  
+  <Step title="Configure Export">
+    - **Frequency**: Export once
+    - **File type**: .zip
+    - **Size**: Maximum size (50GB)
+    
+    Click "Create export"
+  </Step>
+  
+  <Step title="Download Archive">
+    Google will email you when the export is ready (usually 1-48 hours).
+    
+    Download the archive containing your YouTube data.
+  </Step>
+  
+  <Step title="Extract History Files">
+    Locate these files in the archive:
+    - `Takeout/YouTube and YouTube Music/history/watch-history.json`
+    - `Takeout/YouTube and YouTube Music/history/search-history.json` (optional)
+  </Step>
+</Steps>
+
+### Importing to Namida
+
+<Steps>
+  <Step title="Open Import Dialog">
+    Navigate to: **Settings → Data & Storage → Import History → YouTube**
+  </Step>
+  
+  <Step title="Select Files or Folder">
+    Choose either:
+    - Individual JSON files (`watch-history.json`)
+    - Entire Takeout folder (Namida will find relevant files automatically)
+    - ZIP archive (extracts automatically)
+  </Step>
+  
+  <Step title="Configure Import Options">
+    **Matching Options**:
+    - **Match by link**: Use YouTube IDs from track comments/filenames
+    - **Match by title & artist**: Fuzzy matching algorithm
+    - **Include YouTube**: Match YouTube watches
+    - **Include YouTube Music**: Match YouTube Music listens
+    
+    **Date Range** (optional):
+    - Oldest date: Import only after this date
+    - Newest date: Import only before this date
+    
+    **Match All**: Add all matching tracks (vs. only first match)
+  </Step>
+  
+  <Step title="Start Import">
+    Click "Import" and monitor progress:
+    - Parsed entries
+    - Matched tracks
+    - Missing entries
+  </Step>
+</Steps>
+
+<Info>
+The import process runs in background isolates for optimal performance and can handle very large history files (100,000+ entries).
+</Info>
+
+### YouTube Matching Logic
+
+#### Link-Based Matching
+
+Matches YouTube videos to local tracks using video IDs:
+
+```dart
+// Extracts YouTube ID from track comment or filename
+final videoId = extractYoutubeId(track.comment) ?? 
+                extractYoutubeId(track.filename);
+
+// Matches history entry by ID
+if (historyEntry.id == videoId) {
+  addToHistory(track, date: historyEntry.timestamp);
+}
+```
+
+**ID Sources**:
+- Track comment field (added by yt-dlp)
+- Filename patterns: `v=VIDEO_ID` or `id=VIDEO_ID`
+- Any YouTube URL in metadata
+
+#### Title & Artist Matching
+
+Fuzzy matching when video ID is unavailable:
+
+```dart
+// Matching criteria (all must be true):
+// 1. Video title contains track title
+// 2. Video title OR channel contains artist name
+// 3. OR channel name matches album name
+
+final titleMatch = videoTitle.contains(track.title);
+final artistMatch = videoTitle.contains(track.artist) ||
+                    channelName.contains(track.artist) ||
+                    channelName.contains(track.album);
+
+if (titleMatch && artistMatch) {
+  // Track is considered a match
+}
+```
+
+<Note>
+Text matching ignores case, special characters, and common words like "official", "video", "HD", etc.
+</Note>
+
+### YouTube History Dual Storage
+
+Imported YouTube history is stored in **two locations**:
+
+1. **Local History**: Matched videos → local tracks
+2. **YouTube History**: All videos preserved with full metadata
+
+```dart
+// Local history (matched tracks)
+HistoryController.inst.addTracksToHistory(matchedTracks);
+
+// YouTube history (all videos)
+YoutubeHistoryController.inst.addVideosToHistory(allVideos);
+```
+
+<Accordion title="Benefits of Dual Storage">
+- **Preserve YouTube data** even without local matches
+- **Future matching**: New downloads can match existing history
+- **Copy to local**: Use `copyYTHistoryContentToLocalHistory()` after downloading tracks
+- **Statistics**: Maintain accurate YouTube watch counts
+</Accordion>
+
+## Last.fm History Import
+
+### Exporting Last.fm Data
+
+<Steps>
+  <Step title="Request Data Export">
+    Visit Last.fm and request your listening history export.
+    
+    Or use third-party tools:
+    - [Last.fm Scraper](https://benjaminbenben.com/lastfm-to-csv/)
+    - [Last.fm Export](https://lastfm.ghan.nl/export/)
+  </Step>
+  
+  <Step title="Download CSV Files">
+    Last.fm exports are provided as CSV files with this format:
+    ```csv
+    artist,album,title,date
+    Artist Name,Album Name,Track Title,01 Jan 2024 12:30
+    ```
+  </Step>
+</Steps>
+
+### Importing Last.fm History
+
+<Steps>
+  <Step title="Open Import Dialog">
+    **Settings → Data & Storage → Import History → Last.fm**
+  </Step>
+  
+  <Step title="Select CSV Files">
+    Choose Last.fm CSV exports (supports multiple files).
+  </Step>
+  
+  <Step title="Configure Options">
+    - **Match All**: Add all matching tracks or only first match
+    - **Date Range**: Optional filtering by date
+  </Step>
+  
+  <Step title="Import">
+    Namida processes CSV files and matches entries to your library.
+  </Step>
+</Steps>
+
+### Last.fm Matching Algorithm
+
+```dart
+// Phase 1: Direct matching by title and artist
+final titleMatches = tracksGroupedByTitle[csvTitle];
+final artistMatches = tracksGroupedByArtist[csvArtist];
+
+// Find intersection of both
+final directMatches = titleMatches.where(
+  (track) => artistMatches.contains(track)
+);
+
+// Phase 2: Fuzzy matching (if no direct match)
+if (directMatches.isEmpty) {
+  final fuzzyMatches = allTracks.where((track) {
+    // CSV title contains track title
+    final titleMatch = csvTitle.contains(track.title);
+    
+    // CSV artist contains any track artist
+    final artistMatch = track.artistsList.any(
+      (artist) => csvArtist.contains(artist)
+    );
+    
+    return titleMatch && artistMatch;
+  });
+}
+```
+
+<Info>
+Last.fm imports support flexible date parsing and handle malformed CSV entries gracefully.
+</Info>
+
+## Import Progress
+
+### Real-Time Statistics
+
+During import, Namida displays:
+
+```dart
+final progress = {
+  'parsed': parsedHistoryJson.value,        // Total entries processed
+  'total': totalJsonToParse.value,          // Total entries to process
+  'added': addedHistoryJsonToPlaylist.value, // Successfully matched
+  'percentage': (parsed / total * 100),     // Progress percentage
+};
+```
+
+### Notification Updates
+
+```dart
+// System notification during import
+NotificationManager.instance.importHistoryNotification(
+  parsed: currentProgress,
+  total: totalEntries,
+  startTime: importStartTime,
+);
+```
+
+<Note>
+Progress notifications update every second with current status and estimated completion.
+</Note>
+
+## Missing Entries
+
+### Handling Unmatched Items
+
+After import, Namida shows a dialog with unmatched entries:
+
+<Accordion title="Missing Entry Dialog Features">
+- **View all missing entries** sorted by frequency
+- **Manual track selection**: Pick specific tracks for each entry
+- **Add as dummy track**: Create placeholder track for statistics
+- **Bulk operations**: Add all missing as dummies with one click
+- **Status tracking**: See which entries have been resolved
+</Accordion>
+
+```dart
+// Missing entry structure
+final missingEntry = {
+  'title': 'Track Title',
+  'artist': 'Artist Name',
+  'channel': 'YouTube Channel',  // For YouTube imports
+  'source': TrackSource.youtube,
+  'dates': [timestamp1, timestamp2, ...], // All occurrence timestamps
+};
+```
+
+### Resolving Missing Entries
+
+<Steps>
+  <Step title="Review Missing List">
+    After import, click "View Missing Entries" to see unmatched items.
+  </Step>
+  
+  <Step title="Select Matching Track">
+    For each entry:
+    1. Click the entry
+    2. Search your library for matching track
+    3. Select correct track
+    
+    The entry is added to history with original timestamps.
+  </Step>
+  
+  <Step title="Add as Dummy (Optional)">
+    For tracks not in your library:
+    1. Click dummy icon
+    2. Confirm addition
+    
+    Creates a placeholder track for statistical purposes.
+  </Step>
+</Steps>
+
+<Warning>
+Dummy tracks appear in history and statistics but cannot be played. They're useful for preserving accurate play counts.
+</Warning>
+
+## Advanced Options
+
+### Date Range Filtering
+
+Import only specific time periods:
+
+```dart
+await addFilesSourceToNamidaHistory(
+  files: historyFiles,
+  source: TrackSource.youtube,
+  oldestDate: DateTime(2023, 1, 1),
+  newestDate: DateTime(2024, 1, 1),
+);
+```
+
+**Use cases**:
+- Import recent history only
+- Exclude old/irrelevant data
+- Merge specific time periods
+- Re-import failed date ranges
+
+### Match All vs. First Match
+
+<Accordion title="Match Behavior">
+**First Match** (`matchAll: false`):
+- Adds only the first matching track
+- Faster processing
+- Prevents duplicate history entries
+- Recommended for most users
+
+**Match All** (`matchAll: true`):
+- Adds every matching track
+- Useful for multi-track releases (singles, remixes)
+- Can create duplicate entries if multiple versions exist
+- Better for comprehensive statistics
+</Accordion>
+
+### Copy YouTube History to Local
+
+After downloading tracks, match existing YouTube history:
+
+```dart
+// Match YouTube history entries to newly downloaded tracks
+final (totalCount, addedCount) = await copyYTHistoryContentToLocalHistory(
+  matchAll: false,
+);
+
+print('Matched $addedCount of $totalCount YouTube history entries');
+```
+
+<Steps>
+  <Step title="Use Case">
+    You imported YouTube history before downloading the songs locally.
+  </Step>
+  
+  <Step title="Download Songs">
+    Use Namida's YouTube downloader or external tools.
+  </Step>
+  
+  <Step title="Run Copy Function">
+    Settings → Import History → Copy YouTube History to Local
+  </Step>
+  
+  <Step title="Automatic Matching">
+    Namida matches YouTube video IDs to downloaded tracks and copies listen dates.
+  </Step>
+</Steps>
+
+## Performance Optimization
+
+### Large File Handling
+
+For huge history files (100,000+ entries):
+
+```dart
+// Automatic chunking and progress updates
+const chunkSize = 20;
+int totalParsed = 0;
+
+for (final entry in historyEntries) {
+  processEntry(entry);
+  totalParsed++;
+  
+  if (totalParsed >= chunkSize) {
+    // Update progress UI
+    sendProgressUpdate(totalParsed);
+    totalParsed = 0;
+  }
+}
+```
+
+<Note>
+Namida processes imports in background isolates, preventing UI freezing even with massive files.
+</Note>
+
+### ZIP Archive Support
+
+Automatically extracts history files from ZIP archives:
+
+```dart
+// Supports nested ZIPs (Google Takeout format)
+await for (final file in zipContents) {
+  if (file.path.contains('watch-history.json')) {
+    processHistoryFile(file);
+  }
+}
+```
+
+## YouTube Statistics
+
+Importing YouTube history also updates video statistics:
+
+```dart
+// Updates YouTube video watch counts and metadata
+await updateYoutubeStatsDirectory(
+  affectedIds: importedVideoIds,
+  onProgress: (count) => print('Updated $count videos'),
+);
+```
+
+**Statistics include**:
+- Total watch count per video
+- First watch date
+- Last watch date
+- Watch frequency
+- YouTube vs. YouTube Music ratio
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Before Import" icon="clipboard-check">
+    - **Backup current history** before importing
+    - **Export from source** while account is active
+    - **Check file format** to ensure compatibility
+    - **Note date ranges** for verification
+  </Card>
+  
+  <Card title="During Import" icon="bolt">
+    - **Use link matching** when possible for accuracy
+    - **Enable both YT and YTM** to capture all listens
+    - **Keep device charged** for large imports
+    - **Don't close app** until complete
+  </Card>
+</CardGroup>
+
+### Merge Strategies
+
+<Accordion title="Multiple Source Merging">
+**Scenario**: You have history from both YouTube and Last.fm
+
+**Strategy**:
+1. Import YouTube history first (best matching accuracy)
+2. Import Last.fm history second
+3. Resolve missing entries from Last.fm
+4. Use dummy tracks sparingly
+
+**Result**: Comprehensive history with minimal duplicates
+</Accordion>
+
+<Accordion title="Re-importing After Downloads">
+**Scenario**: You import history, then download missing tracks
+
+**Strategy**:
+1. Import initial history (creates entries for matched tracks)
+2. Download missing tracks from YouTube/streaming
+3. Run "Copy YouTube History to Local"
+4. Revisit missing entries dialog
+
+**Result**: Previously unmatched entries now have real tracks
+</Accordion>
+
+## Troubleshooting
+
+<Accordion title="Import Stuck or Frozen">
+**Possible causes**:
+- Very large file (>1GB)
+- Malformed JSON/CSV
+- Insufficient memory
+
+**Solutions**:
+1. Close other apps to free memory
+2. Split large files into smaller chunks
+3. Remove invalid entries from CSV/JSON
+4. Try one file at a time
+</Accordion>
+
+<Accordion title="Low Match Rate">
+**If only a few entries match**:
+
+1. **Check metadata**: Ensure tracks have YouTube IDs in comments
+2. **Enable fuzzy matching**: Turn on title & artist matching
+3. **Fix artist tags**: Ensure artist tags match YouTube channels
+4. **Download more tracks**: Import matches only existing library
+</Accordion>
+
+<Accordion title="Duplicate History Entries">
+**Cause**: Importing same source multiple times
+
+**Prevention**:
+- Namida automatically prevents duplicates by timestamp
+- Use date range filtering for partial re-imports
+
+**Fix**: Clear history and re-import clean export
+</Accordion>
+
+## Export Compatibility
+
+<Info>
+Namida history can be exported for use in other apps or for backup purposes. The export format is compatible with standard music history formats.
+</Info>

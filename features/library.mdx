@@ -1,0 +1,304 @@
+---
+title: Library & Indexing
+description: Learn how Namida's powerful indexing system organizes and manages your local music collection
+---
+
+Namida features a sophisticated library indexing system that scans and organizes your local music collection with powerful customization options and intelligent tag management.
+
+## Overview
+
+The indexing system is powered by jaudiotagger and provides comprehensive metadata extraction, folder-based organization, and advanced filtering capabilities to keep your library clean and organized.
+
+<Info>
+Namida uses a folder-based library system, allowing you to specify which directories to scan while excluding unwanted folders.
+</Info>
+
+## Library Indexing
+
+### Automatic Scanning
+
+Namida automatically scans your specified folders and extracts metadata from audio files:
+
+<Steps>
+  <Step title="Select Folders">
+    Choose which directories on your device contain music files to be indexed
+  </Step>
+  
+  <Step title="Configure Filters">
+    Set minimum file size and duration requirements to exclude unwanted files
+  </Step>
+  
+  <Step title="Start Indexing">
+    Namida scans all audio files and extracts tags like title, artist, album, genre, and more
+  </Step>
+  
+  <Step title="Build Library">
+    Your library is organized into tracks, albums, artists, genres, playlists, and folders
+  </Step>
+</Steps>
+
+### Folder Management
+
+The library system provides granular control over which folders to include:
+
+- **Include Specific Folders**: Add only the directories containing your music
+- **Exclude Folders**: Prevent certain folders from being scanned
+- **Recursive Scanning**: Automatically includes subdirectories
+- **.nomedia Support**: Respects Android's .nomedia files to skip folders
+
+<Warning>
+Files in folders marked with `.nomedia` will be excluded from indexing unless you explicitly enable them in settings.
+</Warning>
+
+## Tag Editing
+
+Namida includes a powerful tag editor that allows you to modify track metadata:
+
+```dart
+// Tag editing is handled by the TaggerController
+// Supports editing: title, artist, album, genre, year, lyrics, artwork, and more
+```
+
+### Supported Metadata
+
+<CardGroup cols={2}>
+  <Card title="Basic Tags" icon="tag">
+    - Title
+    - Artist(s)
+    - Album
+    - Album Artist
+    - Year
+  </Card>
+  
+  <Card title="Advanced Tags" icon="tags">
+    - Genre(s)
+    - Composer
+    - Mood
+    - Comment
+    - Lyrics (synced & plain)
+  </Card>
+  
+  <Card title="Media Info" icon="file-audio">
+    - Bitrate
+    - Sample Rate
+    - Duration
+    - File Size
+    - Format
+  </Card>
+  
+  <Card title="Custom Data" icon="code">
+    - Custom Tags
+    - Artwork
+    - YouTube ID (in comment)
+    - Rating
+  </Card>
+</CardGroup>
+
+## Advanced Features
+
+### Artists and Genres Separators
+
+Namida can intelligently split multiple artists and genres from tags:
+
+<Accordion title="Artist Separation Examples">
+  Input: `"Navjaxx, John Doe & Jane Smith"`
+  
+  Output:
+  - Navjaxx
+  - John Doe
+  - Jane Smith
+  
+  Separators: `,`, `&`, `feat.`, `ft.`, `featuring`
+</Accordion>
+
+<Accordion title="Featured Artist Extraction">
+  The library can automatically extract featured artists from track titles:
+  
+  - `"Song Title (feat. Artist)"` → Extracts "Artist" as separate artist entry
+  - `"Song Title ft. Artist"` → Creates artist entry even if not in tags
+  
+  This ensures featured artists appear in your Artists library.
+</Accordion>
+
+### Duplicate Prevention
+
+The indexer prevents duplicate tracks from appearing in your library:
+
+- **Filename-based Detection**: Tracks with identical filenames are considered duplicates
+- **Smart Filtering**: Only one instance of duplicate files is kept in the library
+- **Statistics Tracking**: View how many duplicates were filtered during indexing
+
+<Note>
+Duplicate prevention is based on filenames, not metadata. Two files with identical tags but different filenames will both be indexed.
+</Note>
+
+### File Filtering
+
+Customize which files get indexed based on quality criteria:
+
+- **Minimum File Size**: Skip files below a certain size (e.g., notification sounds)
+- **Minimum Duration**: Exclude very short audio clips
+- **Format Support**: Automatically detects supported audio formats
+
+## Library Organization
+
+Your music is organized into multiple views:
+
+### Tracks View
+All individual tracks sorted by various properties (title, artist, date added, etc.)
+
+### Albums View
+Tracks grouped by album with artwork display
+
+### Artists View
+Organized by artist, album artist, or composer
+
+### Genres View
+Tracks categorized by genre tags
+
+### Folders View
+Browse music by directory structure
+
+<Info>
+Each view supports multiple sorting options including alphabetical, date added, date modified, size, duration, and more.
+</Info>
+
+## Artwork Management
+
+### Embedded Artwork
+
+Namida extracts and caches artwork embedded in audio files:
+
+- **Automatic Extraction**: Artwork is extracted during indexing
+- **Compression Options**: Choose between full resolution and compressed artwork
+- **Caching**: Artwork is cached for faster loading
+
+### Fallback Covers
+
+When embedded artwork isn't available, Namida looks for:
+
+1. `cover.jpg` in the track's folder
+2. `folder.jpg` in the track's folder
+3. Other common image files (album.jpg, front.jpg, etc.)
+
+<Accordion title="Supported Image Formats">
+  - JPEG (`.jpg`, `.jpeg`)
+  - PNG (`.png`)
+  - WebP (`.webp`)
+  - BMP (`.bmp`)
+</Accordion>
+
+### Custom Artwork
+
+You can manually set custom artwork for:
+- Individual tracks
+- Albums
+- Playlists
+- Artists
+
+## Performance & Storage
+
+### Database System
+
+Namida uses an efficient database system for storing track information:
+
+```dart
+// Tracks are stored in a database for fast access
+// Located at: AppPaths.TRACKS_DB_INFO
+// Track statistics stored separately for better performance
+```
+
+### Statistics Tracking
+
+The library maintains statistics about:
+- Total tracks indexed
+- Files filtered by size/duration
+- Duplicates found
+- Tracks excluded by .nomedia
+- Storage space used by artwork cache
+
+### Refresh Options
+
+<CardGroup cols={2}>
+  <Card title="Refresh on Startup" icon="rotate">
+    Automatically scan for new tracks when app starts
+  </Card>
+  
+  <Card title="Manual Refresh" icon="arrows-rotate">
+    Trigger library scan anytime to find new/changed files
+  </Card>
+  
+  <Card title="Force Re-index" icon="database">
+    Completely rebuild library from scratch
+  </Card>
+  
+  <Card title="Diff Check" icon="code-compare">
+    Smart refresh that only processes changed files
+  </Card>
+</CardGroup>
+
+## Media Store Integration
+
+On Android, Namida can optionally use the system's MediaStore for faster indexing:
+
+<Note>
+**MediaStore Mode**: Uses Android's built-in media database for faster initial scans but may be less accurate for custom metadata.
+
+**File-based Mode**: Directly reads tags from files for complete accuracy and control.
+</Note>
+
+## Folder Info Files
+
+Namida supports special `.info.txt` files in folders to display additional information about your music collection:
+
+```text
+Place a .info.txt file in any music folder to show custom text
+when browsing that folder in Namida.
+```
+
+## Best Practices
+
+<Steps>
+  <Step title="Organize Files First">
+    Structure your music in folders before indexing (e.g., by artist or album)
+  </Step>
+  
+  <Step title="Clean Metadata">
+    Ensure tags are properly filled before indexing for better organization
+  </Step>
+  
+  <Step title="Use Cover Art">
+    Add `cover.jpg` files to folders without embedded artwork
+  </Step>
+  
+  <Step title="Set Filters">
+    Configure minimum size/duration to exclude ringtones and notification sounds
+  </Step>
+  
+  <Step title="Regular Refreshes">
+    Periodically refresh your library to catch new additions
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordion title="Tracks not appearing after indexing">
+  - Check if folder is excluded or contains `.nomedia`
+  - Verify minimum file size and duration settings
+  - Ensure files are in supported audio formats
+  - Try force re-indexing from settings
+</Accordion>
+
+<Accordion title="Artwork not displaying">
+  - Verify artwork is embedded in file or `cover.jpg` exists in folder
+  - Check artwork cache settings
+  - Clear artwork cache and re-index
+  - Ensure image files are in supported formats
+</Accordion>
+
+<Accordion title="Slow indexing performance">
+  - Disable MediaStore if causing issues
+  - Reduce artwork cache quality
+  - Exclude unnecessary folders
+  - Consider indexing fewer files at once
+</Accordion>

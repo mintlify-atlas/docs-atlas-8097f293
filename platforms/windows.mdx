@@ -1,0 +1,407 @@
+---
+title: Windows
+description: Install and use Namida on Windows
+---
+
+Namida is available for Windows as a beta release, bringing the powerful music and video player experience to desktop.
+
+## Installation
+
+<Steps>
+  <Step title="Download Namida">
+    Choose your preferred installation method:
+    
+    <CardGroup cols={2}>
+      <Card title="MSIX Installer" icon="windows">
+        Recommended for most users. Integrates with Windows and auto-updates.
+      </Card>
+      <Card title="Portable EXE" icon="folder">
+        Run without installation. Useful for USB drives or restricted environments.
+      </Card>
+    </CardGroup>
+    
+    Download from [GitHub Releases (Beta)](https://github.com/namidaco/namida-snapshots/releases/latest)
+  </Step>
+  
+  <Step title="Install MSIX (Recommended)">
+    For MSIX installation:
+    
+    1. Download the `.msix` file
+    2. Double-click to open
+    3. Click **Install**
+    4. Wait for installation to complete
+    5. Launch Namida from Start Menu
+    
+    <Note>
+    The MSIX package is configured with proper capabilities:
+    - Music Library access
+    - Videos Library access
+    - Internet Client access
+    </Note>
+  </Step>
+  
+  <Step title="Or Use Portable Version">
+    For portable installation:
+    
+    1. Download the portable `.zip` file
+    2. Extract to your desired location
+    3. Run `namida.exe`
+    4. All settings and data are stored in the app folder
+  </Step>
+</Steps>
+
+## System Requirements
+
+- **Operating System**: Windows 10 (1809) or later, Windows 11
+- **Architecture**: x64 (64-bit)
+- **RAM**: 4GB minimum, 8GB recommended
+- **Storage**: 200MB for the app + space for media cache
+- **Display**: 1280x720 minimum resolution
+- **Graphics**: DirectX 11 compatible GPU
+
+<Warning>
+Windows 7 and 8.1 are not supported. Namida requires Windows 10 version 1809 or newer.
+</Warning>
+
+## Windows-Specific Features
+
+### System Integration
+
+<Accordion title="Windows Taskbar">
+  Namida integrates with the Windows taskbar:
+  
+  - **Thumbnail Toolbar**: Playback controls in taskbar preview
+  - **Progress Bar**: Track progress shown in taskbar icon
+  - **Jump List**: Quick access to recent playlists
+  - **Thumbnail Preview**: Album artwork in hover preview
+</Accordion>
+
+<Accordion title="System Media Transport Controls (SMTC)">
+  Native Windows media controls:
+  
+  - Control playback from keyboard media keys
+  - Show in Windows 11 Quick Settings media panel
+  - Lock screen playback controls
+  - Volume mixer integration
+</Accordion>
+
+<Accordion title="Window Management">
+  Full desktop window features:
+  
+  - Minimize, maximize, and restore window states
+  - Custom title bar with app controls
+  - Resize to any dimension
+  - Remember window position and size
+  - Multi-monitor support
+</Accordion>
+
+<Accordion title="Global Hotkeys">
+  Control Namida from anywhere:
+  
+  - Register system-wide keyboard shortcuts
+  - Control playback without focusing the window
+  - Customizable key combinations
+  - Configure in **Settings** > **Keyboard Shortcuts**
+</Accordion>
+
+### File Handling
+
+#### Drag and Drop Support
+
+Namida supports native Windows drag and drop:
+
+```plaintext
+Supported Actions:
+- Drag audio files into Namida to add to queue
+- Drag folders to add all music files
+- Drag playlist files (.m3u, .m3u8) to import
+- Drag YouTube links to download
+```
+
+#### File Associations
+
+Namida automatically registers for these file types:
+
+<CodeGroup>
+```txt Audio Extensions
+m4a, mp3, wav, flac, ogg, oga, ogx, aac, opus, weba
+m4b, alac, ac3, mp2, m4p, mpa, amr, ape, aa, aax
+act, dss, dts, dvf, dct, dff, dsf, mmf, mid, mpc
+msv, mogg, raw, ra, voc, wma, caf, aiff, wv, aif
+aifc, m4r, mac, mka, mlp, mpp, uax
+```
+
+```txt Video Extensions
+mp4, mkv, avi, wmv, flv, mov, 3gp, ogv, webm, mpg
+mpeg, m4v, ts, vob, asf, rm, f4v, divx, m2ts, mts
+mpv, mpe, mxf, m2v, mpeg1, mpeg2, mpeg4
+```
+</CodeGroup>
+
+<Info>
+You can double-click any supported file to open it directly in Namida.
+</Info>
+
+### File Picker
+
+Namida uses the native Windows file picker:
+
+- Browse files and folders with familiar Windows interface
+- Quick access to common locations (Desktop, Documents, Music)
+- Network drive support
+- Recently used locations
+
+## Features & Capabilities
+
+### Supported Features
+
+<CardGroup cols={2}>
+  <Card title="Full Library Management" icon="music">
+    - Index music from multiple folders
+    - Tag editor with metadata support
+    - Album artwork management
+    - Smart playlists
+  </Card>
+  
+  <Card title="YouTube Integration" icon="youtube">
+    - Stream YouTube content
+    - Download videos and audio
+    - Cache management
+    - Offline playback
+  </Card>
+  
+  <Card title="Video Playback" icon="video">
+    - Hardware-accelerated decoding
+    - Multiple format support
+    - Fullscreen mode
+    - Subtitle support
+  </Card>
+  
+  <Card title="Audio Processing" icon="sliders">
+    - Crossfade and fade effects
+    - Equalizer
+    - Replay Gain
+    - Skip silence
+  </Card>
+</CardGroup>
+
+### Media Kit Integration
+
+Namida on Windows uses Media Kit for video playback:
+
+- **Version**: `media_kit ^1.2.0`
+- **Video Support**: `media_kit_video ^2.0.1`
+- **Windows Libraries**: `media_kit_libs_windows_video ^1.0.11`
+
+This provides:
+- Hardware acceleration
+- Wide format support
+- Low latency playback
+- Subtitle rendering
+
+## Configuration
+
+### Settings Storage
+
+**MSIX Installation**:
+```plaintext
+C:\Users\[YourName]\AppData\Local\Packages\com.msob7y.namida_[id]\LocalState
+```
+
+**Portable Installation**:
+```plaintext
+[Installation Directory]\data\
+```
+
+### Library Indexing
+
+<Steps>
+  <Step title="Add Music Folders">
+    1. Open **Settings** > **Indexer**
+    2. Click **Add Folder**
+    3. Browse to your music folder (e.g., `C:\Users\[Name]\Music`)
+    4. Click **Select Folder**
+  </Step>
+  
+  <Step title="Configure Index Settings">
+    Customize what gets indexed:
+    
+    - Set minimum file size filter
+    - Set minimum duration filter
+    - Enable duplicate prevention
+    - Choose separator for multiple artists/genres
+  </Step>
+  
+  <Step title="Start Indexing">
+    1. Click **Start Indexing**
+    2. Wait for the process to complete
+    3. Progress is shown in the status bar
+  </Step>
+</Steps>
+
+### Network Folders
+
+Access music on network drives:
+
+1. Map network drive in Windows Explorer
+2. Add the mapped drive letter in Namida indexer
+3. Ensure network connection is stable
+4. Consider caching for offline access
+
+## Performance Optimization
+
+### Windows-Specific Tips
+
+<CardGroup cols={2}>
+  <Card title="Windows Defender" icon="shield">
+    Add Namida to Windows Defender exclusions to prevent scanning during playback and indexing.
+  </Card>
+  
+  <Card title="Power Plan" icon="bolt">
+    Use "High Performance" power plan for best audio/video performance, especially on laptops.
+  </Card>
+  
+  <Card title="Startup Performance" icon="clock">
+    Disable startup apps you don't need to free up resources for Namida.
+  </Card>
+  
+  <Card title="Storage Type" icon="hard-drive">
+    Store your music library on an SSD for faster indexing and loading times.
+  </Card>
+</CardGroup>
+
+### Resource Usage
+
+Typical resource consumption:
+
+- **Idle**: ~100-200MB RAM
+- **Audio Playback**: ~150-250MB RAM
+- **Video Playback**: ~300-500MB RAM
+- **Indexing**: ~200-400MB RAM (temporary spike)
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="App Won't Start">
+    If Namida fails to launch:
+    
+    1. Ensure you're on Windows 10 (1809) or later
+    2. Install [Visual C++ Redistributable 2015-2022](https://aka.ms/vs/17/release/vc_redist.x64.exe)
+    3. Update Windows to the latest version
+    4. Check Windows Event Viewer for error details
+  </Accordion>
+  
+  <Accordion title="MSIX Installation Failed">
+    If MSIX installation fails:
+    
+    1. Enable **Developer Mode** in Windows Settings > Update & Security > For developers
+    2. Or right-click the MSIX file > Properties > Digital Signatures > Details > View Certificate > Install Certificate
+    3. Choose "Local Machine" and place in "Trusted Root Certification Authorities"
+  </Accordion>
+  
+  <Accordion title="No Sound Output">
+    If you can't hear audio:
+    
+    1. Check Windows volume mixer (Namida should appear when playing)
+    2. Right-click the volume icon > Open Sound settings
+    3. Ensure correct output device is selected
+    4. Try switching audio output in Namida settings
+  </Accordion>
+  
+  <Accordion title="Video Playback Issues">
+    If videos won't play or stutter:
+    
+    1. Update your graphics drivers
+    2. Disable hardware acceleration in **Settings** > **Video** if issues persist
+    3. Close other video applications
+    4. Check if your GPU supports the video codec
+  </Accordion>
+  
+  <Accordion title="High CPU Usage">
+    If Namida uses excessive CPU:
+    
+    1. Disable visual effects in **Settings** > **Customization**
+    2. Reduce particle effects and animations
+    3. Close other resource-intensive applications
+    4. Check for Windows updates
+  </Accordion>
+</AccordionGroup>
+
+## Keyboard Shortcuts
+
+Default keyboard shortcuts:
+
+| Shortcut | Action |
+|----------|--------|
+| `Space` | Play/Pause |
+| `→` | Next track |
+| `←` | Previous track |
+| `↑` | Volume up |
+| `↓` | Volume down |
+| `M` | Mute/Unmute |
+| `L` | Toggle repeat |
+| `S` | Toggle shuffle |
+| `F` | Toggle fullscreen (video) |
+| `Ctrl+F` | Search |
+| `Ctrl+O` | Open file |
+| `Ctrl+,` | Settings |
+
+<Note>
+All shortcuts can be customized in **Settings** > **Keyboard Shortcuts**
+</Note>
+
+## Known Limitations
+
+<Warning>
+Some features are still in development for Windows:
+
+- No system tray minimize option yet
+- Sleep timer may not work reliably on some systems
+- Some Flutter plugins may have limited functionality
+- Windows 11 snap layouts not yet fully supported
+</Warning>
+
+## Updates
+
+### MSIX Updates
+
+MSIX installations can check for updates:
+
+1. Go to **Settings** > **About**
+2. Click **Check for Updates**
+3. If available, download and install the new version
+
+### Portable Updates
+
+For portable versions:
+
+1. Download the latest version
+2. Extract to a temporary location
+3. Copy your `data` folder from the old version
+4. Replace the old installation
+
+<Info>
+Always backup your data folder before updating!
+</Info>
+
+## Developer Information
+
+- **Application ID**: `com.msob7y.namida`
+- **Display Name**: Namida
+- **Publisher**: namidaco
+- **Build System**: CMake with Flutter
+- **C++ Standard**: C++17
+- **Required Dependencies**: Visual C++ Redistributable 2015-2022
+
+### Build Configuration
+
+From `pubspec.yaml`:
+
+```yaml
+msix_config:
+  display_name: Namida
+  publisher_display_name: namidaco
+  identity_name: com.msob7y.namida
+  capabilities: musicLibrary, videosLibrary, internetClient
+  file_extension: .audio, .music, .video
+```

@@ -1,0 +1,455 @@
+---
+title: Queue Management
+description: Master Namida's powerful queue system with persistent sessions, smart track insertion, and flexible playback control
+---
+
+Namida features a sophisticated queue management system that preserves your listening sessions, offers intelligent track insertion, and provides extensive playback control.
+
+## Overview
+
+The queue system in Namida is designed to be:
+
+- **Persistent**: Your sessions are automatically saved and restored
+- **Reliable**: Queue state preserved even after app restarts
+- **Flexible**: Multiple ways to manipulate playback order
+- **Smart**: Intelligent track insertion and recommendations
+- **Organized**: Save and manage multiple queues
+
+<Info>
+Namida's queue system ensures you never miss your sessions - everything is automatically saved for later usage.
+</Info>
+
+## Queue Basics
+
+### Current Queue
+
+The current queue represents your active listening session:
+
+<Steps>
+  <Step title="Start Playback">
+    Play any track, album, playlist, or folder to create a queue
+  </Step>
+  
+  <Step title="Queue Populated">
+    All tracks from the source are added to the current queue
+  </Step>
+  
+  <Step title="Navigate Queue">
+    Skip forward/backward through queued tracks
+  </Step>
+  
+  <Step title="Auto-Save">
+    Queue is automatically saved as you listen
+  </Step>
+</Steps>
+
+### Queue Sources
+
+Queues can be created from various sources:
+
+<CardGroup cols={2}>
+  <Card title="All Tracks" icon="music">
+    Queue created from entire library
+  </Card>
+  
+  <Card title="Album" icon="album">
+    All tracks from a specific album
+  </Card>
+  
+  <Card title="Artist" icon="user-music">
+    All tracks by an artist
+  </Card>
+  
+  <Card title="Playlist" icon="list-music">
+    Tracks from a specific playlist
+  </Card>
+  
+  <Card title="Folder" icon="folder">
+    All tracks in a folder
+  </Card>
+  
+  <Card title="Search Results" icon="search">
+    Tracks from search query
+  </Card>
+  
+  <Card title="Generated" icon="wand-magic">
+    Smart-generated related tracks
+  </Card>
+  
+  <Card title="Custom" icon="hand">
+    Manually built queue
+  </Card>
+</CardGroup>
+
+## Managing the Queue
+
+### Adding Tracks
+
+Multiple methods to add tracks to the queue:
+
+<Accordion title="Add to Queue Options">
+  - **Play Next**: Insert track immediately after current track
+  - **Add to Queue**: Append track to end of queue
+  - **Insert After Latest**: Add after the last manually inserted track
+  - **Replace Queue**: Clear queue and add new tracks
+  - **Shuffle & Add**: Randomize before adding to queue
+</Accordion>
+
+#### Insert After Latest
+
+Unique feature for queue management:
+
+<Note>
+**Insert After Latest Inserted**: When you add multiple tracks one after another, this option ensures they stay together in the order you added them, inserting after the last track you manually added rather than at the end of the queue.
+
+Example: Current queue has 10 tracks. You add Track A with "Insert After Latest", then Track B. Both tracks are inserted at position 2-3, maintaining your selection order.
+</Note>
+
+### Removing Tracks
+
+Control what stays in your queue:
+
+- **Remove Track**: Swipe to remove individual tracks
+- **Remove Played**: Clear all previously played tracks
+- **Remove Upcoming**: Clear tracks after current position
+- **Clear Queue**: Remove all tracks from queue
+
+### Reordering Tracks
+
+Flexible queue organization:
+
+<Steps>
+  <Step title="Long Press">
+    Long press a track in queue view
+  </Step>
+  
+  <Step title="Drag">
+    Drag the track to desired position
+  </Step>
+  
+  <Step title="Drop">
+    Release to place track in new position
+  </Step>
+</Steps>
+
+<Info>
+Queue changes are automatically saved and will persist across app restarts.
+</Info>
+
+## Saved Queues
+
+### Queue History
+
+Namida maintains a history of your listening sessions:
+
+```dart
+// Queues are stored chronologically
+// Sorted by date (newest first)
+// Limited to queues with ≤2000 tracks
+```
+
+<Warning>
+Queues with more than 2000 tracks are not saved to prevent performance issues and excessive storage usage.
+</Warning>
+
+### Managing Saved Queues
+
+Access and manage your queue history:
+
+<CardGroup cols={2}>
+  <Card title="View Queues" icon="list">
+    Browse all saved listening sessions chronologically
+  </Card>
+  
+  <Card title="Restore Queue" icon="clock-rotate-left">
+    Load a previous queue to continue that session
+  </Card>
+  
+  <Card title="Favorite Queues" icon="star">
+    Mark important queues to prevent auto-deletion
+  </Card>
+  
+  <Card title="Delete Queues" icon="trash">
+    Remove unwanted queue history entries
+  </Card>
+</CardGroup>
+
+### Favorite Queues
+
+Mark queues as favorites to preserve them:
+
+<Steps>
+  <Step title="Open Queue History">
+    Navigate to Queues tab to see all saved queues
+  </Step>
+  
+  <Step title="Mark Favorite">
+    Tap star icon on any queue to mark as favorite
+  </Step>
+  
+  <Step title="Protected">
+    Favorite queues are protected from automatic cleanup
+  </Step>
+</Steps>
+
+<Note>
+Favorite queues are never automatically deleted, making them perfect for sessions you want to revisit.
+</Note>
+
+## Playback Modes
+
+### Repeat Modes
+
+Control how the queue repeats:
+
+<Accordion title="Repeat Options">
+  **None**: Play through queue once and stop
+  
+  **All**: Loop entire queue continuously
+  
+  **One**: Repeat current track indefinitely
+  
+  **For N Times**: Repeat current track specific number of times before advancing
+</Accordion>
+
+#### Repeat for N Times
+
+Unique repeat feature:
+
+```dart
+// Example: Repeat current track 3 times
+// Track plays → Track plays → Track plays → Next track plays
+```
+
+<Info>
+Repeat for N times is perfect when you want to hear a track multiple times without manually replaying it.
+</Info>
+
+### Shuffle Mode
+
+Randomize playback order:
+
+- **Shuffle Off**: Play tracks in queue order
+- **Shuffle On**: Randomize remaining queue
+- **Shuffle All**: Re-shuffle entire queue
+
+<Note>
+When shuffle is enabled, Namida creates a randomized playback order while preserving the original queue structure.
+</Note>
+
+## Advanced Queue Features
+
+### Track Play Mode
+
+Control what plays when you select a track from search:
+
+<Accordion title="Play Mode Options">
+  - **Selected Track Only**: Play just the tapped track
+  - **Search Results**: Play all tracks from current search results
+  - **Album**: Play the track's full album
+  - **First Artist**: Play all tracks by the track's first artist
+  - **First Genre**: Play all tracks in the track's genre
+</Accordion>
+
+<Info>
+This feature gives you flexibility when playing tracks from search - quickly play just that song or explore the full context.
+</Info>
+
+### Smart Track Recommendations
+
+Add intelligent recommendations to your queue:
+
+<CardGroup cols={2}>
+  <Card title="Recommended" icon="sparkles">
+    Tracks you usually listened to with the current track
+  </Card>
+  
+  <Card title="Similar Release" icon="calendar">
+    Tracks released around the same time
+  </Card>
+  
+  <Card title="Same Mood" icon="face-smile">
+    Tracks tagged with similar moods
+  </Card>
+  
+  <Card title="Random Related" icon="dice">
+    Random tracks from same artist/genre/album
+  </Card>
+</CardGroup>
+
+### Queue Statistics
+
+View information about current queue:
+
+- **Total Tracks**: Number of tracks in queue
+- **Total Duration**: Combined length of all tracks
+- **Remaining Duration**: Time left in queue from current position
+- **Queue Source**: What generated this queue
+- **Creation Date**: When queue was created
+
+## Queue Persistence
+
+### Automatic Saving
+
+Queues are automatically saved:
+
+<Steps>
+  <Step title="Continuous Saving">
+    Queue state saved as you add/remove/reorder tracks
+  </Step>
+  
+  <Step title="Position Tracking">
+    Current playback position preserved
+  </Step>
+  
+  <Step title="Source Tracking">
+    Original queue source remembered
+  </Step>
+  
+  <Step title="Restore on Launch">
+    Last queue automatically loaded when app starts
+  </Step>
+</Steps>
+
+### Latest Queue File
+
+The most recent queue is stored separately:
+
+```dart
+// Latest queue is immediately accessible on app startup
+// No need to load queue history to continue listening
+// Supports mixed content (local tracks + YouTube)
+```
+
+## Queue Updates
+
+### Automatic Updates
+
+Queues are updated when library changes:
+
+<Accordion title="Track Path Updates">
+  When you move or rename track files, Namida automatically updates:
+  
+  - Current queue references
+  - All saved queue history
+  - Track paths adjusted to new locations
+  - Preserves playback continuity
+</Accordion>
+
+### Manual Queue Updates
+
+Modify saved queues:
+
+- **Add Tracks**: Insert tracks into saved queue
+- **Remove Tracks**: Delete specific tracks from queue
+- **Reorder**: Change track order in saved queue
+- **Update Metadata**: Refresh queue source information
+
+## Queue Integration
+
+### History Integration
+
+Queue works seamlessly with history tracking:
+
+- Each track in queue contributes to history when played
+- Minimum listen time/percentage respected
+- Skip counts tracked separately
+- Session data preserved for analytics
+
+### Playlist Integration
+
+Convert queues to playlists:
+
+<Steps>
+  <Step title="Open Queue">
+    View current or saved queue
+  </Step>
+  
+  <Step title="Save as Playlist">
+    Tap "Save as Playlist" option
+  </Step>
+  
+  <Step title="Name Playlist">
+    Give your new playlist a name
+  </Step>
+  
+  <Step title="Permanent Collection">
+    Queue is now saved as a permanent playlist
+  </Step>
+</Steps>
+
+## Best Practices
+
+<Steps>
+  <Step title="Use Insert After Latest">
+    When adding multiple related tracks, use this option to keep them together
+  </Step>
+  
+  <Step title="Favorite Important Sessions">
+    Mark queues you want to revisit as favorites
+  </Step>
+  
+  <Step title="Clear Old Queues">
+    Periodically clean up queue history to free storage
+  </Step>
+  
+  <Step title="Save as Playlist">
+    Convert great queues to playlists for permanent access
+  </Step>
+  
+  <Step title="Use Track Play Mode">
+    Configure play mode based on how you typically listen from search
+  </Step>
+</Steps>
+
+## Performance Tips
+
+### Queue Size Management
+
+<Warning>
+**Large Queue Warning**: While Namida can handle large queues, queues exceeding 2000 tracks:
+- Will not be saved to queue history
+- May impact performance on lower-end devices
+- Consider breaking into smaller queues or playlists
+</Warning>
+
+### Optimization
+
+- **Clean History**: Remove old queues you won't use
+- **Favorite Selectively**: Only favorite queues you'll truly revisit
+- **Limit Queue Size**: Keep active queue under 500 tracks for best performance
+- **Use Playlists**: Convert large queues to playlists for better management
+
+## Troubleshooting
+
+<Accordion title="Queue not restoring after app restart">
+  - Check if app has storage permissions
+  - Verify queue wasn't empty when app closed
+  - Ensure queue file isn't corrupted (Settings → Reset Queue)
+  - Check if battery optimization is killing app abruptly
+  - Try manually saving queue as playlist
+</Accordion>
+
+<Accordion title="Tracks missing from queue">
+  - Verify track files still exist on device
+  - Check if tracks were excluded from library
+  - Ensure library is fully indexed
+  - Look for tracks in different queue source
+  - Try refreshing library and reloading queue
+</Accordion>
+
+<Accordion title="Can't reorder queue tracks">
+  - Ensure you're long-pressing correctly
+  - Check if queue is locked or read-only
+  - Verify app has write permissions
+  - Try disabling shuffle mode first
+  - Restart app if drag gesture not responding
+</Accordion>
+
+<Accordion title="Queue automatically clearing">
+  - Check repeat mode settings (None mode stops after queue)
+  - Verify you're not triggering "Clear Queue" accidentally
+  - Check if battery saver is affecting app
+  - Ensure queue is being saved (favorite it to test)
+  - Look for saved version in queue history
+</Accordion>

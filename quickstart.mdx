@@ -1,80 +1,405 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quick Start Guide
+description: Get started with Namida in minutes - set up your library, play music, and explore key features
 ---
 
-## Get started in three steps
+# Quick Start Guide
 
-Get your documentation site running locally and make your first customization.
+This guide will help you get up and running with Namida in just a few minutes. Let's start playing your favorite music!
 
-### Step 1: Set up your local environment
+## First Launch
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
+<Steps>
+  <Step title="Open Namida">
+    Launch Namida for the first time. You'll see an onboarding screen with configuration options.
     
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
+    <img src="https://raw.githubusercontent.com/namidaco/namida/main/screens/customization_settings.jpg" alt="Namida Settings" width="300" />
+  </Step>
+  
+  <Step title="Grant Storage Permission">
+    Namida needs access to your device storage to scan and play your music files.
     
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
+    <Tabs>
+      <Tab title="Android">
+        When prompted, tap **Allow** to grant storage permissions:
+        - **Files and media** (Android 13+)
+        - **Storage** (Android 12 and below)
+        
+        <Note>
+        For advanced features like tag editing and downloads, you may need to grant "All files access" later.
+        </Note>
+      </Tab>
+      
+      <Tab title="Windows/Linux">
+        You'll configure your music folders in the next step. No system permissions needed.
+      </Tab>
+    </Tabs>
+  </Step>
+  
+  <Step title="Configure Music Folders">
+    Tell Namida where your music files are located:
     
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+    1. Go to **Settings** → **Indexer**
+    2. Tap **Folders to Scan**
+    3. Add folders containing your music:
+       - Android: Usually `/storage/emulated/0/Music` or `/sdcard/Music`
+       - Windows: Usually `C:\Users\YourName\Music`
+       - Linux: Usually `~/Music` or `/home/username/Music`
+    
+    <Info>
+    Namida automatically suggests common music folder locations. By default, it includes the `Music` and `Download` folders.
+    </Info>
+  </Step>
+  
+  <Step title="Wait for Indexing">
+    Namida will scan your folders and index all music files. This may take a few moments depending on your library size.
+    
+    <Note>
+    The indexer reads metadata from your audio files (title, artist, album, artwork, etc.) and organizes them in the library.
+    </Note>
+  </Step>
+</Steps>
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+## Exploring Your Library
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 3: Go live
-
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
-
-## Next steps
-
-Now that you have your docs running, explore these key features:
+Once indexing is complete, you'll see your music organized in several views:
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Tracks" icon="music">
+    All your songs in one place
+  </Card>
+  <Card title="Albums" icon="compact-disc">
+    Organized by album artwork
+  </Card>
+  <Card title="Artists" icon="user-music">
+    Browse by artist
+  </Card>
+  <Card title="Genres" icon="guitar">
+    Filter by music genre
+  </Card>
+  <Card title="Playlists" icon="list-music">
+    Custom playlists you create
+  </Card>
+  <Card title="Folders" icon="folder">
+    File system view
+  </Card>
 </CardGroup>
 
+### Navigate Between Views
+
+Use the navigation drawer (swipe from left or tap ☰) to switch between different library views.
+
+## Playing Your First Track
+
+<Steps>
+  <Step title="Find a Song">
+    Navigate to **Tracks** view to see all your music. You can:
+    - Scroll through the list
+    - Use the search icon 🔍 at the top
+    - Sort by tapping the sort button
+  </Step>
+  
+  <Step title="Tap to Play">
+    Simply tap any track to start playing. The miniplayer will appear at the bottom.
+    
+    <Info>
+    Long-press a track to see more options like adding to queue, playlist, or viewing info.
+    </Info>
+  </Step>
+  
+  <Step title="Use the Player">
+    Swipe up on the miniplayer to expand it to full screen. Here you can:
+    - See album artwork
+    - View lyrics (if available)
+    - Adjust equalizer settings
+    - Control playback speed and pitch
+    - See waveform visualization
+  </Step>
+</Steps>
+
+## Essential Player Controls
+
+### Miniplayer Controls
+
+The bottom miniplayer shows:
+- **Play/Pause** button
+- **Previous/Next** track buttons
+- **Track progress** bar (tap to seek)
+- **Album artwork** (tap to expand player)
+- **Queue icon** (see what's playing next)
+
+### Full Player Gestures
+
+<Info>
+Namida supports intuitive gestures for quick control:
+</Info>
+
+- **Swipe down**: Minimize player
+- **Swipe left/right**: Skip to next/previous track
+- **Double-tap artwork**: Toggle lyrics view
+- **Long-press artwork**: Custom action (configurable)
+- **Tap progress bar**: Seek to position
+
+## Creating Your First Playlist
+
+<Steps>
+  <Step title="Select Tracks">
+    Long-press on a track to enter selection mode, then tap other tracks to select multiple songs.
+  </Step>
+  
+  <Step title="Add to Playlist">
+    Tap the **+** icon at the top, then select **Add to Playlist** → **Create New Playlist**.
+  </Step>
+  
+  <Step title="Name Your Playlist">
+    Enter a name for your playlist and tap **Create**.
+    
+    <Note>
+    You can set custom artwork for playlists by opening the playlist and tapping the artwork.
+    </Note>
+  </Step>
+</Steps>
+
+## Exploring YouTube Features
+
+One of Namida's standout features is seamless YouTube integration.
+
+<Steps>
+  <Step title="Access YouTube Tab">
+    Open the navigation drawer and tap **YouTube** to switch to YouTube mode.
+  </Step>
+  
+  <Step title="Search for Music">
+    Tap the search icon and enter a song name, artist, or video title.
+  </Step>
+  
+  <Step title="Stream or Download">
+    - **Tap** a video to stream it instantly
+    - **Long-press** to see download options
+    - Choose audio-only or video+audio format
+    
+    <Info>
+    Downloaded content is cached locally for offline playback!
+    </Info>
+  </Step>
+  
+  <Step title="Manage Cache">
+    Go to **Settings** → **YouTube** → **Cache** to manage downloaded content and set cache limits.
+  </Step>
+</Steps>
+
+### YouTube-Specific Features
+
+<CardGroup cols={2}>
+  <Card title="SponsorBlock" icon="forward">
+    Automatically skip sponsored segments in videos
+  </Card>
+  <Card title="Return Dislike" icon="thumbs-down">
+    See dislike counts on YouTube videos
+  </Card>
+  <Card title="Picture-in-Picture" icon="window-restore">
+    Watch videos while using other apps
+  </Card>
+  <Card title="Playlist Import" icon="download">
+    Import your YouTube playlists and history
+  </Card>
+</CardGroup>
+
+## Customizing Your Experience
+
+Namida offers extensive customization options:
+
+### Theme Settings
+
+<Steps>
+  <Step title="Open Theme Settings">
+    Go to **Settings** → **Theme**
+  </Step>
+  
+  <Step title="Choose Theme Mode">
+    Select from:
+    - Light
+    - Dark  
+    - Black (AMOLED)
+    - System (auto)
+  </Step>
+  
+  <Step title="Enable Dynamic Colors">
+    Toggle **Auto Coloring** to have the player interface adapt to album artwork colors.
+    
+    <Note>
+    Dynamic theming makes each song feel unique by extracting colors from the artwork!
+    </Note>
+  </Step>
+</Steps>
+
+### Essential Settings to Configure
+
+<AccordionGroup>
+  <Accordion title="Playback Settings">
+    **Settings → Playback**
+    
+    - **Crossfade Duration**: Smooth transitions between tracks (0-12 seconds)
+    - **Replay Gain**: Normalize volume across different tracks
+    - **Skip Silence**: Automatically skip silent parts
+    - **Play Speed**: Adjust default playback speed
+  </Accordion>
+  
+  <Accordion title="Audio Quality">
+    **Settings → Audio**
+    
+    - **YouTube Audio Quality**: Set preferred quality (high/medium/low)
+    - **Data Saver Mode**: Reduce bandwidth usage
+    - **Audio Only Mode**: Download only audio from YouTube videos
+  </Accordion>
+  
+  <Accordion title="UI Customization">
+    **Settings → Customization**
+    
+    - **Miniplayer Style**: Compact or card style
+    - **Waveform**: Enable animated waveform on player
+    - **Particles Effect**: Visual effects synchronized with music
+    - **Grid Count**: Adjust album grid size
+  </Accordion>
+  
+  <Accordion title="Lyrics">
+    **Settings → Lyrics**
+    
+    - **Auto-Fetch Lyrics**: Automatically download lyrics from online sources
+    - **Synced Lyrics**: Show time-synced lyrics during playback
+    - **Lyrics Source**: Choose preferred lyrics provider
+  </Accordion>
+</AccordionGroup>
+
+## Smart Features to Try
+
+### Sleep Timer
+
+Set Namida to stop playing after a certain duration:
+
+1. Open the player
+2. Tap the ⋮ (more) menu
+3. Select **Sleep Timer**
+4. Choose duration or number of tracks
+
+### Smart Track Generation
+
+<Info>
+Namida can generate intelligent playlists based on your listening habits!
+</Info>
+
+1. Open any track
+2. Tap ⋮ (more) menu
+3. Select **Add to Queue** → **Recommended Tracks**
+4. Namida will add tracks you usually listen to around the same time
+
+Other generation options:
+- **Similar Release Date**: Tracks from the same era
+- **Most Played**: Your top tracks from a specific period
+- **Random**: Surprise me!
+
+### History Tracking
+
+Namida keeps detailed listening history:
+
+1. Open navigation drawer
+2. Tap **History**
+3. Browse by day, week, or month
+4. See listening statistics and patterns
+
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+You can import your YouTube and Last.fm listening history to get complete statistics!
 </Note>
+
+## Tips & Tricks
+
+<AccordionGroup>
+  <Accordion title="Bulk Tag Editing">
+    Select multiple tracks → ⋮ menu → **Edit Tags** to edit metadata for multiple files at once.
+  </Accordion>
+  
+  <Accordion title="Custom Swipe Actions">
+    **Settings → Customization → Swipe Actions** - Configure what happens when you swipe left or right on tracks.
+  </Accordion>
+  
+  <Accordion title="Video Integration">
+    Namida can automatically match local videos to your music! Place video files with matching names in your music folders.
+  </Accordion>
+  
+  <Accordion title="Queue Management">
+    - Swipe up from miniplayer to see the queue
+    - Drag to reorder tracks
+    - Swipe track left/right to remove from queue
+    - Long-press for more options
+  </Accordion>
+  
+  <Accordion title="Keyboard Shortcuts (Desktop)">
+    **Windows/Linux users:**
+    - `Space`: Play/Pause
+    - `→/←`: Next/Previous track
+    - `Ctrl+F`: Search
+    - `Ctrl+L`: Toggle lyrics
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting Common Issues
+
+<AccordionGroup>
+  <Accordion title="Music not showing up">
+    1. Check **Settings → Indexer → Folders to Scan**
+    2. Ensure folders contain supported audio files
+    3. Tap **Re-scan** to force a fresh index
+    4. Check file permissions on your music folder
+  </Accordion>
+  
+  <Accordion title="Lyrics not loading">
+    1. Enable **Settings → Lyrics → Auto-Fetch Lyrics**
+    2. Check internet connection
+    3. Ensure track has proper metadata (title/artist)
+    4. Try manually adding lyrics from the track menu
+  </Accordion>
+  
+  <Accordion title="YouTube videos not playing">
+    1. Check internet connection
+    2. Update to latest Namida version
+    3. Clear YouTube cache: **Settings → YouTube → Clear Cache**
+    4. Try toggling **Settings → YouTube → Data Saver Mode**
+  </Accordion>
+  
+  <Accordion title="Battery drain issues">
+    1. Disable **Settings → Customization → Particles Effect**
+    2. Reduce **Settings → Customization → Waveform Intensity**
+    3. Enable battery optimization for Namida in Android settings
+  </Accordion>
+</AccordionGroup>
+
+## What's Next?
+
+<CardGroup cols={2}>
+  <Card title="Import History" icon="clock-rotate-left">
+    Import your YouTube and Last.fm listening history to see complete statistics
+  </Card>
+  <Card title="Create Backups" icon="floppy-disk">
+    Set up automatic backups of your library, playlists, and settings
+  </Card>
+  <Card title="Explore Advanced" icon="sliders">
+    Dive into advanced features like equalizer, replay gain, and audio effects
+  </Card>
+  <Card title="Join Community" icon="users">
+    Connect with other users on Telegram or Discord for tips and support
+  </Card>
+</CardGroup>
+
+<Info>
+**Pro Tip**: Explore **Settings → Extra** for hidden features and experimental options that power users will love!
+</Info>
+
+## Need Help?
+
+If you run into issues or have questions:
+
+- Check the [GitHub Issues](https://github.com/namidaco/namida/issues) page
+- Join the [Telegram Chat](https://t.me/+FmdfsgKoGmM1ZGFk) for community support
+- Visit the [Discord Server](https://discord.gg/WeY7DTVChT) for discussions
+
+Happy listening! 🎵

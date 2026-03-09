@@ -1,0 +1,276 @@
+---
+title: Indexer
+description: Configure Namida's powerful music library indexer to scan and organize your audio files
+---
+
+The Indexer is Namida's core system for discovering, scanning, and organizing your music library. It uses the powerful jaudiotagger library to extract metadata from your audio files and maintain a comprehensive database of your music collection.
+
+## Library Scanning
+
+### Folders Configuration
+
+Namida uses a folder-based library system that gives you complete control over which directories are scanned.
+
+<Steps>
+  <Step title="Add Folders to Scan">
+    Navigate to **Settings → Indexer → Folders to Scan** to select directories containing your music files. The indexer will recursively scan all subdirectories unless excluded.
+  </Step>
+  
+  <Step title="Exclude Specific Folders">
+    Add folders to the exclusion list if you want to skip certain directories during scanning. This is useful for excluding sample packs, sound effects, or temporary files.
+  </Step>
+  
+  <Step title="Refresh Library">
+    Trigger a manual refresh to scan for new files or detect deleted tracks. Namida can also automatically refresh on startup.
+  </Step>
+</Steps>
+
+<Info>
+The indexer respects `.nomedia` files in directories. When `strictNoMedia` mode is enabled, all subdirectories inherit the parent's exclusion status.
+</Info>
+
+### Media Store Integration
+
+Namida supports two indexing methods:
+
+- **File-based indexing**: Direct filesystem scanning using custom tag extraction
+- **MediaStore indexing**: Android's native media database for faster initial scans
+
+```dart
+// The indexer automatically selects the best method
+// based on platform and settings
+bool useMediaStore = settings.useMediaStore.value;
+```
+
+## Filtering & Quality Control
+
+### Minimum Requirements
+
+Set quality thresholds to filter out unwanted files:
+
+<CardGroup cols={2}>
+  <Card title="Minimum Duration" icon="clock">
+    Exclude tracks shorter than a specified duration (in seconds)
+  </Card>
+  <Card title="Minimum File Size" icon="file">
+    Filter out files smaller than a specified size (in bytes)
+  </Card>
+</CardGroup>
+
+<Warning>
+Tracks that don't meet these criteria are automatically excluded during indexing and counted in the `filteredForSizeDurationTracks` statistic.
+</Warning>
+
+### Duplicate Prevention
+
+Enable duplicate track prevention to avoid multiple entries with the same filename:
+
+```dart
+// Duplicate detection by filename
+if (settings.preventDuplicatedTracks.value) {
+  // Tracks with identical filenames are skipped
+  // Duplicates counter: duplicatedTracksLength
+}
+```
+
+## Metadata Extraction
+
+### Tag Processing
+
+The indexer extracts comprehensive metadata from audio files:
+
+- **Basic Tags**: Title, Artist, Album, Album Artist, Composer
+- **Classification**: Genre, Mood, Tags
+- **Technical**: Bitrate, Sample Rate, Bit Depth, Format, Channels
+- **Organization**: Track Number, Disc Number, Year
+- **Advanced**: Lyrics, Comments, Description, Rating, Gain Data
+
+### Artist & Genre Separators
+
+<Accordion title="Configuring Artist Separation">
+Namida automatically splits artist fields using configurable separators:
+
+```dart
+// Split artists by common delimiters
+List<String> artists = Indexer.splitArtist(
+  title: trackTitle,
+  originalArtist: trackArtist,
+  config: ArtistsSplitConfig.settings(),
+);
+```
+
+**Default separators**: `,`, `/`, `&`, `;`, `+`
+
+**Featured Artist Extraction**: Automatically extracts artists from `(ft. Artist)` or `[feat. Artist]` patterns in track titles.
+</Accordion>
+
+<Accordion title="Genre Configuration">
+Genres are split similarly to artists using customizable delimiters:
+
+```dart
+List<String> genres = Indexer.splitGenre(
+  originalGenre,
+  config: GenresSplitConfig.settings(),
+);
+```
+</Accordion>
+
+### Fallback Extraction
+
+When tag metadata is missing or corrupted, Namida attempts to extract information from filenames:
+
+```dart
+// Extracts "Artist" and "Title" from "Artist - Title.mp3"
+(title, artist) = getTitleAndArtistFromFilename(filename);
+```
+
+**Supported patterns**:
+- `Artist - Title.mp3`
+- `Artist_-_Title.mp3`  
+- `Title [Artist].mp3`
+
+## Video Integration
+
+### Local Videos
+
+Namida can index video files alongside audio tracks:
+
+```dart
+// Include videos in library
+if (settings.includeVideos.value) {
+  // Video files are indexed as Video objects
+  // Organized in separate video folders
+}
+```
+
+**Video Matching**: The indexer automatically associates videos with audio tracks by:
+1. Matching YouTube IDs in comments/filenames
+2. Comparing title and artist metadata
+3. Finding videos with similar filenames
+
+### Folder Covers
+
+Namida detects cover images in music folders:
+
+- `cover.jpg`, `folder.jpg`, `album.jpg`
+- `.info.txt` files for additional folder information
+
+```dart
+// Fallback folder artwork
+String? artworkPath = getFallbackFolderArtworkPath(folder: folder);
+```
+
+## Performance & Optimization
+
+### Multi-threaded Indexing
+
+The indexer uses parallel processing for optimal performance:
+
+```dart
+// Automatically determines optimal thread count
+int listParts = Platform.isAndroid 
+  ? (Platform.numberOfProcessors * 0.5).round()
+  : (Platform.numberOfProcessors * 0.8).round();
+```
+
+<Note>
+On mobile devices, the indexer uses 50% of available cores to preserve battery life. Desktop platforms utilize 80% for faster processing.
+</Note>
+
+### Artwork Caching
+
+<Steps>
+  <Step title="Enable Artwork Caching">
+    Settings → Indexer → Cache Artworks
+    
+    Extracts and stores album artwork during indexing for instant loading.
+  </Step>
+  
+  <Step title="Storage Management">
+    Monitor cached artwork size and clear cache if needed:
+    
+    - Total artworks: `artworksInStorage`
+    - Total size: `artworksSizeInStorage` (bytes)
+  </Step>
+  
+  <Step title="Clear Cache">
+    Use "Clear Image Cache" to remove all cached artworks and reclaim storage space.
+  </Step>
+</Steps>
+
+## Indexing Statistics
+
+After indexing, Namida provides detailed statistics:
+
+```dart
+// Available counters
+final stats = {
+  'total': tracksInfoList.length,
+  'filtered': filteredForSizeDurationTracks.value,
+  'duplicates': duplicatedTracksLength.value,
+  'excludedByNoMedia': tracksExcludedByNoMedia.value,
+  'newFiles': newFilesLength,
+  'deletedFiles': deletedFilesLength,
+};
+```
+
+## Reindexing Tracks
+
+Force reindex specific tracks or your entire library:
+
+<CardGroup cols={2}>
+  <Card title="Full Reindex" icon="rotate">
+    Scans all folders from scratch, useful after changing separator settings or fixing corrupted metadata.
+    
+    **Path**: `refreshLibraryAndCheckForDiff(forceReIndex: true)`
+  </Card>
+  
+  <Card title="Selective Reindex" icon="list-check">
+    Update metadata for specific tracks, useful after editing tags externally.
+    
+    **Path**: `reindexTracks(tracks: selectedTracks)`
+  </Card>
+</CardGroup>
+
+<Warning>
+Reindexing preserves your play history, playlists, and track statistics. Only metadata is refreshed.
+</Warning>
+
+## Album Identification
+
+Configure how albums are identified and grouped:
+
+```dart
+// Album identifiers determine grouping logic
+Set<AlbumIdentifier> identifiers = settings.albumIdentifiers.value;
+// Options: album name, album artist, year, folder path
+```
+
+**Available identifiers**:
+- Album Name
+- Album Artist  
+- Year
+- Folder Path
+
+## Best Practices
+
+<Accordion title="Optimize Initial Scan">
+1. **Use MediaStore** on Android for faster first-time indexing
+2. **Enable artwork caching** if you have sufficient storage
+3. **Set appropriate filters** to exclude ringtones and notifications
+4. **Exclude system folders** like `/Android/` and `/Download/`
+</Accordion>
+
+<Accordion title="Maintain Library Health">
+1. **Enable automatic refresh** on startup to detect changes
+2. **Use duplicate prevention** to keep library clean
+3. **Regularly clear artwork cache** if storage becomes an issue
+4. **Verify folder paths** after SD card changes or system updates
+</Accordion>
+
+<Accordion title="Handle Large Libraries">
+- Libraries with 10,000+ tracks benefit from MediaStore indexing
+- Disable artwork caching if storage is limited
+- Consider excluding video files if not needed
+- Use minimum duration/size filters to reduce database size
+</Accordion>
